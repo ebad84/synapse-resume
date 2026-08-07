@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ 'rtl' if rtl else 'ltr' }}" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ t.site }} — {{ t.name }}</title>
+<link rel="icon" href="{{ url_for('static', filename='synapse.svg') }}" type="image/svg+xml">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body data-lang="{{ lang }}">
+<header class="topbar">
+  <div class="ssh-strip">{{ t.ssh_line.format(host=host, port=ssh_port) }}</div>
+  <div class="brand">
+    <img class="logo" src="{{ url_for('static', filename='synapse.png') }}" alt="SYNAPSE">
+    <div class="brand-txt">
+      <h1>{{ t.name }}</h1>
+      <div class="role">{{ t.role }}</div>
+    </div>
+    <div class="controls">
+      <a class="btn" href="{{ '/fa' if lang == 'en' else '/' }}">{{ t.lang_other }}</a>
+      <button class="btn" id="themeBtn" type="button" data-light="{{ t.theme_light }}" data-dark="{{ t.theme_dark }}"></button>
+    </div>
+  </div>
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+<footer>
+  <a class="more" href="{{ '/more' if lang == 'en' else '/fa/more' }}">{{ t.more_link }}</a>
+  <div class="foot-line">{{ t.foot }} · ebad84</div>
+</footer>
+<script>
+(function () {
+  var KEY = 'synapse-theme';
+  var btn = document.getElementById('themeBtn');
+  var root = document.documentElement;
+  function apply(theme) {
+    root.setAttribute('data-theme', theme);
+    btn.textContent = theme === 'dark' ? btn.dataset.light : btn.dataset.dark;
+    try { localStorage.setItem(KEY, theme); } catch (e) {}
+  }
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  apply(saved === 'dark' ? 'dark' : 'light');
+  btn.addEventListener('click', function () {
+    apply(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+  var buf = '';
+  document.addEventListener('keydown', function (e) {
+    if (e.key && e.key.length === 1) {
+      buf = (buf + e.key).slice(-3);
+      if (buf === '418') { location.href = '/teapot'; }
+    }
+  });
+})();
+</script>
+</body>
+</html>

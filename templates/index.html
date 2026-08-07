@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="grid">
+  <div class="cell" id="about">
+    <h2>{{ t.sec_about }}</h2>
+    {% if has_profile %}<img class="photo" src="{{ url_for('static', filename='profile.jpg') }}" alt="profile">{% endif %}
+    <p class="bio">{{ t.bio }}</p>
+  </div>
+  <div class="cell" id="skills">
+    <h2>{{ t.sec_skills }} <span class="dim">— {{ t.skills_note }}</span></h2>
+    {% for s in t.skill_items %}
+    <div class="skill">
+      <span class="k">{{ s.k }}</span>
+      <span class="bar"><span class="fill">{{ '█' * (s.pct // 10) }}</span><span class="track">{{ '░' * (10 - s.pct // 10) }}</span></span>
+      <span class="pct">{{ s.pct }}%</span>
+    </div>
+    {% endfor %}
+    <div class="tools">{{ t.tools }}</div>
+  </div>
+  <div class="cell" id="boards">
+    <h2>{{ t.sec_boards }}</h2>
+    <ul>
+      {% for b in t.boards_items %}<li>{{ b }}</li>{% endfor %}
+    </ul>
+  </div>
+  <div class="cell" id="exp">
+    <h2>{{ t.sec_exp }}</h2>
+    <div class="exp-role">{{ t.exp_role }}</div>
+    <div class="exp-dur">{{ t.exp_dur }}</div>
+    <div class="exp-note">{{ t.exp_note }}</div>
+  </div>
+  <div class="cell wide" id="projects">
+    <h2>{{ t.sec_projects }}</h2>
+    <div id="proj">{{ t.proj_loading }}</div>
+  </div>
+  <div class="cell wide" id="links">
+    <h2>{{ t.sec_links }}</h2>
+    <ul>
+      <li><a href="https://github.com/ebad84">GITHUB — github.com/ebad84</a></li>
+      <li><a href="https://linkedin.com/in/ebad84">LINKEDIN — linkedin.com/in/ebad84</a></li>
+      <li><a href="https://t.me/ebad84">TELEGRAM — t.me/ebad84</a></li>
+    </ul>
+    <div class="dim">{{ t.links_note }}</div>
+  </div>
+</section>
+<script>
+(function () {
+  var el = document.getElementById('proj');
+  var lang = document.body.dataset.lang || 'en';
+  var OPEN = lang === 'fa' ? 'باز کردن ↑' : 'OPEN ↑';
+  fetch('/api/projects').then(function (r) { return r.json(); }).then(function (d) {
+    if (!d.projects || !d.projects.length) {
+      el.textContent = 'EMPTY — ADD PROJECTS IN projects.json';
+      return;
+    }
+    el.innerHTML = d.projects.map(function (p, i) {
+      var ttl = (p.title && (p.title[lang] || p.title.en)) || '?';
+      var dsc = (p.desc && (p.desc[lang] || p.desc.en)) || '';
+      var lnk = p.link ? '<a class="link" href="' + p.link + '" target="_blank" rel="noopener">' + OPEN + '</a>' : '';
+      var img = p.image ? '<img src="/static/projects/' + p.image + '" alt="">' : '';
+      var tags = (p.tags || []).join(' · ');
+      return '<div class="proj"><div class="proj-head"><span class="idx">' +
+        String(i + 1).padStart(2, '0') + '</span><h3>' + ttl + '</h3>' + lnk +
+        '</div>' + img + '<div class="desc">' + dsc + '</div><div class="tags">' + tags + '</div></div>';
+    }).join('');
+  }).catch(function () { el.textContent = 'PROJECTS FAILED TO LOAD'; });
+})();
+</script>
+{% endblock %}

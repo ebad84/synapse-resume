@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="grid">
+  <div class="cell"><h2>{{ t.sec_system }}</h2><p class="bio">{{ t.os_line }}</p></div>
+  <div class="cell"><h2>{{ t.sec_term }}</h2><p class="bio">{{ t.term_line }}</p></div>
+  <div class="cell"><h2>{{ t.sec_tools }}</h2><p class="bio">{{ t.tools_line }}</p></div>
+  <div class="cell"><h2>{{ t.sec_devops }}</h2><p class="bio">{{ t.devops_line }}</p></div>
+  <div class="cell wide"><h2>{{ t.sec_making }}</h2><p class="bio">{{ t.making_line }}</p></div>
+  <div class="cell wide"><h2>{{ t.sec_site }}</h2><p class="bio">{{ t.site_line }}</p></div>
+</section>
+{% endblock %}

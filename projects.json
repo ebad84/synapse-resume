@@ -1,0 +1,58 @@
+{
+  "projects": [
+    {
+      "id": "esp32-datalogger",
+      "title": {
+        "en": "ESP32 DATALOGGER NODE",
+        "fa": "گرهٔ دیتالاگر ESP32"
+      },
+      "desc": {
+        "en": "Battery-powered data logger with SD storage and MQTT uplink; logs temperature, humidity and pressure to a local broker.",
+        "fa": "دیتالاگر باتری‌خور با ذخیرهٔ SD و آپلینک MQTT؛ دما، رطوبت و فشار را به یک بروکر محلی می‌فرستد."
+      },
+      "tags": [
+        "ESP32",
+        "MQTT",
+        "SD CARD"
+      ],
+      "link": "https://github.com/ebad84",
+      "image": null
+    },
+    {
+      "id": "home-hub",
+      "title": {
+        "en": "HOME AUTOMATION HUB",
+        "fa": "هاب هوشمندسازی خانه"
+      },
+      "desc": {
+        "en": "A small hub that ties smart sensors and relays together over Wi-Fi, with a simple web panel.",
+        "fa": "هاب کوچکی که سنسورهای هوشمند و رله‌ها را با وای‌فای به هم متصل می‌کند و پنل وب ساده دارد."
+      },
+      "tags": [
+        "ESP8266",
+        "RELAYS",
+        "WI-FI"
+      ],
+      "link": null,
+      "image": null
+    },
+    {
+      "id": "signal-lab",
+      "title": {
+        "en": "SIGNAL & IMAGE PLAYGROUND",
+        "fa": "آزمایشگاه سیگنال و تصویر"
+      },
+      "desc": {
+        "en": "Jupyter experiments on sensor signals and images — filtering, FFT, edge detection.",
+        "fa": "آزمایش‌های Jupyter روی سیگنال سنسورها و تصاویر — فیلتر، FFT و تشخیص لبه."
+      },
+      "tags": [
+        "PYTHON",
+        "FFT",
+        "OPENCV"
+      ],
+      "link": "https://github.com/ebad84",
+      "image": null
+    }
+  ]
+}
