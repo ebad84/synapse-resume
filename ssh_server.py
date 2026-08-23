@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # SYNAPSE SSH TUI — the resume site as a minimal interactive terminal.
 #
-#   run:      python ssh_server.py            (binds 0.0.0.0:2222 by default)
-#   login:    any username / password: synapse (override: env SYNAPSE_PASS)
+#   run:      python ssh_server.py            (binds 0.0.0.0:22 by default)
+#   login:    NONE — terminal.shop style:  ssh <host>  and the content
+#             is just there (auth "none" is accepted for everyone).
 #
-#   layout:   [ Synapse ASCII logo + name ]   <- fixed header
+#   layout:   [ Synapse ASCII logo + name + icon/link strip ]  <- fixed header
 #             [ content pane of the section ]
-#             [ nav bar ]                     <- fixed footer
+#             [ nav bar ]                                      <- fixed footer
 #
 #   keys:     1-5  switch section (ABOUT / INTERESTS / PROJECTS / EXPERIENCE / LINKS)
 #             N    in PROJECTS: open project N
@@ -27,12 +28,30 @@ import paramiko
 BASE = Path(__file__).resolve().parent
 HOST_KEY_PATH = BASE / "data" / "host.key"
 PASSWORD = os.environ.get("SYNAPSE_PASS", "synapse")
-PORT = int(os.environ.get("SYNAPSE_PORT", "2222"))
+PORT = int(os.environ.get("SYNAPSE_PORT", "22"))
 HOST = os.environ.get("SYNAPSE_HOST", "0.0.0.0")
 WEB_URL = os.environ.get("SYNAPSE_WEB", "http://localhost:5000")
 
 CLEAR = "\x1b[2J\x1b[H"
 NAV_BAR = "  [1] ABOUT   [2] INTERESTS   [3] PROJECTS   [4] EXPERIENCE   [5] LINKS     (Q)UIT"
+
+# fallback logo (hand-made) — used only if data/ascii_logo.txt is missing
+FALLBACK_LOGO = """        \u2588  \u2588 \u2588\u2588      \u2588
+         \u2588\u2588\u2588\u2588         \u2588\u2588
+            \u2588       \u2588
+    \u2588        \u2588      \u2588\u2588\u2588\u2588
+   \u2588\u2588        \u2588\u2588    \u2588
+ \u2588\u2588\u2588 \u2588\u2588     \u2588\u2588\u2588\u2588\u2588\u2588\u2588
+       \u2588\u2588\u2588\u2588\u2588 \u2588 \u2588 \u2588 \u2588
+          \u2588\u2588 \u2588   \u2588 \u2588\u2588           \u2588\u2588\u2588     \u2588
+          \u2588\u2588 \u2588   \u2588 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  \u2588\u2588   \u2588   \u2588  \u2588\u2588
+        \u2588\u2588\u2588\u2588 \u2588 \u2588 \u2588 \u2588\u2588       \u2588\u2588      \u2588\u2588\u2588
+  \u2588   \u2588\u2588   \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+  \u2588\u2588\u2588\u2588       \u2588\u2588   \u2588\u2588
+    \u2588        \u2588      \u2588\u2588\u2588\u2588
+    \u2588       \u2588       \u2588\u2588   \u2588
+         \u2588\u2588 \u2588\u2588     \u2588  \u2588\u2588
+           \u2588\u2588 \u2588"""
 
 
 def load_projects():
@@ -47,7 +66,17 @@ def ascii_logo():
     p = BASE / "data" / "ascii_logo.txt"
     if p.exists():
         return p.read_text(encoding="utf-8").rstrip("\n")
-    return "SYNAPSE"
+    return FALLBACK_LOGO
+
+
+def banner_links():
+    p = BASE / "data" / "banner_links.txt"
+    if p.exists():
+        lines = [ln.rstrip("\n") for ln in p.read_text(encoding="utf-8").splitlines()]
+        lines = [ln for ln in lines if ln.strip()]
+        if lines:
+            return lines
+    return ["  t.me/ebad84 · github.com/ebad84 · linkedin.com/in/ebad84"]
 
 
 ABOUT = """\
@@ -67,7 +96,7 @@ ABOUT = """\
     WINDOWS (daily driver) · UBUNTU GNOME · GHOSTTY
 
   THIS SITE
-    web: {web}   ssh: you are here
+    web: {web}   ssh: you are here — no login, just like that
     press ? for help · type 418 for a surprise"""
 
 INTERESTS = """\
@@ -142,6 +171,7 @@ class Tui:
         self.overlay = None
         self.buf = []
         self.logo = ascii_logo().split("\n")
+        self.links = banner_links()
         self.body = {
             "about": ABOUT.format(web=WEB_URL),
             "interests": INTERESTS,
@@ -159,10 +189,13 @@ class Tui:
     def render(self):
         w, h = self.width, self.height
         logo_h = len(self.logo)
-        header_h = logo_h + 3
+        links_h = len(self.links)
+        full_header_h = logo_h + links_h + 2   # logo + name + link strip + rule
         footer_h = 3
-        if h < header_h + footer_h + 12:
-            header_h = 2  # small terminal: single-line header
+        if h < full_header_h + footer_h + 10:
+            header_h = 3   # small terminal: name + links + rule
+        else:
+            header_h = full_header_h
         avail = max(4, h - header_h - footer_h - 1)
 
         if self.overlay is not None:
@@ -177,12 +210,14 @@ class Tui:
             shown.append("  ... (terminal too short for this section)")
 
         out = [CLEAR]
-        if header_h == 2:
+        if header_h == 3:
             out.append("  SYNAPSE — MOHAMMAD REZA EBADOLLAH".ljust(w))
+            out.append("  t.me/ebad84 · github.com/ebad84 · linkedin.com/in/ebad84".ljust(w))
             out.append("=" * w)
         else:
             out += [("  " + ln).ljust(w) for ln in self.logo]
             out.append("  MOHAMMAD REZA EBADOLLAH — SYNAPSE TUI".ljust(w))
+            out += [("  " + ln).ljust(w) for ln in self.links]
             out.append("=" * w)
         out += [ln.ljust(w) for ln in shown]
         out += [""] * (avail - len(shown))
@@ -246,19 +281,19 @@ class Tui:
             pass
 
 
-
-
-
-
 class SynapseServer(paramiko.ServerInterface):
     def __init__(self):
         self.width, self.height = 80, 24
 
+    # terminal.shop style: NO LOGIN — anyone connects, zero prompts
+    def get_allowed_auths(self, username):
+        return "none,password"
+
+    def check_auth_none(self, username):
+        return paramiko.AUTH_SUCCESSFUL
+
     def check_auth_password(self, username, password):
         return paramiko.AUTH_SUCCESSFUL if password == PASSWORD else paramiko.AUTH_FAILED
-
-    def get_allowed_auths(self, username):
-        return "password"
 
     def check_channel_request(self, kind, chanid):
         return paramiko.OPEN_SUCCEEDED if kind == "session" else paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
@@ -311,10 +346,16 @@ def handle_connection(conn, addr):
 def run_server(host=HOST, port=PORT, stop_event=None):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind((host, port))
+    try:
+        sock.bind((host, port))
+    except OSError as exc:
+        print("[synapse] could not bind %s:%s — %s" % (host, port, exc))
+        print("[synapse] port 22 needs admin rights; try:  SYNAPSE_PORT=2222 python ssh_server.py")
+        raise
     sock.listen(8)
     sock.settimeout(1.0)
-    print("[synapse] ssh tui on %s:%s — any user / password %r" % (host, port, PASSWORD))
+    hint = "ssh %s" % host if port == 22 else "ssh %s -p %s" % (host, port)
+    print("[synapse] terminal twin ready — %s  (no login needed)" % hint)
     try:
         while True:
             if stop_event is not None and stop_event.is_set():

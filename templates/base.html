@@ -9,7 +9,7 @@
 </head>
 <body data-lang="{{ lang }}">
 <header class="topbar">
-  <div class="ssh-strip">{{ t.ssh_line.format(host=host, port=ssh_port) }}</div>
+  <div class="ssh-strip">{{ t.ssh_line.format(hint=ssh_hint) }}</div>
   <div class="brand">
     <img class="logo" src="{{ url_for('static', filename='synapse.png') }}" alt="SYNAPSE">
     <div class="brand-txt">

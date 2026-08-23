@@ -8,7 +8,13 @@ from flask import Flask, render_template, jsonify, request, abort
 
 BASE = Path(__file__).resolve().parent
 app = Flask(__name__)
-SSH_PORT = os.environ.get("SYNAPSE_PORT", "2222")
+SSH_PORT = os.environ.get("SYNAPSE_PORT", "22")
+
+
+def ssh_hint(host):
+    if SSH_PORT == "22":
+        return "ssh %s" % host
+    return "ssh %s -p %s" % (host, SSH_PORT)
 
 
 def load_projects():
@@ -24,12 +30,12 @@ I18N = {
         "lang_other": "FA", "theme_dark": "DARK", "theme_light": "LIGHT",
         "site": "SYNAPSE", "name": "MOHAMMAD REZA EBADOLLAH",
         "role": "COMPUTER ENGINEER · IOT / EMBEDDED / SIGNAL + IMAGE",
-        "ssh_line": "SSH: ssh ebad84@{host} -p {port}  —  terminal twin of this site",
+        "ssh_line": "TERMINAL TWIN · {hint} · NO LOGIN NEEDED",
         "sec_about": "ABOUT", "sec_skills": "SKILLS", "sec_boards": "BOARDS",
         "sec_exp": "EXPERIENCE", "sec_projects": "PROJECTS", "sec_links": "CONTACT",
         "bio": "Computer engineer who likes to build things — electronics, devices and the "
-               "internet of things. My main board is the ESP32; I also work with Arduino, "
-               "Raspberry Pi Pico, the ESP8266 family, Pi Zero and Pi 5. Data processing, "
+               "internet of things. My main board is the ESP32; I have also worked with Arduino, "
+               "Raspberry Pi Pico, the ESP8266 family, Pi Zero and Pi 5. Data logging/processing, "
                "signals and images are the areas I dig into.",
         "skills_note": "self-assessed",
         "skill_items": [
@@ -58,7 +64,7 @@ I18N = {
         "lang_other": "EN", "theme_dark": "\u062a\u06cc\u0631\u0647", "theme_light": "\u0631\u0648\u0634\u0646",
         "site": "\u0633\u06cc\u0646\u067e\u0633", "name": "\u0645\u062d\u0645\u062f\u0631\u0636\u0627 \u0639\u0628\u0627\u062f\u0627\u0644\u0647",
         "role": "\u0645\u0647\u0646\u062f\u0633 \u06a9\u0627\u0645\u067e\u06cc\u0648\u062a\u0631 \u00b7 \u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0627\u0634\u06cc\u0627 / \u0633\u06cc\u0633\u062a\u0645\u200c\u0647\u0627\u06cc \u0646\u0647\u0641\u062a\u0647 / \u0633\u06cc\u06af\u0646\u0627\u0644 \u0648 \u062a\u0635\u0648\u06cc\u0631",
-        "ssh_line": "\u0646\u0633\u062e\u0647\u0654 \u062a\u0631\u0645\u06cc\u0646\u0627\u0644\u06cc \u0647\u0645\u06cc\u0646 \u0633\u0627\u06cc\u062a: ssh ebad84@{host} -p {port}",
+        "ssh_line": "\u0646\u0633\u062e\u0647\u0654 \u062a\u0631\u0645\u06cc\u0646\u0627\u0644\u06cc \u00b7 {hint} \u00b7 \u0628\u062f\u0648\u0646 \u0644\u0627\u06af\u06cc\u0646",
         "sec_about": "\u062f\u0631\u0628\u0627\u0631\u0647\u0654 \u0645\u0646", "sec_skills": "\u0645\u0647\u0627\u0631\u062a\u200c\u0647\u0627", "sec_boards": "\u0628\u0631\u062f\u0647\u0627",
         "sec_exp": "\u062a\u062c\u0631\u0628\u0647", "sec_projects": "\u067e\u0631\u0648\u0698\u0647\u200c\u0647\u0627", "sec_links": "\u0627\u0631\u062a\u0628\u0627\u0637",
         "bio": "\u0645\u0647\u0646\u062f\u0633 \u06a9\u0627\u0645\u067e\u06cc\u0648\u062a\u0631\u0645 \u0648 \u0627\u0632 \u0633\u0627\u062e\u062a\u0646 \u0686\u06cc\u0632\u0647\u0627 \u0644\u0630\u062a \u0645\u06cc\u200c\u0628\u0631\u0645 \u2014 \u0642\u0637\u0639\u0627\u062a \u0627\u0644\u06a9\u062a\u0631\u0648\u0646\u06cc\u06a9\u06cc\u060c \u062f\u0633\u062a\u06af\u0627\u0647 \u0648 \u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0627\u0634\u06cc\u0627. \u0628\u0631\u062f \u0627\u0635\u0644\u06cc\u200c\u0627\u0645 ESP32 \u0627\u0633\u062a\u061b \u0628\u0627 \u0622\u0631\u062f\u0648\u06cc\u0646\u0648\u060c \u0631\u0632\u0628\u0631\u06cc\u200c\u067e\u0627\u06cc \u067e\u06cc\u06a9\u0648\u060c \u062e\u0627\u0646\u0648\u0627\u062f\u0647\u0654 ESP8266\u060c \u0631\u0632\u0628\u0631\u06cc\u200c\u067e\u0627\u06cc \u0632\u06cc\u0631\u0648 \u0648 \u0631\u0632\u0628\u0631\u06cc\u200c\u067e\u0627\u06cc 5 \u0647\u0645 \u06a9\u0627\u0631 \u06a9\u0631\u062f\u0647\u200c\u0627\u0645. \u067e\u0631\u062f\u0627\u0632\u0634 \u062f\u0627\u062f\u0647\u060c \u0633\u06cc\u06af\u0646\u0627\u0644 \u0648 \u062a\u0635\u0648\u06cc\u0631 \u0647\u0645 \u062d\u0648\u0632\u0647\u200c\u0647\u0627\u06cc\u06cc \u0647\u0633\u062a\u0646\u062f \u06a9\u0647 \u062f\u0631 \u0622\u0646\u200c\u0647\u0627 \u06a9\u0627\u0648\u0634 \u0645\u06cc\u200c\u06a9\u0646\u0645.",
@@ -100,7 +106,7 @@ def page(lang):
     host = request.host.split(":")[0]
     return render_template(
         "index.html", lang=lang, t=I18N[lang], rtl=(lang == "fa"),
-        host=host, ssh_port=SSH_PORT,
+        ssh_hint=ssh_hint(host),
         has_profile=(BASE / "static" / "profile.jpg").exists(),
     )
 
@@ -118,7 +124,7 @@ def more_fa():
 def _more(lang):
     host = request.host.split(":")[0]
     return render_template("more.html", lang=lang, t=I18N[lang], rtl=(lang == "fa"),
-                           host=host, ssh_port=SSH_PORT)
+                           ssh_hint=ssh_hint(host))
 
 
 @app.route("/api/projects")
