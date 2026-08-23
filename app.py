@@ -33,11 +33,10 @@ I18N = {
         "ssh_line": "TERMINAL TWIN · {hint} · NO LOGIN NEEDED",
         "sec_about": "ABOUT", "sec_skills": "SKILLS", "sec_boards": "BOARDS",
         "sec_exp": "EXPERIENCE", "sec_projects": "PROJECTS", "sec_links": "CONTACT",
-        "bio": """Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things.
-My main board is currently the ESP32, but I’ve also worked with Arduino, Raspberry Pi Pico, the ESP8266 family, Pi Zero, and Pi 5.
-Data, audio, signal, and image processing are some of the areas I’ve always found interesting and enjoy exploring.
-If you have a project you think I could help with, I’d be happy to work together!
-""",
+        "bio": "Computer engineer who likes to build things — electronics, devices and the "
+               "internet of things. My main board is the ESP32; I have also worked with Arduino, "
+               "Raspberry Pi Pico, the ESP8266 family, Pi Zero and Pi 5. Data logging/processing, "
+               "signals and images are the areas I dig into.",
         "skills_note": "self-assessed",
         "skill_items": [
             {"k": "PYTHON", "pct": 80},
@@ -47,9 +46,9 @@ If you have a project you think I could help with, I’d be happy to work togeth
         "tools": "FLASK · FASTAPI · uv · SQL · GIT · DOCKER (A BIT)",
         "boards_items": ["ESP32 — MAIN BOARD", "ARDUINO", "RASPBERRY PI PICO",
                          "ESP8266 FAMILY", "RASPBERRY PI ZERO", "RASPBERRY PI 5"],
-        "exp_role": "FREELANCE DEVELOPER · PARSCODERS",
-        "exp_dur": "6 YEARS",
-        "exp_note": "client software projects, IoT prototypes and data tooling",
+        "exp_items": [
+            {"role": "FREELANCE DEVELOPER · PARSCODERS", "dur": "6 YEARS", "note": "client software projects, IoT prototypes and data tooling"},
+        ],
         "proj_loading": "LOADING PROJECTS\u2026",
         "links_note": "SAME USERNAME EVERYWHERE",
         "more_link": "MORE \u2192", "more_title": "MORE / SETUP",
@@ -98,9 +97,9 @@ If you have a project you think I could help with, I’d be happy to work togeth
             "رزبری‌پای زیرو",
             "رزبری‌پای 5"
         ],
-        "exp_role": "توسعه‌دهندهٔ فریلنسر · پارس‌کدرز",
-        "exp_dur": "۶ سال",
-        "exp_note": "پروژه‌های نرم‌افزاری مشتری، نمونه‌سازی IoT و ابزارهای داده",
+        "exp_items": [
+            {"role": "توسعه‌دهندهٔ فریلنسر · پارس‌کدرز", "dur": "۶ سال", "note": "پروژه‌های نرم‌افزاری مشتری، نمونه‌سازی IoT و ابزارهای داده"},
+        ],
         "proj_loading": "در حال بارگذاری پروژه‌ها…",
         "links_note": "در همه‌جا همین نام کاربری",
         "more_link": "بیشتر ←",

@@ -25,9 +25,13 @@
   </div>
   <div class="cell" id="exp">
     <h2>{{ t.sec_exp }}</h2>
-    <div class="exp-role">{{ t.exp_role }}</div>
-    <div class="exp-dur">{{ t.exp_dur }}</div>
-    <div class="exp-note">{{ t.exp_note }}</div>
+    {% for e in t.exp_items %}
+    <div class="exp-item{% if not loop.last %} exp-item--sep{% endif %}">
+      <div class="exp-role">{{ e.role }}</div>
+      <div class="exp-dur">{{ e.dur }}</div>
+      <div class="exp-note">{{ e.note }}</div>
+    </div>
+    {% endfor %}
   </div>
   <div class="cell wide" id="projects">
     <h2>{{ t.sec_projects }}</h2>
