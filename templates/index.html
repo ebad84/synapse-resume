@@ -3,8 +3,10 @@
 <section class="grid">
   <div class="cell" id="about">
     <h2>{{ t.sec_about }}</h2>
-    {% if has_profile %}<img class="photo" src="{{ url_for('static', filename='profile.jpg') }}" alt="profile">{% endif %}
-    <p class="bio">{{ t.bio }}</p>
+    <div class="about-body">
+      {% if has_profile %}<img class="photo" src="{{ url_for('static', filename='profile.jpg') }}" alt="profile">{% endif %}
+      <p class="bio">{{ t.bio }}</p>
+    </div>
   </div>
   <div class="cell" id="skills">
     <h2>{{ t.sec_skills }} <span class="dim">— {{ t.skills_note }}</span></h2>
