@@ -33,10 +33,14 @@ I18N = {
         "ssh_line": "TERMINAL TWIN · {hint} · NO LOGIN NEEDED",
         "sec_about": "ABOUT", "sec_skills": "SKILLS", "sec_boards": "BOARDS",
         "sec_exp": "EXPERIENCE", "sec_projects": "PROJECTS", "sec_links": "CONTACT",
-        "bio": "Computer engineer who likes to build things — electronics, devices and the "
-               "internet of things. My main board is the ESP32; I have also worked with Arduino, "
-               "Raspberry Pi Pico, the ESP8266 family, Pi Zero and Pi 5. Data logging/processing, "
-               "signals and images are the areas I dig into.",
+        "bio": """Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things.
+
+My main board is currently the ESP32, but I’ve also worked with Arduino, Raspberry Pi Pico, the ESP8266 family, Pi Zero, and Pi 5.
+
+Data, audio, signal, and image processing are some of the areas I’ve always found interesting and enjoy exploring.
+
+If you have a project you think I could help with, I’d be happy to work together!
+""",
         "skills_note": "self-assessed",
         "skill_items": [
             {"k": "PYTHON", "pct": 80},
@@ -47,7 +51,8 @@ I18N = {
         "boards_items": ["ESP32 — MAIN BOARD", "ARDUINO", "RASPBERRY PI PICO",
                          "ESP8266 FAMILY", "RASPBERRY PI ZERO", "RASPBERRY PI 5"],
         "exp_items": [
-            {"role": "FREELANCE DEVELOPER · PARSCODERS", "dur": "6 YEARS", "note": "client software projects, IoT prototypes and data tooling"},
+            {"role": "R&D · University of Qom", "dur": "2026-present", "note": "making a DataLogger and other IoT Projects"},
+            {"role": "FREELANCE DEVELOPER · PARSCODERS", "dur": "2020-2024 · 4 years", "note": "python webscrapping expert and bot automation [https://parscoders.com/resume/150715/mohammad_e]"},
         ],
         "proj_loading": "LOADING PROJECTS\u2026",
         "links_note": "SAME USERNAME EVERYWHERE",
@@ -98,7 +103,8 @@ I18N = {
             "رزبری‌پای 5"
         ],
         "exp_items": [
-            {"role": "توسعه‌دهندهٔ فریلنسر · پارس‌کدرز", "dur": "۶ سال", "note": "پروژه‌های نرم‌افزاری مشتری، نمونه‌سازی IoT و ابزارهای داده"},
+            {"role": "دانشگاه قم R&D", "dur": "2026-present", "note": "پروژه IoT و دیتالاگر"},
+            {"role": "توسعه‌دهندهٔ فریلنسر · پارس‌کدرز", "dur": "2020-2024 · 4 years", "note": "python webscrapping expert and bot automation [https://parscoders.com/resume/150715/mohammad_e]"},
         ],
         "proj_loading": "در حال بارگذاری پروژه‌ها…",
         "links_note": "در همه‌جا همین نام کاربری",
