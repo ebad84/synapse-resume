@@ -33,10 +33,11 @@ I18N = {
         "ssh_line": "TERMINAL TWIN · {hint} · NO LOGIN NEEDED",
         "sec_about": "ABOUT", "sec_skills": "SKILLS", "sec_boards": "BOARDS",
         "sec_exp": "EXPERIENCE", "sec_projects": "PROJECTS", "sec_links": "CONTACT",
-        "bio": "Computer engineer who likes to build things — electronics, devices and the "
-               "internet of things. My main board is the ESP32; I have also worked with Arduino, "
-               "Raspberry Pi Pico, the ESP8266 family, Pi Zero and Pi 5. Data logging/processing, "
-               "signals and images are the areas I dig into.",
+        "bio": """Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things.
+My main board is currently the ESP32, but I’ve also worked with Arduino, Raspberry Pi Pico, the ESP8266 family, Pi Zero, and Pi 5.
+Data, audio, signal, and image processing are some of the areas I’ve always found interesting and enjoy exploring.
+If you have a project you think I could help with, I’d be happy to work together!
+""",
         "skills_note": "self-assessed",
         "skill_items": [
             {"k": "PYTHON", "pct": 80},
