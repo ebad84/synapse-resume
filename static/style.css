@@ -45,7 +45,7 @@ main{ max-width:1100px; margin:0 auto; padding:24px; }
   .tools{ letter-spacing:.02em; }
   .btn{ letter-spacing:.03em; }
 }
-.cell{ background:var(--paper); padding:22px 24px; }
+.cell{ background:var(--paper); padding:22px 24px; overflow:hidden; }
 .cell.wide{ grid-column:1 / -1; }
 h2{ font-size:16px; letter-spacing:.16em; text-transform:uppercase;
   border-bottom:1px solid var(--line); padding-bottom:8px; margin:0 0 14px; }
