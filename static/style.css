@@ -14,12 +14,12 @@ a:hover{ border-bottom-color:var(--ink); }
 .dim{ color:var(--dim); }
 .topbar{ max-width:1100px; margin:0 auto; padding:0 24px; }
 .ssh-strip{ padding:8px 0; font-size:10.5px; letter-spacing:.06em; color:var(--dim);
-  border-bottom:1px solid var(--line); text-transform:uppercase; }
+  border-bottom:1px solid var(--line); text-transform:uppercase; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .brand{ display:flex; align-items:center; gap:20px; padding:18px 0 20px;
   border-bottom:2px solid var(--ink); flex-wrap:wrap; }
 .logo{ width:162px; height:162px; image-rendering:pixelated; border:1px solid var(--line); flex:none; }
 h1{ font-size:21px; letter-spacing:.14em; text-transform:uppercase; margin:0; font-weight:700; }
-.role{ font-size:10.5px; letter-spacing:.06em; color:var(--dim); text-transform:uppercase; margin-top:4px; }
+.role{ font-size:10.5px; letter-spacing:.06em; color:var(--dim); text-transform:uppercase; margin-top:4px; word-break:break-word; overflow-wrap:break-word; }
 .controls{ margin-left:auto; display:flex; gap:10px; }
 html[dir="rtl"] .controls{ margin-left:0; margin-right:auto; }
 .btn{ font-family:inherit; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
@@ -35,6 +35,8 @@ main{ max-width:1100px; margin:0 auto; padding:24px; }
   .cell{ padding:18px 16px; }
   .brand{ gap:14px; padding:14px 0 16px; }
   footer{ padding:16px 14px; }
+  .logo{ width:80px; height:80px; }
+  h1{ font-size:15px; }
 }
 .cell{ background:var(--paper); padding:22px 24px; }
 .cell.wide{ grid-column:1 / -1; }
@@ -42,9 +44,9 @@ h2{ font-size:16px; letter-spacing:.16em; text-transform:uppercase;
   border-bottom:1px solid var(--line); padding-bottom:8px; margin:0 0 14px; }
 .about-body{ display:flex; gap:18px; align-items:flex-start; }
 html[dir="rtl"] .about-body{ flex-direction:row; }
-.photo{ width:110px; height:110px; object-fit:cover; filter:grayscale(1);
+.photo{ width:1vw; max-width:110px; min-width:30px; height:auto; aspect-ratio:1/1; object-fit:cover; filter:grayscale(1);
   border:1px solid var(--line); flex:none; }
-.bio{ margin:0; font-size:13px; white-space:pre-line; overflow:hidden; }
+.bio{ margin:0; font-size:13px; white-space:pre-line; overflow:hidden; min-width:0; word-break:break-word; overflow-wrap:break-word; }
 .skill{ display:flex; align-items:baseline; gap:10px; font-size:12px; margin:9px 0; }
 .skill .k{ width:36%; flex:none; letter-spacing:.04em; }
 .bar{ white-space:nowrap; letter-spacing:2px; }
