@@ -2,6 +2,7 @@
 """SYNAPSE — minimal Flask resume site (EN default, FA with full RTL)."""
 import json
 import os
+import functools
 from pathlib import Path
 
 from flask import Flask, render_template, jsonify, request, abort
@@ -10,22 +11,54 @@ BASE = Path(__file__).resolve().parent
 app = Flask(__name__)
 SSH_PORT = os.environ.get("SYNAPSE_PORT", "22")
 
+# ── API KEY ────────────────────────────────────────────────────────────────
+ADMIN_API_KEY = os.environ.get("SYNAPSE_ADMIN_KEY", "change-me-please")
 
+def require_api_key(f):
+    @functools.wraps(f)
+    def decorated(*args, **kwargs):
+        key = request.headers.get("X-Admin-Key") or request.args.get("api_key")
+        if key != ADMIN_API_KEY:
+            return jsonify({"error": "unauthorized"}), 401
+        return f(*args, **kwargs)
+    return decorated
+
+# ── HELPERS ────────────────────────────────────────────────────────────────
 def ssh_hint(host):
     if SSH_PORT == "22":
         return "ssh %s" % host
     return "ssh %s -p %s" % (host, SSH_PORT)
 
 
+PROJECTS_FILE = BASE / "projects.json"
+
 def load_projects():
     try:
-        with open(BASE / "projects.json", encoding="utf-8") as f:
+        with open(PROJECTS_FILE, encoding="utf-8") as f:
             return json.load(f).get("projects", [])
     except Exception:
         return []
 
+def save_projects(projects):
+    with open(PROJECTS_FILE, "w", encoding="utf-8") as f:
+        json.dump({"projects": projects}, f, ensure_ascii=False, indent=2)
 
-I18N = {
+CONTENT_FILE = BASE / "content.json"
+
+def load_content():
+    """Load editable content from content.json, fallback to I18N defaults."""
+    try:
+        with open(CONTENT_FILE, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+def save_content(data):
+    with open(CONTENT_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+# ── I18N (static defaults — overridden by content.json at runtime) ─────────
+I18N_DEFAULTS = {
     "en": {
         "lang_other": "FA", "theme_dark": "DARK", "theme_light": "LIGHT",
         "site": "SYNAPSE", "name": "MOHAMMAD REZA EBADOLLAH",
@@ -35,11 +68,11 @@ I18N = {
         "sec_exp": "EXPERIENCE", "sec_projects": "PROJECTS", "sec_links": "CONTACT",
         "bio": """Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things.
 
-My main board is currently the ESP32, but I’ve also worked with Arduino, Raspberry Pi Pico, the ESP8266 family, Pi Zero, and Pi 5.
+My main board is currently the ESP32, but I've also worked with Arduino, Raspberry Pi Pico, the ESP8266 family, Pi Zero, and Pi 5.
 
-Data, audio, signal, and image processing are some of the areas I’ve always found interesting and enjoy exploring.
+Data, audio, signal, and image processing are some of the areas I've always found interesting and enjoy exploring.
 
-If you have a project you think I could help with, I’d be happy to work together!
+If you have a project you think I could help with, I'd be happy to work together!
 """,
         "skills_note": "self-assessed",
         "skill_items": [
@@ -126,7 +159,19 @@ If you have a project you think I could help with, I’d be happy to work togeth
     }
 }
 
+def get_i18n():
+    """Merge defaults with any saved overrides from content.json."""
+    overrides = load_content()
+    result = {}
+    for lang in ("en", "fa"):
+        merged = dict(I18N_DEFAULTS[lang])
+        if lang in overrides:
+            merged.update(overrides[lang])
+        result[lang] = merged
+    return result
 
+
+# ── PUBLIC ROUTES ──────────────────────────────────────────────────────────
 @app.route("/")
 def index():
     return page("en")
@@ -134,6 +179,7 @@ def index():
 
 @app.route("/<lang>")
 def page(lang):
+    I18N = get_i18n()
     if lang not in I18N:
         abort(404)
     host = request.host.split(":")[0]
@@ -155,6 +201,7 @@ def more_fa():
 
 
 def _more(lang):
+    I18N = get_i18n()
     host = request.host.split(":")[0]
     return render_template("more.html", lang=lang, t=I18N[lang], rtl=(lang == "fa"),
                            ssh_hint=ssh_hint(host))
@@ -168,7 +215,240 @@ def api_projects():
 @app.route("/teapot")
 def teapot():
     lang = request.args.get("lang", "en")
-    return render_template("teapot.html", lang=lang if lang in I18N else "en"), 418
+    return render_template("teapot.html", lang=lang if lang in I18N_DEFAULTS else "en"), 418
+
+
+# ── ADMIN API ──────────────────────────────────────────────────────────────
+
+# --- Projects ---
+
+@app.route("/admin/projects", methods=["GET"])
+@require_api_key
+def admin_get_projects():
+    """GET all projects."""
+    return jsonify({"projects": load_projects()})
+
+
+@app.route("/admin/projects", methods=["POST"])
+@require_api_key
+def admin_add_project():
+    """
+    POST — add a new project.
+    Body (JSON):
+      id        string  unique slug (e.g. "my-project")
+      title     {en, fa}
+      desc      {en, fa}
+      tags      [string, ...]
+      link      string | null
+      image     string | null
+    """
+    data = request.get_json(force=True)
+    if not data or not data.get("id"):
+        return jsonify({"error": "id is required"}), 400
+
+    projects = load_projects()
+    if any(p["id"] == data["id"] for p in projects):
+        return jsonify({"error": f"project with id '{data['id']}' already exists"}), 409
+
+    project = {
+        "id":    data["id"],
+        "title": data.get("title", {"en": data["id"], "fa": data["id"]}),
+        "desc":  data.get("desc",  {"en": "", "fa": ""}),
+        "tags":  data.get("tags",  []),
+        "link":  data.get("link",  None),
+        "image": data.get("image", None),
+    }
+    projects.append(project)
+    save_projects(projects)
+    return jsonify({"ok": True, "project": project}), 201
+
+
+@app.route("/admin/projects/<project_id>", methods=["GET"])
+@require_api_key
+def admin_get_project(project_id):
+    """GET a single project by id."""
+    projects = load_projects()
+    project = next((p for p in projects if p["id"] == project_id), None)
+    if not project:
+        return jsonify({"error": "not found"}), 404
+    return jsonify(project)
+
+
+@app.route("/admin/projects/<project_id>", methods=["PUT"])
+@require_api_key
+def admin_update_project(project_id):
+    """
+    PUT — update an existing project (partial update supported).
+    Body (JSON): any subset of {title, desc, tags, link, image, id}
+    """
+    data = request.get_json(force=True)
+    projects = load_projects()
+    idx = next((i for i, p in enumerate(projects) if p["id"] == project_id), None)
+    if idx is None:
+        return jsonify({"error": "not found"}), 404
+
+    project = projects[idx]
+    for key in ("id", "title", "desc", "tags", "link", "image"):
+        if key in data:
+            project[key] = data[key]
+    projects[idx] = project
+    save_projects(projects)
+    return jsonify({"ok": True, "project": project})
+
+
+@app.route("/admin/projects/<project_id>", methods=["DELETE"])
+@require_api_key
+def admin_delete_project(project_id):
+    """DELETE a project by id."""
+    projects = load_projects()
+    new_projects = [p for p in projects if p["id"] != project_id]
+    if len(new_projects) == len(projects):
+        return jsonify({"error": "not found"}), 404
+    save_projects(new_projects)
+    return jsonify({"ok": True, "deleted": project_id})
+
+
+@app.route("/admin/projects/reorder", methods=["POST"])
+@require_api_key
+def admin_reorder_projects():
+    """
+    POST — reorder projects.
+    Body (JSON): {"order": ["id1", "id2", "id3"]}
+    """
+    data = request.get_json(force=True)
+    order = data.get("order", [])
+    projects = load_projects()
+    proj_map = {p["id"]: p for p in projects}
+    reordered = [proj_map[pid] for pid in order if pid in proj_map]
+    # append any projects not in the order list at the end
+    for p in projects:
+        if p["id"] not in order:
+            reordered.append(p)
+    save_projects(reordered)
+    return jsonify({"ok": True, "order": [p["id"] for p in reordered]})
+
+
+# --- Content (bio, skills, experience, etc.) ---
+
+@app.route("/admin/content", methods=["GET"])
+@require_api_key
+def admin_get_content():
+    """GET all editable content (current overrides merged with defaults)."""
+    return jsonify(get_i18n())
+
+
+@app.route("/admin/content/<lang>", methods=["PUT"])
+@require_api_key
+def admin_update_content(lang):
+    """
+    PUT — update content for a language (partial update).
+    lang: 'en' or 'fa'
+    Body (JSON): any subset of the I18N fields, e.g.:
+      {"bio": "new bio text", "role": "new role"}
+
+    Editable fields:
+      bio, role, name, tools, skills_note
+      skill_items   → [{k, pct}, ...]
+      boards_items  → [string, ...]
+      exp_items     → [{role, dur, note}, ...]
+      foot, os_line, term_line, tools_line, devops_line, making_line, site_line
+    """
+    if lang not in ("en", "fa"):
+        return jsonify({"error": "lang must be 'en' or 'fa'"}), 400
+
+    data = request.get_json(force=True)
+    overrides = load_content()
+    if lang not in overrides:
+        overrides[lang] = {}
+    overrides[lang].update(data)
+    save_content(overrides)
+    return jsonify({"ok": True, "updated": lang, "fields": list(data.keys())})
+
+
+@app.route("/admin/content/<lang>/skills", methods=["PUT"])
+@require_api_key
+def admin_update_skills(lang):
+    """
+    PUT — replace skill_items for a language.
+    Body (JSON): {"skills": [{"k": "PYTHON", "pct": 85}, ...]}
+    """
+    if lang not in ("en", "fa"):
+        return jsonify({"error": "lang must be 'en' or 'fa'"}), 400
+    data = request.get_json(force=True)
+    skills = data.get("skills")
+    if not isinstance(skills, list):
+        return jsonify({"error": "'skills' must be a list"}), 400
+    overrides = load_content()
+    overrides.setdefault(lang, {})["skill_items"] = skills
+    save_content(overrides)
+    return jsonify({"ok": True, "skill_items": skills})
+
+
+@app.route("/admin/content/<lang>/experience", methods=["PUT"])
+@require_api_key
+def admin_update_experience(lang):
+    """
+    PUT — replace exp_items for a language.
+    Body (JSON): {"experience": [{"role": "...", "dur": "...", "note": "..."}, ...]}
+    """
+    if lang not in ("en", "fa"):
+        return jsonify({"error": "lang must be 'en' or 'fa'"}), 400
+    data = request.get_json(force=True)
+    exp = data.get("experience")
+    if not isinstance(exp, list):
+        return jsonify({"error": "'experience' must be a list"}), 400
+    overrides = load_content()
+    overrides.setdefault(lang, {})["exp_items"] = exp
+    save_content(overrides)
+    return jsonify({"ok": True, "exp_items": exp})
+
+
+@app.route("/admin/content/<lang>/boards", methods=["PUT"])
+@require_api_key
+def admin_update_boards(lang):
+    """
+    PUT — replace boards_items for a language.
+    Body (JSON): {"boards": ["ESP32", "Arduino", ...]}
+    """
+    if lang not in ("en", "fa"):
+        return jsonify({"error": "lang must be 'en' or 'fa'"}), 400
+    data = request.get_json(force=True)
+    boards = data.get("boards")
+    if not isinstance(boards, list):
+        return jsonify({"error": "'boards' must be a list"}), 400
+    overrides = load_content()
+    overrides.setdefault(lang, {})["boards_items"] = boards
+    save_content(overrides)
+    return jsonify({"ok": True, "boards_items": boards})
+
+
+@app.route("/admin/content/reset", methods=["POST"])
+@require_api_key
+def admin_reset_content():
+    """POST — reset all content overrides back to hardcoded defaults."""
+    save_content({})
+    return jsonify({"ok": True, "message": "content reset to defaults"})
+
+
+# --- Status ---
+
+@app.route("/admin/status", methods=["GET"])
+@require_api_key
+def admin_status():
+    """GET — quick health check + stats."""
+    overrides = load_content()
+    return jsonify({
+        "ok": True,
+        "projects_count": len(load_projects()),
+        "content_overrides": {lang: list(fields.keys()) for lang, fields in overrides.items()},
+    })
+
+
+# ── ADMIN WEB PANEL ────────────────────────────────────────────────────────
+@app.route("/admin")
+def admin_panel():
+    """Serve the admin web panel (authentication handled client-side with API key)."""
+    return render_template("admin.html")
 
 
 if __name__ == "__main__":

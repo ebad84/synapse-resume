@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SYNAPSE — ADMIN</title>
+<link rel="icon" href="{{ url_for('static', filename='synapse.svg') }}" type="image/svg+xml">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+/* ── Admin-only styles ─────────────────────────────────── */
+.adm-wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+.adm-header { display: flex; align-items: center; gap: 20px;
+  border-bottom: 2px solid var(--ink); padding-bottom: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+.adm-header h1 { margin: 0; font-size: 17px; letter-spacing: .18em; }
+.adm-header .dim { font-size: 11px; letter-spacing: .08em; }
+.adm-header .controls { margin-left: auto; display: flex; gap: 8px; }
+
+/* tabs */
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin-bottom: 24px; flex-wrap: wrap; }
+.tab  { font-family: inherit; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 18px;
+  cursor: pointer; color: var(--dim); margin-bottom: -1px; }
+.tab.active, .tab:hover { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* panels */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* form elements */
+.field { margin-bottom: 18px; }
+.field label { display: block; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 6px; }
+.field input, .field textarea, .field select {
+  width: 100%; font-family: inherit; font-size: 13px;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line); padding: 9px 12px;
+  outline: none; }
+.field input:focus, .field textarea:focus { border-color: var(--ink); }
+.field textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 600px) { .field-row { grid-template-columns: 1fr; } }
+
+/* project cards */
+.proj-list { display: grid; gap: 10px; margin-bottom: 24px; }
+.proj-card { border: 1px solid var(--line); padding: 14px 16px;
+  display: flex; align-items: flex-start; gap: 14px; }
+.proj-card .info { flex: 1; min-width: 0; }
+.proj-card .proj-id { font-size: 10px; color: var(--dim); letter-spacing: .08em; }
+.proj-card h3 { margin: 4px 0 6px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+.proj-card .proj-desc { font-size: 12px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.proj-card .proj-tags { font-size: 10px; color: var(--dim); letter-spacing: .04em; margin-top: 6px; }
+.proj-card .actions { display: flex; gap: 6px; flex-shrink: 0; }
+.btn-sm { font-family: inherit; font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+  border: 1px solid var(--line); background: none; color: var(--ink);
+  padding: 5px 10px; cursor: pointer; }
+.btn-sm:hover { background: var(--ink); color: var(--paper); }
+.btn-sm.danger { border-color: #c00; color: #c00; }
+.btn-sm.danger:hover { background: #c00; color: #fff; border-color: #c00; }
+.drag-handle { cursor: grab; color: var(--dim); font-size: 16px; padding: 4px 0; user-select: none; }
+.drag-handle:active { cursor: grabbing; }
+.proj-card.dragging { opacity: .4; }
+.proj-card.drag-over { border-color: var(--ink); }
+
+/* skill rows */
+.skill-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+.skill-row input.sk { flex: 1; }
+.skill-row input.pct { width: 70px; }
+.skill-row .btn-sm { flex-shrink: 0; }
+
+/* exp rows */
+.exp-row { border: 1px solid var(--line); padding: 12px 14px; margin-bottom: 10px; }
+.exp-row .field { margin-bottom: 10px; }
+.exp-row .field:last-child { margin-bottom: 0; }
+
+/* boards */
+.board-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.board-row input { flex: 1; }
+
+/* notice / toast */
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--ink); color: var(--paper);
+  padding: 10px 18px; font-size: 12px; letter-spacing: .06em;
+  opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 999; }
+.toast.show { opacity: 1; }
+.toast.err { background: #c00; }
+
+/* modal */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100;
+  align-items: center; justify-content: center; padding: 24px; }
+.modal-bg.open { display: flex; }
+.modal { background: var(--paper); border: 1px solid var(--ink);
+  padding: 28px; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; }
+.modal h2 { margin: 0 0 20px; font-size: 14px; letter-spacing: .14em; }
+.modal-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+
+/* login */
+.login-wrap { max-width: 380px; margin: 80px auto; border: 1px solid var(--line); padding: 36px; }
+.login-wrap h2 { margin: 0 0 24px; font-size: 14px; letter-spacing: .16em; }
+
+/* section divider */
+.sec-title { font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--dim); border-bottom: 1px solid var(--line); padding-bottom: 8px;
+  margin: 0 0 16px; }
+
+.lang-tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+.lang-tab { font-family: inherit; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  background: none; border: 1px solid var(--line); padding: 6px 14px;
+  cursor: pointer; color: var(--dim); }
+.lang-tab.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.range-wrap { display: flex; gap: 10px; align-items: center; }
+.range-wrap input[type=range] { flex: 1; accent-color: var(--ink); }
+.range-wrap span { font-size: 12px; color: var(--dim); width: 36px; text-align: right; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" style="display:none;">
+  <div class="adm-wrap">
+    <div class="login-wrap">
+      <h2>SYNAPSE // ADMIN</h2>
+      <div class="field">
+        <label>API KEY</label>
+        <input type="password" id="apiKeyInput" placeholder="Enter your admin key" autocomplete="off">
+      </div>
+      <button class="btn" style="width:100%" onclick="doLogin()">ENTER</button>
+      <div id="loginErr" style="font-size:11px;color:#c00;margin-top:12px;display:none;">Invalid key</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN PANEL -->
+<div id="mainPanel" style="display:none;">
+  <div class="adm-wrap">
+    <div class="adm-header">
+      <img class="logo" style="width:52px;height:52px;" src="{{ url_for('static', filename='synapse.png') }}" alt="">
+      <div>
+        <h1>SYNAPSE — ADMIN</h1>
+        <div class="dim" id="statusLine">—</div>
+      </div>
+      <div class="controls">
+        <button class="btn" id="themeBtn" type="button"></button>
+        <a class="btn" href="/" target="_blank">VIEW SITE</a>
+        <button class="btn" onclick="doLogout()">LOGOUT</button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('projects', this)">PROJECTS</button>
+      <button class="tab" onclick="switchTab('content', this)">CONTENT</button>
+      <button class="tab" onclick="switchTab('skills', this)">SKILLS</button>
+      <button class="tab" onclick="switchTab('experience', this)">EXPERIENCE</button>
+      <button class="tab" onclick="switchTab('boards', this)">BOARDS</button>
+    </div>
+
+    <!-- ─── TAB: PROJECTS ─────────────────────────── -->
+    <div class="panel active" id="tab-projects">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div class="sec-title" style="margin:0;border:none;">PROJECTS <span class="dim" id="projCount"></span></div>
+        <button class="btn" onclick="openAddProject()">+ ADD PROJECT</button>
+      </div>
+      <div class="proj-list" id="projList">
+        <div class="dim" style="font-size:12px;">Loading…</div>
+      </div>
+      <div id="projEmpty" style="display:none;font-size:12px;color:var(--dim);">No projects yet. Add one above.</div>
+    </div>
+
+    <!-- ─── TAB: CONTENT ──────────────────────────── -->
+    <div class="panel" id="tab-content">
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="switchLang('en',this)">EN</button>
+        <button class="lang-tab" onclick="switchLang('fa',this)">FA</button>
+      </div>
+
+      <div id="contentForm-en">
+        <div class="field">
+          <label>Name</label>
+          <input type="text" id="en-name">
+        </div>
+        <div class="field">
+          <label>Role / Tagline</label>
+          <input type="text" id="en-role">
+        </div>
+        <div class="field">
+          <label>Bio</label>
+          <textarea id="en-bio" style="min-height:140px;"></textarea>
+        </div>
+        <div class="field">
+          <label>Tools line (shown under skills)</label>
+          <input type="text" id="en-tools">
+        </div>
+        <div class="field">
+          <label>Footer text</label>
+          <input type="text" id="en-foot">
+        </div>
+        <button class="btn" onclick="saveContent('en')">SAVE EN CONTENT</button>
+      </div>
+
+      <div id="contentForm-fa" style="display:none;" dir="rtl">
+        <div class="field">
+          <label>نام</label>
+          <input type="text" id="fa-name">
+        </div>
+        <div class="field">
+          <label>نقش / توضیح کوتاه</label>
+          <input type="text" id="fa-role">
+        </div>
+        <div class="field">
+          <label>بیو</label>
+          <textarea id="fa-bio" style="min-height:140px;"></textarea>
+        </div>
+        <div class="field">
+          <label>خط ابزارها</label>
+          <input type="text" id="fa-tools">
+        </div>
+        <div class="field">
+          <label>متن فوتر</label>
+          <input type="text" id="fa-foot">
+        </div>
+        <button class="btn" onclick="saveContent('fa')">ذخیره محتوای FA</button>
+      </div>
+    </div>
+
+    <!-- ─── TAB: SKILLS ───────────────────────────── -->
+    <div class="panel" id="tab-skills">
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="switchSkillLang('en',this)">EN</button>
+        <button class="lang-tab" onclick="switchSkillLang('fa',this)">FA</button>
+      </div>
+
+      <div id="skillsForm-en">
+        <div class="sec-title">SKILLS — EN</div>
+        <div id="skillRows-en"></div>
+        <button class="btn-sm" onclick="addSkillRow('en')" style="margin-bottom:16px;">+ ADD SKILL</button>
+        <br><button class="btn" onclick="saveSkills('en')">SAVE EN SKILLS</button>
+      </div>
+      <div id="skillsForm-fa" style="display:none;" dir="rtl">
+        <div class="sec-title">مهارت‌ها — FA</div>
+        <div id="skillRows-fa"></div>
+        <button class="btn-sm" onclick="addSkillRow('fa')" style="margin-bottom:16px;">+ اضافه کردن</button>
+        <br><button class="btn" onclick="saveSkills('fa')">ذخیره مهارت‌ها</button>
+      </div>
+    </div>
+
+    <!-- ─── TAB: EXPERIENCE ───────────────────────── -->
+    <div class="panel" id="tab-experience">
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="switchExpLang('en',this)">EN</button>
+        <button class="lang-tab" onclick="switchExpLang('fa',this)">FA</button>
+      </div>
+
+      <div id="expForm-en">
+        <div class="sec-title">EXPERIENCE — EN</div>
+        <div id="expRows-en"></div>
+        <button class="btn-sm" onclick="addExpRow('en')" style="margin-bottom:16px;">+ ADD ENTRY</button>
+        <br><button class="btn" onclick="saveExperience('en')">SAVE EN EXPERIENCE</button>
+      </div>
+      <div id="expForm-fa" style="display:none;" dir="rtl">
+        <div class="sec-title">تجربه — FA</div>
+        <div id="expRows-fa"></div>
+        <button class="btn-sm" onclick="addExpRow('fa')" style="margin-bottom:16px;">+ اضافه</button>
+        <br><button class="btn" onclick="saveExperience('fa')">ذخیره تجربه</button>
+      </div>
+    </div>
+
+    <!-- ─── TAB: BOARDS ───────────────────────────── -->
+    <div class="panel" id="tab-boards">
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="switchBoardLang('en',this)">EN</button>
+        <button class="lang-tab" onclick="switchBoardLang('fa',this)">FA</button>
+      </div>
+      <div id="boardsForm-en">
+        <div class="sec-title">BOARDS — EN</div>
+        <div id="boardRows-en"></div>
+        <button class="btn-sm" onclick="addBoardRow('en')" style="margin-bottom:16px;">+ ADD BOARD</button>
+        <br><button class="btn" onclick="saveBoards('en')">SAVE EN BOARDS</button>
+      </div>
+      <div id="boardsForm-fa" style="display:none;" dir="rtl">
+        <div class="sec-title">بردها — FA</div>
+        <div id="boardRows-fa"></div>
+        <button class="btn-sm" onclick="addBoardRow('fa')" style="margin-bottom:16px;">+ اضافه</button>
+        <br><button class="btn" onclick="saveBoards('fa')">ذخیره بردها</button>
+      </div>
+    </div>
+
+  </div><!-- /adm-wrap -->
+</div><!-- /mainPanel -->
+
+<!-- ── MODAL: ADD / EDIT PROJECT ───────────────────── -->
+<div class="modal-bg" id="projModal">
+  <div class="modal">
+    <h2 id="modalTitle">ADD PROJECT</h2>
+    <input type="hidden" id="editingId">
+
+    <div class="field">
+      <label>ID (slug, e.g. my-project)</label>
+      <input type="text" id="proj-id" placeholder="my-project">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Title — EN</label>
+        <input type="text" id="proj-title-en" placeholder="MY PROJECT">
+      </div>
+      <div class="field">
+        <label>Title — FA</label>
+        <input type="text" id="proj-title-fa" dir="rtl" placeholder="پروژه من">
+      </div>
+    </div>
+    <div class="field">
+      <label>Description — EN</label>
+      <textarea id="proj-desc-en" placeholder="What this project does…"></textarea>
+    </div>
+    <div class="field">
+      <label>Description — FA</label>
+      <textarea id="proj-desc-fa" dir="rtl" placeholder="توضیح پروژه…"></textarea>
+    </div>
+    <div class="field">
+      <label>Tags (comma separated)</label>
+      <input type="text" id="proj-tags" placeholder="ESP32, PYTHON, FLASK">
+    </div>
+    <div class="field">
+      <label>Link (optional)</label>
+      <input type="text" id="proj-link" placeholder="https://github.com/…">
+    </div>
+
+    <div class="modal-foot">
+      <button class="btn-sm" onclick="closeModal()">CANCEL</button>
+      <button class="btn" onclick="saveProject()">SAVE</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ────────────────────────────────────────────────────
+var API_KEY = '';
+var currentLang  = 'en';
+var skillLang    = 'en';
+var expLang      = 'en';
+var boardLang    = 'en';
+var allContent   = {};
+var allProjects  = [];
+var dragSrc      = null;
+
+// ── Auth ─────────────────────────────────────────────────────
+function init() {
+  applyTheme(localStorage.getItem('synapse-theme') || 'light');
+  var saved = sessionStorage.getItem('synapse-admin-key');
+  if (saved) { API_KEY = saved; showPanel(); }
+  else { document.getElementById('loginScreen').style.display = ''; }
+
+  document.getElementById('apiKeyInput').addEventListener('keydown', function(e){
+    if (e.key === 'Enter') doLogin();
+  });
+}
+
+function doLogin() {
+  var k = document.getElementById('apiKeyInput').value.trim();
+  if (!k) return;
+  API_KEY = k;
+  api('GET', '/admin/status').then(function() {
+    sessionStorage.setItem('synapse-admin-key', k);
+    document.getElementById('loginScreen').style.display = 'none';
+    showPanel();
+  }).catch(function() {
+    document.getElementById('loginErr').style.display = '';
+    API_KEY = '';
+  });
+}
+
+function doLogout() {
+  sessionStorage.removeItem('synapse-admin-key');
+  API_KEY = '';
+  document.getElementById('mainPanel').style.display = 'none';
+  document.getElementById('loginScreen').style.display = '';
+  document.getElementById('apiKeyInput').value = '';
+}
+
+function showPanel() {
+  document.getElementById('mainPanel').style.display = '';
+  loadAll();
+}
+
+// ── API helper ───────────────────────────────────────────────
+function api(method, path, body) {
+  var opts = { method: method, headers: { 'X-Admin-Key': API_KEY } };
+  if (body !== undefined) {
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(body);
+  }
+  return fetch(path, opts).then(function(r) {
+    if (r.status === 401) { doLogout(); throw new Error('Unauthorized'); }
+    return r.json();
+  });
+}
+
+// ── Toast ────────────────────────────────────────────────────
+function toast(msg, err) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err ? ' err' : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(function() { t.className = 'toast'; }, 2800);
+}
+
+// ── Theme ────────────────────────────────────────────────────
+function applyTheme(th) {
+  document.documentElement.setAttribute('data-theme', th);
+  var btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = th === 'dark' ? 'LIGHT' : 'DARK';
+  localStorage.setItem('synapse-theme', th);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('themeBtn').addEventListener('click', function() {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+  init();
+});
+
+// ── Tabs ─────────────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Load all ─────────────────────────────────────────────────
+function loadAll() {
+  api('GET', '/admin/status').then(function(d) {
+    document.getElementById('statusLine').textContent =
+      d.projects_count + ' project(s)';
+  });
+  loadProjects();
+  api('GET', '/admin/content').then(function(d) {
+    allContent = d;
+    fillContent('en'); fillContent('fa');
+    fillSkills('en');  fillSkills('fa');
+    fillExp('en');     fillExp('fa');
+    fillBoards('en');  fillBoards('fa');
+  });
+}
+
+// ── PROJECTS ─────────────────────────────────────────────────
+function loadProjects() {
+  api('GET', '/admin/projects').then(function(d) {
+    allProjects = d.projects || [];
+    document.getElementById('projCount').textContent = '(' + allProjects.length + ')';
+    renderProjList();
+  });
+}
+
+function renderProjList() {
+  var list = document.getElementById('projList');
+  var empty = document.getElementById('projEmpty');
+  if (!allProjects.length) {
+    list.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = allProjects.map(function(p, i) {
+    var title = (p.title && p.title.en) || p.id;
+    var desc  = (p.desc  && p.desc.en)  || '';
+    var tags  = (p.tags  || []).join(' · ');
+    return '<div class="proj-card" draggable="true" data-id="' + p.id + '" data-idx="' + i + '">' +
+      '<span class="drag-handle" title="Drag to reorder">⠿</span>' +
+      '<div class="info">' +
+        '<div class="proj-id">' + p.id + (p.link ? ' · <a href="' + p.link + '" target="_blank" style="font-size:10px;">' + p.link.replace('https://','') + '</a>' : '') + '</div>' +
+        '<h3>' + title + '</h3>' +
+        '<div class="proj-desc">' + desc + '</div>' +
+        '<div class="proj-tags">' + tags + '</div>' +
+      '</div>' +
+      '<div class="actions">' +
+        '<button class="btn-sm" onclick="editProject(\'' + p.id + '\')">EDIT</button>' +
+        '<button class="btn-sm danger" onclick="deleteProject(\'' + p.id + '\')">DEL</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // drag-and-drop reorder
+  list.querySelectorAll('.proj-card').forEach(function(card) {
+    card.addEventListener('dragstart', function(e) {
+      dragSrc = card;
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(function() { card.classList.add('dragging'); }, 0);
+    });
+    card.addEventListener('dragend', function() {
+      card.classList.remove('dragging');
+      list.querySelectorAll('.proj-card').forEach(function(c){ c.classList.remove('drag-over'); });
+    });
+    card.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      list.querySelectorAll('.proj-card').forEach(function(c){ c.classList.remove('drag-over'); });
+      if (card !== dragSrc) card.classList.add('drag-over');
+    });
+    card.addEventListener('drop', function(e) {
+      e.preventDefault();
+      if (dragSrc && dragSrc !== card) {
+        var cards = Array.from(list.querySelectorAll('.proj-card'));
+        var from = cards.indexOf(dragSrc);
+        var to   = cards.indexOf(card);
+        allProjects.splice(to, 0, allProjects.splice(from, 1)[0]);
+        var order = allProjects.map(function(p){ return p.id; });
+        api('POST', '/admin/projects/reorder', {order: order}).then(function() {
+          renderProjList();
+          toast('Order saved');
+        });
+      }
+    });
+  });
+}
+
+function openAddProject() {
+  document.getElementById('modalTitle').textContent = 'ADD PROJECT';
+  document.getElementById('editingId').value = '';
+  ['id','title-en','title-fa','desc-en','desc-fa','tags','link'].forEach(function(f){
+    document.getElementById('proj-' + f).value = '';
+  });
+  document.getElementById('projModal').classList.add('open');
+}
+
+function editProject(id) {
+  var p = allProjects.find(function(x){ return x.id === id; });
+  if (!p) return;
+  document.getElementById('modalTitle').textContent = 'EDIT PROJECT';
+  document.getElementById('editingId').value = id;
+  document.getElementById('proj-id').value       = p.id;
+  document.getElementById('proj-title-en').value = (p.title && p.title.en) || '';
+  document.getElementById('proj-title-fa').value = (p.title && p.title.fa) || '';
+  document.getElementById('proj-desc-en').value  = (p.desc  && p.desc.en)  || '';
+  document.getElementById('proj-desc-fa').value  = (p.desc  && p.desc.fa)  || '';
+  document.getElementById('proj-tags').value     = (p.tags  || []).join(', ');
+  document.getElementById('proj-link').value     = p.link || '';
+  document.getElementById('projModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('projModal').classList.remove('open');
+}
+
+function saveProject() {
+  var editingId = document.getElementById('editingId').value;
+  var id    = document.getElementById('proj-id').value.trim();
+  var tagsRaw = document.getElementById('proj-tags').value;
+  var tags = tagsRaw.split(',').map(function(t){ return t.trim(); }).filter(Boolean);
+  var body = {
+    id:    id,
+    title: { en: document.getElementById('proj-title-en').value.trim(),
+             fa: document.getElementById('proj-title-fa').value.trim() },
+    desc:  { en: document.getElementById('proj-desc-en').value.trim(),
+             fa: document.getElementById('proj-desc-fa').value.trim() },
+    tags:  tags,
+    link:  document.getElementById('proj-link').value.trim() || null,
+  };
+  if (!id) { toast('ID is required', true); return; }
+
+  var req = editingId
+    ? api('PUT', '/admin/projects/' + editingId, body)
+    : api('POST', '/admin/projects', body);
+
+  req.then(function() {
+    closeModal();
+    loadProjects();
+    document.getElementById('statusLine').textContent = allProjects.length + ' project(s)';
+    toast(editingId ? 'Project updated' : 'Project added');
+  }).catch(function(e) { toast('Error: ' + e.message, true); });
+}
+
+function deleteProject(id) {
+  if (!confirm('Delete project "' + id + '"?')) return;
+  api('DELETE', '/admin/projects/' + id).then(function() {
+    loadProjects();
+    toast('Deleted ' + id);
+  });
+}
+
+// close modal on bg click
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('projModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+});
+
+// ── CONTENT ──────────────────────────────────────────────────
+function switchLang(lang, btn) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-tabs .lang-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('contentForm-en').style.display = lang === 'en' ? '' : 'none';
+  document.getElementById('contentForm-fa').style.display = lang === 'fa' ? '' : 'none';
+}
+
+function fillContent(lang) {
+  var t = allContent[lang];
+  if (!t) return;
+  document.getElementById(lang + '-name').value = t.name  || '';
+  document.getElementById(lang + '-role').value = t.role  || '';
+  document.getElementById(lang + '-bio').value  = t.bio   || '';
+  document.getElementById(lang + '-tools').value= t.tools || '';
+  document.getElementById(lang + '-foot').value = t.foot  || '';
+}
+
+function saveContent(lang) {
+  var body = {
+    name:  document.getElementById(lang + '-name').value,
+    role:  document.getElementById(lang + '-role').value,
+    bio:   document.getElementById(lang + '-bio').value,
+    tools: document.getElementById(lang + '-tools').value,
+    foot:  document.getElementById(lang + '-foot').value,
+  };
+  api('PUT', '/admin/content/' + lang, body).then(function() {
+    toast('Content saved (' + lang.toUpperCase() + ')');
+  }).catch(function(){ toast('Save failed', true); });
+}
+
+// ── SKILLS ───────────────────────────────────────────────────
+function switchSkillLang(lang, btn) {
+  skillLang = lang;
+  document.querySelectorAll('#tab-skills .lang-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('skillsForm-en').style.display = lang === 'en' ? '' : 'none';
+  document.getElementById('skillsForm-fa').style.display = lang === 'fa' ? '' : 'none';
+}
+
+function fillSkills(lang) {
+  var items = (allContent[lang] && allContent[lang].skill_items) || [];
+  var cont = document.getElementById('skillRows-' + lang);
+  cont.innerHTML = '';
+  items.forEach(function(s) { addSkillRow(lang, s.k, s.pct); });
+}
+
+function addSkillRow(lang, k, pct) {
+  k = k || ''; pct = pct !== undefined ? pct : 70;
+  var cont = document.getElementById('skillRows-' + lang);
+  var row = document.createElement('div');
+  row.className = 'skill-row';
+  row.innerHTML =
+    '<input class="sk" type="text" placeholder="PYTHON" value="' + escHtml(k) + '">' +
+    '<div class="range-wrap">' +
+      '<input type="range" min="0" max="100" step="5" value="' + pct + '" oninput="this.nextElementSibling.textContent=this.value+\'%\'">' +
+      '<span>' + pct + '%</span>' +
+    '</div>' +
+    '<button class="btn-sm danger" onclick="this.parentNode.remove()">✕</button>';
+  cont.appendChild(row);
+}
+
+function saveSkills(lang) {
+  var rows = document.querySelectorAll('#skillRows-' + lang + ' .skill-row');
+  var skills = Array.from(rows).map(function(r) {
+    return { k: r.querySelector('.sk').value.trim(),
+             pct: parseInt(r.querySelector('input[type=range]').value) };
+  }).filter(function(s){ return s.k; });
+  api('PUT', '/admin/content/' + lang + '/skills', { skills: skills }).then(function() {
+    toast('Skills saved (' + lang.toUpperCase() + ')');
+  }).catch(function(){ toast('Save failed', true); });
+}
+
+// ── EXPERIENCE ───────────────────────────────────────────────
+function switchExpLang(lang, btn) {
+  expLang = lang;
+  document.querySelectorAll('#tab-experience .lang-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('expForm-en').style.display = lang === 'en' ? '' : 'none';
+  document.getElementById('expForm-fa').style.display = lang === 'fa' ? '' : 'none';
+}
+
+function fillExp(lang) {
+  var items = (allContent[lang] && allContent[lang].exp_items) || [];
+  var cont = document.getElementById('expRows-' + lang);
+  cont.innerHTML = '';
+  items.forEach(function(e) { addExpRow(lang, e.role, e.dur, e.note); });
+}
+
+function addExpRow(lang, role, dur, note) {
+  var cont = document.getElementById('expRows-' + lang);
+  var row = document.createElement('div');
+  row.className = 'exp-row';
+  var dir = lang === 'fa' ? ' dir="rtl"' : '';
+  row.innerHTML =
+    '<div class="field"><label>Role / Title</label><input type="text"' + dir + ' placeholder="FREELANCE DEVELOPER" value="' + escHtml(role||'') + '"></div>' +
+    '<div class="field"><label>Duration</label><input type="text" placeholder="2020-2024 · 4 years" value="' + escHtml(dur||'') + '"></div>' +
+    '<div class="field"><label>Note / Description</label><input type="text"' + dir + ' placeholder="…" value="' + escHtml(note||'') + '"></div>' +
+    '<button class="btn-sm danger" onclick="this.parentNode.remove()" style="margin-top:4px;">REMOVE</button>';
+  cont.appendChild(row);
+}
+
+function saveExperience(lang) {
+  var rows = document.querySelectorAll('#expRows-' + lang + ' .exp-row');
+  var exp = Array.from(rows).map(function(r) {
+    var inputs = r.querySelectorAll('input');
+    return { role: inputs[0].value.trim(), dur: inputs[1].value.trim(), note: inputs[2].value.trim() };
+  }).filter(function(e){ return e.role; });
+  api('PUT', '/admin/content/' + lang + '/experience', { experience: exp }).then(function() {
+    toast('Experience saved (' + lang.toUpperCase() + ')');
+  }).catch(function(){ toast('Save failed', true); });
+}
+
+// ── BOARDS ───────────────────────────────────────────────────
+function switchBoardLang(lang, btn) {
+  boardLang = lang;
+  document.querySelectorAll('#tab-boards .lang-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('boardsForm-en').style.display = lang === 'en' ? '' : 'none';
+  document.getElementById('boardsForm-fa').style.display = lang === 'fa' ? '' : 'none';
+}
+
+function fillBoards(lang) {
+  var items = (allContent[lang] && allContent[lang].boards_items) || [];
+  var cont = document.getElementById('boardRows-' + lang);
+  cont.innerHTML = '';
+  items.forEach(function(b) { addBoardRow(lang, b); });
+}
+
+function addBoardRow(lang, val) {
+  var cont = document.getElementById('boardRows-' + lang);
+  var row = document.createElement('div');
+  row.className = 'board-row';
+  var dir = lang === 'fa' ? ' dir="rtl"' : '';
+  row.innerHTML =
+    '<input type="text"' + dir + ' placeholder="ESP32 — MAIN BOARD" value="' + escHtml(val||'') + '">' +
+    '<button class="btn-sm danger" onclick="this.parentNode.remove()">✕</button>';
+  cont.appendChild(row);
+}
+
+function saveBoards(lang) {
+  var rows = document.querySelectorAll('#boardRows-' + lang + ' .board-row input');
+  var boards = Array.from(rows).map(function(i){ return i.value.trim(); }).filter(Boolean);
+  api('PUT', '/admin/content/' + lang + '/boards', { boards: boards }).then(function() {
+    toast('Boards saved (' + lang.toUpperCase() + ')');
+  }).catch(function(){ toast('Save failed', true); });
+}
+
+// ── Util ─────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>
