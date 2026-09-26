@@ -85,20 +85,6 @@
       "image": null
     },
     {
-      "id": "abol-ocr",
-      "title": {
-        "en": "ABOL — PDF OCR PIPELINE",
-        "fa": "ابول — پایپ‌لاین OCR فایل PDF"
-      },
-      "desc": {
-        "en": "OCR pipeline for Persian and mixed-script PDFs. Splits PDFs into chunks, uploads them to Google Drive, converts to Google Docs for free OCR, then extracts the text into a Word document. Uses Google Drive, Docs, and Vision APIs.",
-        "fa": "پایپ‌لاین OCR برای فایل‌های PDF فارسی. PDF را به تکه‌های کوچک تقسیم می‌کند، در Google Drive آپلود و به Google Doc تبدیل می‌کند تا OCR رایگان انجام شود، سپس متن را در فایل Word ذخیره می‌کند."
-      },
-      "tags": ["PYTHON", "GOOGLE DRIVE API", "GOOGLE VISION", "OAUTH2", "OPENCV", "PYMUPDF", "PYTHON-DOCX"],
-      "link": "https://github.com/ebad84/ABOL-PROJECT-OCR",
-      "image": null
-    },
-    {
       "id": "uv-station",
       "title": {
         "en": "UV CURING STATION PCB",
