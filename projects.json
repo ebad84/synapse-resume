@@ -1,57 +1,115 @@
 {
   "projects": [
     {
-      "id": "esp32-datalogger",
+      "id": "synapse-resume",
       "title": {
-        "en": "ESP32 DATALOGGER NODE",
-        "fa": "گرهٔ دیتالاگر ESP32"
+        "en": "SYNAPSE RESUME SITE",
+        "fa": "سایت رزومهٔ سینپس"
       },
       "desc": {
-        "en": "Battery-powered data logger with SD storage and MQTT uplink; logs temperature, humidity and pressure to a local broker.",
-        "fa": "دیتالاگر باتری‌خور با ذخیرهٔ SD و آپلینک MQTT؛ دما، رطوبت و فشار را به یک بروکر محلی می‌فرستد."
+        "en": "Personal resume site with two faces: a minimal Flask web page and an interactive SSH terminal version — login-free, terminal.shop style. Self-hosted on a home server behind nginx.",
+        "fa": "سایت رزومهٔ شخصی با دو رویه: یک صفحه وب مینیمال با Flask و یک نسخه SSH تعاملی بدون نیاز به لاگین. هاست روی سرور خانگی پشت nginx."
       },
-      "tags": [
-        "ESP32",
-        "MQTT",
-        "SD CARD"
-      ],
-      "link": "https://github.com/ebad84",
+      "tags": ["PYTHON", "FLASK", "SSH", "PARAMIKO", "SELF-HOSTED", "NGINX"],
+      "link": "https://github.com/ebad84/synapse-resume",
       "image": null
     },
     {
-      "id": "home-hub",
+      "id": "utemp",
       "title": {
-        "en": "HOME AUTOMATION HUB",
-        "fa": "هاب هوشمندسازی خانه"
+        "en": "UTEMP — IoT TEMPERATURE PLATFORM",
+        "fa": "یوتمپ — پلتفرم دمای IoT"
       },
       "desc": {
-        "en": "A small hub that ties smart sensors and relays together over Wi-Fi, with a simple web panel.",
-        "fa": "هاب کوچکی که سنسورهای هوشمند و رله‌ها را با وای‌فای به هم متصل می‌کند و پنل وب ساده دارد."
+        "en": "A web service and REST API for IoT devices to log and display temperature data. Devices authenticate with an API key; users register sensors via a web dashboard. Deployed with Docker + nginx.",
+        "fa": "سرویس وب و REST API برای دستگاه‌های IoT جهت ثبت و نمایش دما. دستگاه‌ها با API key احراز هویت می‌شوند؛ کاربران سنسورها را از طریق داشبورد وب مدیریت می‌کنند. Deploy شده با Docker و nginx."
       },
-      "tags": [
-        "ESP8266",
-        "RELAYS",
-        "WI-FI"
-      ],
-      "link": null,
+      "tags": ["PYTHON", "FLASK", "REST API", "DOCKER", "NGINX", "IOT", "SQLITE"],
+      "link": "https://github.com/ebad84/UTEMP",
       "image": null
     },
     {
-      "id": "signal-lab",
+      "id": "qr-generator",
       "title": {
-        "en": "SIGNAL & IMAGE PLAYGROUND",
-        "fa": "آزمایشگاه سیگنال و تصویر"
+        "en": "QR CODE GENERATOR",
+        "fa": "مولد QR Code"
       },
       "desc": {
-        "en": "Jupyter experiments on sensor signals and images — filtering, FFT, edge detection.",
-        "fa": "آزمایش‌های Jupyter روی سیگنال سنسورها و تصاویر — فیلتر، FFT و تشخیص لبه."
+        "en": "A fully client-side QR code generator — no backend, no API, no tracking. Runs entirely in the browser. Supports URL, text, email, phone and Wi-Fi. Outputs PNG and SVG. Self-hosted on home hardware.",
+        "fa": "مولد QR Code کاملاً سمت کلاینت — بدون بک‌اند، بدون API، بدون ردیابی. کاملاً در مرورگر اجرا می‌شود. پشتیبانی از URL، متن، ایمیل، تلفن و Wi-Fi. خروجی PNG و SVG. هاست روی سخت‌افزار خانگی."
       },
-      "tags": [
-        "PYTHON",
-        "FFT",
-        "OPENCV"
-      ],
-      "link": "https://github.com/ebad84",
+      "tags": ["HTML", "CSS", "VANILLA JS", "SELF-HOSTED", "NGINX"],
+      "link": "https://qr.ebad84.ir",
+      "image": null
+    },
+    {
+      "id": "my-things-manager",
+      "title": {
+        "en": "ELECTRONIC PARTS MANAGER",
+        "fa": "مدیریت قطعات الکترونیکی"
+      },
+      "desc": {
+        "en": "A full-stack Persian web app for managing an electronics inventory. Tracks parts, purchase history, projects, invoices and organizations. Features Jalali calendar, image extraction from product URLs, and ZIP backup/restore.",
+        "fa": "اپلیکیشن وب فارسی full-stack برای مدیریت انبار قطعات الکترونیکی. ردیابی قطعات، تاریخچهٔ خرید، پروژه‌ها، فاکتورها و سازمان‌ها. دارای تقویم جلالی، استخراج تصویر از URL محصول و بکاپ/ریستور ZIP."
+      },
+      "tags": ["PYTHON", "FLASK", "SQLALCHEMY", "SQLITE", "PILLOW", "JALALI CALENDAR"],
+      "link": "https://github.com/ebad84/my-things-manager",
+      "image": null
+    },
+    {
+      "id": "digikala-dailypoint",
+      "title": {
+        "en": "DIGIKALA DAILY POINT BOT",
+        "fa": "ربات امتیاز روزانهٔ دیجی‌کالا"
+      },
+      "desc": {
+        "en": "Automates the daily DigiClub point collection on Digikala — Iran's largest e-commerce platform. Logs in via OTP, persists the session, and can be deployed to run automatically every day via UptimeRobot.",
+        "fa": "جمع‌آوری خودکار امتیاز روزانهٔ DigiClub دیجی‌کالا. لاگین با OTP، نگهداری session، و قابل deploy برای اجرای روزانهٔ خودکار از طریق UptimeRobot."
+      },
+      "tags": ["PYTHON", "FLASK", "WEB SCRAPING", "BEAUTIFULSOUP4", "REQUESTS", "POETRY"],
+      "link": "https://github.com/ebad84/digikala_dailypoint",
+      "image": null
+    },
+    {
+      "id": "esp32-music-player",
+      "title": {
+        "en": "ESP32 MUSIC PLAYER",
+        "fa": "موزیک پلیر ESP32"
+      },
+      "desc": {
+        "en": "An MP3 player built on an ESP32 with MicroPython. Audio is converted to WAV on a PC using pydub/ffmpeg, stored on an SD card, and streamed to an I2S DAC. Includes a Flask server for wireless file transfer over Wi-Fi.",
+        "fa": "موزیک پلیر ساخته‌شده روی ESP32 با MicroPython. صدا با pydub/ffmpeg به WAV تبدیل و روی SD card ذخیره می‌شود و از طریق I2S DAC پخش می‌شود. شامل Flask server برای انتقال بی‌سیم فایل از طریق Wi-Fi."
+      },
+      "tags": ["MICROPYTHON", "ESP32", "I2S", "SPI", "PYTHON", "PYDUB", "EMBEDDED"],
+      "link": "https://github.com/ebad84/Music_Player",
+      "image": null
+    },
+    {
+      "id": "abol-ocr",
+      "title": {
+        "en": "ABOL — PDF OCR PIPELINE",
+        "fa": "ابول — پایپ‌لاین OCR فایل PDF"
+      },
+      "desc": {
+        "en": "OCR pipeline for Persian and mixed-script PDFs. Splits PDFs into chunks, uploads them to Google Drive, converts to Google Docs for free OCR, then extracts the text into a Word document. Uses Google Drive, Docs, and Vision APIs.",
+        "fa": "پایپ‌لاین OCR برای فایل‌های PDF فارسی. PDF را به تکه‌های کوچک تقسیم می‌کند، در Google Drive آپلود و به Google Doc تبدیل می‌کند تا OCR رایگان انجام شود، سپس متن را در فایل Word ذخیره می‌کند."
+      },
+      "tags": ["PYTHON", "GOOGLE DRIVE API", "GOOGLE VISION", "OAUTH2", "OPENCV", "PYMUPDF", "PYTHON-DOCX"],
+      "link": "https://github.com/ebad84/ABOL-PROJECT-OCR",
+      "image": null
+    },
+    {
+      "id": "uv-station",
+      "title": {
+        "en": "UV CURING STATION PCB",
+        "fa": "PCB ایستگاه UV"
+      },
+      "desc": {
+        "en": "A compact PCB-based UV curing station for electronics work — cures UV solder mask, resin and PCB coatings. 20 UV LEDs, USB powered (5V / ~400mA). Designed in EasyEDA Pro.",
+        "fa": "یک ایستگاه UV Curing مبتنی بر PCB برای کارهای الکترونیکی — پخت solder mask UV، رزین و پوشش PCB. ۲۰ عدد LED UV، تغذیه USB (5V / ~400mA). طراحی‌شده با EasyEDA Pro."
+      },
+      "tags": ["PCB DESIGN", "EASYEDA PRO", "ELECTRONICS", "UV LED", "HARDWARE"],
+      "link": "https://github.com/ebad84/UV-Station",
       "image": null
     }
   ]
