@@ -1,75 +1,74 @@
-{% extends "base.html" %}
-{% block content %}
-<section class="grid">
-  <div class="cell" id="about">
-    <h2>{{ t.sec_about }}</h2>
-    <div class="about-body">
-      {% if has_profile %}<img class="photo" src="{{ url_for('static', filename='profile.jpg') }}" alt="profile">{% endif %}
-      <p class="bio">{{ t.bio }}</p>
-    </div>
-  </div>
-  <div class="cell" id="skills">
-    <h2>{{ t.sec_skills }} <span class="dim">— {{ t.skills_note }}</span></h2>
-    {% for s in t.skill_items %}
-    <div class="skill">
-      <span class="k">{{ s.k }}</span>
-      <span class="bar"><span class="fill">{{ '█' * (s.pct // 10) }}</span><span class="track">{{ '░' * (10 - s.pct // 10) }}</span></span>
-      <span class="pct">{{ s.pct }}%</span>
-    </div>
-    {% endfor %}
-    <div class="tools">{{ t.tools }}</div>
-  </div>
-  <div class="cell" id="boards">
-    <h2>{{ t.sec_boards }}</h2>
-    <ul>
-      {% for b in t.boards_items %}<li>{{ b }}</li>{% endfor %}
-    </ul>
-  </div>
-  <div class="cell" id="exp">
-    <h2>{{ t.sec_exp }}</h2>
-    {% for e in t.exp_items %}
-    <div class="exp-item{% if not loop.last %} exp-item--sep{% endif %}">
-      <div class="exp-role">{{ e.role }}</div>
-      <div class="exp-dur">{{ e.dur }}</div>
-      <div class="exp-note">{{ e.note }}</div>
-    </div>
-    {% endfor %}
-  </div>
-  <div class="cell wide" id="projects">
-    <h2>{{ t.sec_projects }}</h2>
-    <div id="proj">{{ t.proj_loading }}</div>
-  </div>
-  <div class="cell wide" id="links">
-    <h2>{{ t.sec_links }}</h2>
-    <ul>
-      <li><a href="https://github.com/ebad84"><img class="cicon" src="{{ url_for('static', filename='icon-gh.svg') }}" alt="">GITHUB — github.com/ebad84</a></li>
-      <li><a href="https://linkedin.com/in/ebad84"><img class="cicon" src="{{ url_for('static', filename='icon-in.svg') }}" alt="">LINKEDIN — linkedin.com/in/ebad84</a></li>
-      <li><a href="https://t.me/ebad84"><img class="cicon" src="{{ url_for('static', filename='icon-tg.svg') }}" alt="">TELEGRAM — t.me/ebad84</a></li>
-    </ul>
-    <div class="dim">{{ t.links_note }}</div>
-  </div>
+<!doctype html>
+<html lang="{{ lang }}" dir="{{ 'rtl' if rtl else 'ltr' }}" data-theme="light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ t.site }} — {{ t.name }}</title>
+<meta name="description" content="{{ t.role }} — Python, web services and automation, with hardware experience.">
+<link rel="icon" href="{{ url_for('static', filename='synapse.svg') }}" type="image/svg+xml">
+<script>try { document.documentElement.dataset.theme = localStorage.getItem('synapse-theme') === 'dark' ? 'dark' : 'light'; } catch (_) {}</script>
+<link rel="stylesheet" href="{{ url_for('static', filename='resume.css') }}">
+</head>
+{% set ui = {"projects": "پروژه‌ها", "experience": "سابقهٔ کاری", "about": "دربارهٔ من", "skip": "رفتن به محتوا", "identity": "پایتون، وب و اتوماسیون؛ با تجربهٔ سخت‌افزار", "intro": "تمرکزم نرم‌افزار است؛ وب‌سرویس، ابزار و اتوماسیون می‌سازم. تجربهٔ سخت‌افزار کمکم می‌کند کد را به دنیای واقعی وصل کنم.", "explore": "دیدن پروژه‌ها", "contact": "ارتباط با من", "explabel": "سابقهٔ کاری", "exphead": "از تجربه تا ساختن.", "selected": "پروژه‌های منتخب", "built": "چیزهایی که ساخته‌ام", "all": "همه", "software": "نرم‌افزار", "hardware": "سخت‌افزار و IoT", "aboutlabel": "کمی دربارهٔ من", "abouthead": "کنجکاوی، در مدار.", "toolkit": "ابزارهای نرم‌افزاری", "toolhead": "نرم‌افزار؛ با تجربهٔ سخت‌افزار.", "boards": "تجربهٔ سخت‌افزار", "reach": "ایده‌ای برای یک پروژه داری؟", "hello": "چیزی با هم بسازیم.", "second": "یک رابط دیگر؛ داخل ترمینالت.", "copy": "کپی", "copied": "کپی شد ✓", "copyfallback": "انتخاب و کپی", "more": "بیشتر / سیستم ↗", "top": "بازگشت به بالا ↑", "assembly": "نرم‌افزار + سخت‌افزار", "hint": "با هاور باز کن؛ با کلیک یا لمس ثابت نگه دار", "assembly_label": "باز کردن لایه‌های نرم‌افزار و سخت‌افزار", "empty": "هنوز پروژه‌ای ثبت نشده است.", "emptyfilter": "پروژه‌ای در این دسته نیست.", "profile": "مشاهدهٔ پروفایل ↗", "fig": "FIG. A—01", "theme_label": "تغییر حالت روشن و تیره", "filter_label": "فیلتر پروژه‌ها", "portrait": "عکس محمدرضا عبادالله", "footer": "میزبانی روی سرور شخصی؛ ساخته‌شده برای کشف‌کردن."} if rtl else {"projects": "Projects", "experience": "Experience", "about": "About", "skip": "Skip to content", "identity": "Python / Web / Automation · Hardware experience", "intro": "Software first. I build web services, tools and automation — with hands-on hardware experience that connects code to the real world.", "explore": "Explore projects", "contact": "Get in touch", "explabel": "WORK EXPERIENCE", "exphead": "Where I’ve put it to work.", "selected": "SELECTED WORK", "built": "Things I’ve built", "all": "All", "software": "Software", "hardware": "Hardware / IoT", "aboutlabel": "A LITTLE ABOUT ME", "abouthead": "Curiosity, wired in.", "toolkit": "SOFTWARE TOOLKIT", "toolhead": "Software, with a hardware edge.", "boards": "Hardware experience", "reach": "HAVE A PROJECT IN MIND?", "hello": "Let’s build something.", "second": "A second interface. In your terminal.", "copy": "Copy", "copied": "Copied ✓", "copyfallback": "Select and copy", "more": "More / setup ↗", "top": "Back to top ↑", "assembly": "Software + hardware", "hint": "Hover to separate · click or tap to pin", "assembly_label": "Separate software and hardware layers", "empty": "No projects yet.", "emptyfilter": "No projects in this category.", "profile": "View profile ↗", "fig": "FIG. A—01", "theme_label": "Toggle color theme", "filter_label": "Filter projects", "portrait": "Portrait of Mohammad Reza Ebadollah", "footer": "Self-hosted. Built to be explored."} %}
+<body class="paper" id="top" data-lang="{{ lang }}">
+<a class="skip-link" href="#main">{{ ui.skip }}</a>
+<div class="wrap">
+<header class="top">
+<a class="brand" href="{{ '/fa' if rtl else '/' }}" aria-label="{{ t.site }}"><span class="mark" aria-hidden="true"></span>SYNAPSE</a>
+<nav class="nav" aria-label="{{ t.site }}">
+<a class="navlink" href="#work">{{ ui.projects }}</a><a class="navlink" href="#experience">{{ ui.experience }}</a><a class="navlink about-link" href="#about">{{ ui.about }}</a>
+<a class="lang" href="{{ '/' if rtl else '/fa' }}" lang="{{ 'en' if rtl else 'fa' }}" style="display:inline-flex;align-items:center;min-height:44px">{{ 'EN' if rtl else 'فارسی' }}</a>
+<button class="theme" id="themeBtn" type="button" aria-label="{{ ui.theme_label }}" data-light="{{ t.theme_light }}" data-dark="{{ t.theme_dark }}">{{ t.theme_dark }}</button>
+</nav></header>
+<main id="main">
+<section class="hero" aria-labelledby="name">
+<div class="hero-copy"><div class="identity">
+{% if has_profile %}<img class="portrait" src="{{ url_for('static', filename='profile.jpg') }}" width="88" height="88" alt="{{ ui.portrait }}" fetchpriority="high">{% endif %}
+<div><div class="eyebrow">{{ t.role }}</div><span class="identity-sub">{{ ui.identity }}</span></div></div>
+{% set parts = t.name.rsplit(' ', 1) %}
+<h1 id="name">{{ parts[0] if rtl else parts[0]|title }}{% if parts|length > 1 %}<span>{{ parts[1] if rtl else parts[1]|title }}{% if not rtl %}.{% endif %}</span>{% endif %}</h1>
+<p>{{ t.hero_intro if t.hero_intro else ui.intro }}</p>
+<div class="actions"><a class="cta primary" href="#work"><span>{{ ui.explore }}</span><span aria-hidden="true">↗</span></a><a class="cta" href="https://t.me/ebad84" target="_blank" rel="noopener noreferrer">{{ ui.contact }}</a></div>
+</div>
+<div class="artbox">
+<button class="iso-toggle" id="iso-toggle" type="button" aria-pressed="false" aria-label="{{ ui.assembly_label }}" aria-describedby="assembly-hint">
+{% include 'isometric.html' %}
+<span class="art-tag one" dir="ltr">SOFTWARE / API</span><span class="art-tag two" dir="ltr">ESP32 / HARDWARE</span>
+<span class="assembly-hint" id="assembly-hint">{{ ui.hint }}</span>
+</button>
+<div class="art-caption"><span>{{ ui.assembly }}</span><span dir="ltr">{{ ui.fig }}</span></div>
+</div></section>
+<div class="ticker" aria-label="{{ t.role }}" dir="ltr"><span>01 / SOFTWARE ENGINEERING</span><span>02 / PYTHON + AUTOMATION</span><span>03 / HARDWARE EXPERIENCE</span></div>
+<section id="experience" class="experience" aria-labelledby="exp-title">
+<div class="section-head"><div><div class="eyebrow">{{ ui.explabel }}</div><h2 id="exp-title">{{ ui.exphead }}</h2></div></div>
+<div class="exp-grid">{% for e in t.exp_items %}
+<article class="exp-entry"><div class="exp-date">{{ e.dur }}</div><h3>{{ e.role }}</h3><p class="exp-desc">{{ e.note.split('[')[0]|trim }}</p>
+{% if '[' in e.note %}{% set link = e.note.split('[')[1].split(']')[0] %}{% if link.startswith('https://') %}<a class="exp-link" href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ ui.profile }}</a>{% endif %}{% endif %}
+</article>{% endfor %}</div></section>
+<section id="work" class="section" aria-labelledby="work-title">
+<div class="section-head"><div><div class="eyebrow">{{ ui.selected }}</div><h2 id="work-title">{{ ui.built }}</h2></div>
+<div class="filters" role="group" aria-label="{{ ui.filter_label }}"><button type="button" data-filter="all" aria-pressed="true">{{ ui.all }}</button><button type="button" data-filter="software" aria-pressed="false">{{ ui.software }}</button><button type="button" data-filter="hardware" aria-pressed="false">{{ ui.hardware }}</button></div></div>
+<div id="projects" class="projects">
+{% for p in projects %}
+{% set link_ok = p.link and (p.link.startswith('https://') or p.link.startswith('http://')) %}
+{% if link_ok %}<a class="project" data-category="{{ p.category }}" href="{{ p.link }}" target="_blank" rel="noopener noreferrer">{% else %}<article class="project" data-category="{{ p.category }}">{% endif %}
+<div class="num"><span dir="ltr">{{ '%02d'|format(loop.index) }} / {{ p.category|upper }}</span>{% if link_ok %}<span class="arrow" aria-hidden="true">↗</span>{% endif %}</div>
+{% if p.image %}<img class="project-image" loading="lazy" src="{{ url_for('static', filename='projects/' ~ p.image) }}" alt="{{ p.title.get(lang, p.title.get('en', '')) }}">{% endif %}
+<h3>{{ p.title.get(lang, p.title.get('en', '')) }}</h3><p>{{ p.desc.get(lang, p.desc.get('en', '')) }}</p><div class="tags" dir="ltr">{{ p.tags|join(' · ') }}</div>
+{% if link_ok %}</a>{% else %}</article>{% endif %}
+{% else %}<p class="empty-projects">{{ ui.empty }}</p>{% endfor %}
+</div><p id="filter-status" class="empty-projects" role="status" hidden>{{ ui.emptyfilter }}</p>
 </section>
-<script>
-(function () {
-  var el = document.getElementById('proj');
-  var lang = document.body.dataset.lang || 'en';
-  var OPEN = lang === 'fa' ? 'باز کردن ↑' : 'OPEN ↑';
-  fetch('/api/projects').then(function (r) { return r.json(); }).then(function (d) {
-    if (!d.projects || !d.projects.length) {
-      el.textContent = 'EMPTY — ADD PROJECTS IN projects.json';
-      return;
-    }
-    el.innerHTML = d.projects.map(function (p, i) {
-      var ttl = (p.title && (p.title[lang] || p.title.en)) || '?';
-      var dsc = (p.desc && (p.desc[lang] || p.desc.en)) || '';
-      var lnk = p.link ? '<a class="link" href="' + p.link + '" target="_blank" rel="noopener">' + OPEN + '</a>' : '';
-      var img = p.image ? '<img src="/static/projects/' + p.image + '" alt="">' : '';
-      var tags = (p.tags || []).join(' · ');
-      return '<div class="proj"><div class="proj-head"><span class="idx">' +
-        String(i + 1).padStart(2, '0') + '</span><h3>' + ttl + '</h3>' + lnk +
-        '</div>' + img + '<div class="desc">' + dsc + '</div><div class="tags">' + tags + '</div></div>';
-    }).join('');
-  }).catch(function () { el.textContent = 'PROJECTS FAILED TO LOAD'; });
-})();
-</script>
-{% endblock %}
+<section id="about" class="about-grid" aria-labelledby="about-title">
+<div><div class="eyebrow">{{ ui.aboutlabel }}</div><h2 id="about-title">{{ ui.abouthead }}</h2><p class="muted bio-text">{{ t.bio }}</p><p class="muted">{{ ui.second }}</p>
+<div class="ssh"><code id="command" tabindex="0" dir="ltr">{{ ssh_hint }}</code><button type="button" id="copy" data-copied="{{ ui.copied }}" data-fallback="{{ ui.copyfallback }}">{{ ui['copy'] }}</button></div><span id="copy-status" class="sr-only" role="status"></span>
+</div>
+<div><div class="eyebrow">{{ ui.toolkit }}</div><h2>{{ ui.toolhead }}</h2><div class="skill-list" dir="ltr">{% for skill in t.skill_items %}<span>{{ skill.k }}</span>{% endfor %}</div><p class="tools-line" dir="ltr">{{ t.tools }}</p>
+<details class="board-details"><summary>{{ ui.boards }}</summary><div class="board-list" dir="ltr">{% for board in t.boards_items %}<span>{{ board }}</span>{% endfor %}</div></details>
+</div></section>
+<section id="contact" class="contact" aria-labelledby="contact-title"><div><div class="eyebrow">{{ ui.reach }}</div><h2 id="contact-title">{{ ui.hello }}</h2></div>
+<div class="social"><a href="https://github.com/ebad84" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://linkedin.com/in/ebad84" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://t.me/ebad84" target="_blank" rel="noopener noreferrer">Telegram ↗</a></div></section>
+<div class="foot-links"><a href="{{ '/fa/more' if rtl else '/more' }}">{{ ui.more }}</a><a href="#top">{{ ui.top }}</a></div>
+</main><footer><span>{{ t.foot }}</span><span>{{ ui.footer }}</span></footer></div>
+<script src="{{ url_for('static', filename='resume.js') }}" defer></script>
+<script src="{{ url_for('static', filename='oneko.js') }}" data-cat="{{ url_for('static', filename='oneko.gif') }}" defer></script>
+</body></html>
