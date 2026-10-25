@@ -11,10 +11,11 @@
   let persistPosition = true;
 
   let nekoPosX = 32;
-  let nekoPosY = 32;
+  const isResumePage = Boolean(document.getElementById("iso-toggle"));
+  let nekoPosY = isResumePage ? 104 : 32;
   
-  let mousePosX = 0;
-  let mousePosY = 0;
+  let mousePosX = nekoPosX;
+  let mousePosY = nekoPosY;
 
   let frameCount = 0;
   let idleTime = 0;
@@ -86,7 +87,7 @@
   };
 
   function init() {
-    let nekoFile = "./static/oneko.gif"
+    let nekoFile = "/static/oneko.gif"
     const curScript = document.currentScript
     if (curScript && curScript.dataset.cat) {
       nekoFile = curScript.dataset.cat
@@ -100,7 +101,11 @@
     }
   
     if (persistPosition) {
-      let storedNeko = JSON.parse(window.localStorage.getItem("oneko"));
+      let storedNeko = null;
+      try {
+        const stored = JSON.parse(window.localStorage.getItem("oneko"));
+        if (stored && Number.isFinite(stored.nekoPosX) && Number.isFinite(stored.nekoPosY) && Number.isFinite(stored.mousePosX) && Number.isFinite(stored.mousePosY) && Number.isFinite(stored.frameCount) && Number.isFinite(stored.idleTime) && Number.isFinite(stored.idleAnimationFrame) && (stored.idleAnimation === null || Object.prototype.hasOwnProperty.call(spriteSets, stored.idleAnimation))) storedNeko = stored;
+      } catch (_) { /* Storage can be disabled or contain stale data. */ }
       if (storedNeko !== null) {
         nekoPosX = storedNeko.nekoPosX;
         nekoPosY = storedNeko.nekoPosY;
@@ -114,6 +119,12 @@
       }
     }
   
+    // Start below the compact homepage header, including when restoring old state.
+    if (isResumePage && nekoPosY < 96) {
+      nekoPosY = 104;
+      mousePosX = nekoPosX;
+      mousePosY = nekoPosY;
+    }
     nekoEl.id = "oneko";
     nekoEl.ariaHidden = true;
     nekoEl.style.width = "32px";
@@ -136,7 +147,7 @@
     
     if (persistPosition) {
       window.addEventListener("beforeunload", function (event) {
-        window.localStorage.setItem("oneko", JSON.stringify({
+        try { window.localStorage.setItem("oneko", JSON.stringify({
           nekoPosX: nekoPosX,
           nekoPosY: nekoPosY,
           mousePosX: mousePosX,
@@ -146,7 +157,7 @@
           idleAnimation: idleAnimation,
           idleAnimationFrame: idleAnimationFrame,
           bgPos: nekoEl.style.backgroundPosition
-        }));
+        })); } catch (_) { /* Storage is optional. */ }
       });
     }
     

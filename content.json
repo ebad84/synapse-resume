@@ -1,9 +1,15 @@
 {
   "en": {
     "name": "MOHAMMAD REZA EBADOLLAH",
-    "role": "COMPUTER ENGINEER · IOT / EMBEDDED / SIGNAL + IMAGE",
-    "bio": "Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things.\n\nMy main board is currently the ESP32, but I've also worked with Arduino, Raspberry Pi Pico, the ESP8266 family, Pi Zero, and Pi 5.\n\nData, audio, signal, and image processing are some of the areas I've always found interesting and enjoy exploring.\n\nIf you have a project you think I could help with, I'd be happy to work together!!\n\n",
+    "role": "SOFTWARE ENGINEER",
+    "bio": "I’m a software engineer and Computer Engineering student, focused on Python, web services, web scraping and bot automation.\n\nI also have hands-on experience with electronics, ESP32 and IoT. I’ve worked with Arduino, Raspberry Pi Pico, ESP8266, Pi Zero and Pi 5.\n\nData, audio, signal and image processing are areas I enjoy exploring. If you have a project I could help with, I’d be happy to work together.",
     "tools": "FLASK · FASTAPI · uv · SQL · GIT · DOCKER (A BIT)",
-    "foot": "© 2026 MOHAMMAD REZA EBADOLLAH — SYNAPSE"
+    "foot": "© 2026 MOHAMMAD REZA EBADOLLAH — SYNAPSE",
+    "hero_intro": "Software first. I build web services, tools and automation — with hands-on hardware experience that connects code to the real world."
+  },
+  "fa": {
+    "role": "مهندس نرم‌افزار",
+    "hero_intro": "تمرکزم نرم‌افزار است؛ وب‌سرویس، ابزار و اتوماسیون می‌سازم. تجربهٔ سخت‌افزار کمکم می‌کند کد را به دنیای واقعی وصل کنم.",
+    "bio": "مهندس نرم‌افزار و دانشجوی مهندسی کامپیوترم؛ تمرکزم روی پایتون، وب‌سرویس، وب‌اسکرپینگ و اتوماسیون بات‌هاست.\n\nدر کنار آن، با الکترونیک، ESP32 و اینترنت اشیا هم تجربه دارم. با Arduino، Raspberry Pi Pico، ESP8266 و Pi Zero و Pi 5 هم کار کرده‌ام.\n\nاز تجربه‌کردن در حوزه‌های داده، صدا، سیگنال و پردازش تصویر لذت می‌برم. اگر پروژه‌ای دارید که فکر می‌کنید می‌توانم کمک کنم، خوشحال می‌شوم همکاری کنیم."
   }
 }
