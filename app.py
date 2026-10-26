@@ -39,17 +39,6 @@ def load_projects():
     except Exception:
         return []
 
-def resume_projects():
-    """Add presentation categories without modifying the stored project records."""
-    hardware_tags = {"IOT", "EMBEDDED", "HARDWARE", "PCB DESIGN", "ESP32", "MICROPYTHON"}
-    result = []
-    for project in load_projects():
-        tags = {str(tag).upper() for tag in project.get("tags", [])}
-        category = "hardware" if tags & hardware_tags else "software"
-        result.append({**project, "category": category})
-    return sorted(result, key=lambda project: project["category"] != "software")
-
-
 def save_projects(projects):
     with open(PROJECTS_FILE, "w", encoding="utf-8") as f:
         json.dump({"projects": projects}, f, ensure_ascii=False, indent=2)
@@ -198,7 +187,6 @@ def page(lang):
         "index.html", lang=lang, t=I18N[lang], rtl=(lang == "fa"),
         ssh_hint=ssh_hint(host),
         has_profile=(BASE / "static" / "profile.jpg").exists(),
-        projects=resume_projects(),
     )
 
 
