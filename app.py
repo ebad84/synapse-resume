@@ -69,7 +69,7 @@ def list_uploads() -> list[str]:
 @app.route("/fa")
 @app.route("/en")
 def index():
-    lang = "en" if request.path == "/en" or request.args.get("lang") == "en" else "fa"
+    lang = "fa" if request.path == "/fa" or request.args.get("lang") == "fa" else "en"
     content = load_content()
     return render_template(
         "index.html",
