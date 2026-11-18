@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HYBRID 01 — NEOFETCH + SIGNAL BUS | EBAD84 / SYNAPSE</title>
+  <link rel="icon" href="../static/synapse.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M14 30 H84 V104 H160'/%3E%3Cpath d='M226 20 V76 H140 V164'/%3E%3Cpath d='M34 218 V152 L78 108'/%3E%3Cpath d='M196 226 H130 V186'/%3E%3Cpath d='M66 12 V48'/%3E%3Cpath d='M104 226 V196 H150'/%3E%3C/g%3E%3Cg fill='%23e3e3e3'%3E%3Ccircle cx='14' cy='30' r='3'/%3E%3Ccircle cx='160' cy='104' r='3'/%3E%3Ccircle cx='226' cy='20' r='3'/%3E%3Ccircle cx='140' cy='164' r='3'/%3E%3Ccircle cx='34' cy='218' r='3'/%3E%3Ccircle cx='78' cy='108' r='3'/%3E%3Ccircle cx='196' cy='226' r='3'/%3E%3Ccircle cx='150' cy='196' r='3'/%3E%3Ccircle cx='66' cy='12' r='3'/%3E%3Crect x='100' y='128' width='16' height='10'/%3E%3Crect x='182' y='58' width='10' height='16'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M14 30 H84 V104 H160'/%3E%3Cpath d='M226 20 V76 H140 V164'/%3E%3Cpath d='M34 218 V152 L78 108'/%3E%3Cpath d='M196 226 H130 V186'/%3E%3Cpath d='M66 12 V48'/%3E%3Cpath d='M104 226 V196 H150'/%3E%3C/g%3E%3Cg fill='%232e2e2e'%3E%3Ccircle cx='14' cy='30' r='3'/%3E%3Ccircle cx='160' cy='104' r='3'/%3E%3Ccircle cx='226' cy='20' r='3'/%3E%3Ccircle cx='140' cy='164' r='3'/%3E%3Ccircle cx='34' cy='218' r='3'/%3E%3Ccircle cx='78' cy='108' r='3'/%3E%3Ccircle cx='196' cy='226' r='3'/%3E%3Ccircle cx='150' cy='196' r='3'/%3E%3Ccircle cx='66' cy='12' r='3'/%3E%3Crect x='100' y='128' width='16' height='10'/%3E%3Crect x='182' y='58' width='10' height='16'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background-color: var(--paper); background-image: var(--pcb); background-repeat: repeat;
+      color: var(--ink); font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Courier New", monospace;
+      font-size: 13.5px; line-height: 1.65;
+    }
+    html[dir="rtl"] body { font-family: Vazirmatn, Tahoma, "JetBrains Mono", monospace; }
+    html[dir="rtl"] * { letter-spacing: 0 !important; }
+    a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--line); }
+    a:hover { border-bottom-color: var(--ink); }
+
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 20px 64px; }
+
+    /* Top Bar */
+    .topbar {
+      background: var(--paper); border: 1px solid var(--line); border-bottom: 2px solid var(--ink);
+      padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    .topbar-left { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); }
+    .topbar-left strong { color: var(--ink); }
+    .controls { display: flex; gap: 8px; }
+    .btn {
+      background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 6px 12px;
+      font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+    }
+    .btn.ghost { background: var(--paper); color: var(--ink); }
+    .btn:hover { opacity: 0.78; }
+
+    /* Neofetch Hero Box */
+    .neo-box {
+      position: relative; background: var(--paper); border: 1px solid var(--ink); border-top: none;
+      padding: 26px 24px 20px;
+    }
+    .neo-label {
+      position: absolute; top: 8px; inset-inline-end: 14px; font-size: 10px;
+      letter-spacing: 0.12em; color: var(--dim); text-transform: uppercase;
+    }
+    .neo-grid {
+      display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: start;
+    }
+    .portrait-col { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+    .photo {
+      width: 120px; height: 120px; aspect-ratio: 1 / 1; object-fit: cover;
+      filter: grayscale(1); border: 1px solid var(--ink); padding: 3px; background: var(--paper);
+    }
+    .mini-logo {
+      width: 48px; height: 48px; image-rendering: pixelated; border: 1px solid var(--line);
+    }
+    .neo-info h1 {
+      margin: 0 0 4px; font-size: 19px; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .neo-role {
+      font-size: 11px; color: var(--dim); letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line);
+    }
+    .kv-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 18px; font-size: 12px; }
+    .kv-row { display: flex; gap: 8px; min-width: 0; }
+    .kv-k { color: var(--dim); text-transform: uppercase; font-size: 10.5px; flex: none; }
+    .kv-v { font-weight: 700; overflow-wrap: anywhere; }
+
+    .skill-bars {
+      margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line);
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 11.5px;
+    }
+    .sk-item { border: 1px solid var(--line); padding: 8px 10px; }
+    .sk-top { display: flex; justify-content: space-between; font-size: 10.5px; margin-bottom: 3px; }
+    .bar .fill { color: var(--ink); }
+    .bar .track { color: var(--dim); }
+
+    .waveform {
+      margin-top: 16px; padding-top: 10px; border-top: 1px solid var(--line);
+      font-size: 11.5px; color: var(--dim); overflow-x: auto; white-space: nowrap; user-select: none;
+    }
+    .waveform strong { color: var(--ink); }
+
+    /* Vertical Signal Bus Timeline */
+    .bus { position: relative; margin-top: 26px; padding-inline-start: 34px; }
+    .bus::before {
+      content: ""; position: absolute; inset-block: 0; inset-inline-start: 11px; width: 2px; background: var(--line);
+    }
+    .node {
+      position: relative; background: var(--paper); border: 1px solid var(--line);
+      padding: 22px 24px; margin-bottom: 20px; transition: border-color 0.15s;
+    }
+    .node:hover { border-color: var(--ink); }
+    .node::before {
+      content: ""; position: absolute; top: 24px; inset-inline-start: -30px;
+      width: 12px; height: 12px; background: var(--paper); border: 2px solid var(--ink);
+    }
+    .node:hover::before { background: var(--ink); }
+    .node-head {
+      display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;
+      border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 14px;
+    }
+    .node-head h2 { margin: 0; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; }
+    .node-head span { font-size: 10.5px; color: var(--dim); letter-spacing: 0.08em; }
+
+    .bio { margin: 0; white-space: pre-line; font-size: 13px; }
+    .hw-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .pill { border: 1px solid var(--line); padding: 5px 10px; font-size: 11px; text-transform: uppercase; }
+    .pill.main { border-color: var(--ink); font-weight: 700; }
+    .tools-line { font-size: 11.5px; color: var(--dim); border-top: 1px dashed var(--line); padding-top: 10px; }
+
+    /* Accordion Projects with Keyboard Support */
+    .proj-row { border-bottom: 1px solid var(--line); }
+    .proj-row:last-child { border-bottom: none; }
+    .proj-trigger {
+      width: 100%; background: transparent; border: none; color: var(--ink); font-family: inherit;
+      padding: 12px 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      cursor: pointer; text-align: start;
+    }
+    .proj-row.focused .proj-trigger, .proj-trigger:hover { background: var(--ink); color: var(--paper); }
+    .proj-row.focused .proj-meta, .proj-trigger:hover .proj-meta { color: var(--paper); opacity: 0.8; }
+    .proj-name { font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .proj-meta { font-size: 10px; color: var(--dim); white-space: nowrap; }
+    .proj-body { display: none; padding: 10px 8px 14px; font-size: 12px; color: var(--dim); }
+    .proj-row.open .proj-body { display: block; }
+    .proj-open-link {
+      display: inline-block; margin-top: 8px; font-size: 11px; color: var(--ink); border-bottom: 1px solid var(--ink);
+    }
+
+    .exp-item { padding: 10px 0; border-bottom: 1px dashed var(--line); }
+    .exp-item:last-child { border-bottom: none; }
+    .exp-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-weight: 700; font-size: 12.5px; }
+    .exp-dur { font-size: 11px; color: var(--dim); font-weight: 400; }
+    .exp-note { font-size: 12px; color: var(--dim); margin-top: 4px; }
+
+    .contact-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .clink { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); padding: 7px 12px; font-size: 11.5px; }
+    .clink:hover { border-color: var(--ink); }
+    .cicon { width: 13px; height: 13px; image-rendering: pixelated; }
+    html[data-theme="dark"] .cicon { filter: invert(1); }
+
+    footer {
+      margin-top: 24px; background: var(--paper); border: 1px solid var(--line); border-top: 2px solid var(--ink);
+      padding: 14px 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+      font-size: 11px; color: var(--dim);
+    }
+
+    @media (max-width: 720px) {
+      .neo-grid, .kv-list, .skill-bars { grid-template-columns: 1fr; }
+      .portrait-col { flex-direction: row; justify-content: flex-start; }
+      .proj-meta { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="topbar-left"><strong>SYNAPSE</strong> // <span data-i18n="conceptTitle">HYBRID 01: NEOFETCH + SIGNAL BUS</span></div>
+      <div class="controls">
+        <button class="btn ghost" id="langBtn" onclick="toggleLang()">FA</button>
+        <button class="btn" id="themeBtn" onclick="toggleTheme()">LIGHT</button>
+      </div>
+    </header>
+
+    <!-- Neofetch Hero Box -->
+    <section class="neo-box">
+      <div class="neo-label">NEOFETCH // EBAD84@SYNAPSE</div>
+      <div class="neo-grid">
+        <div class="portrait-col">
+          <img class="photo" src="../static/profile.jpg" alt="Mohammad Reza Ebadollah" />
+          <img class="mini-logo" src="../static/synapse.png" alt="SYNAPSE" />
+        </div>
+        <div class="neo-info">
+          <h1 data-i18n="name">MOHAMMAD REZA EBADOLLAH</h1>
+          <div class="neo-role" data-i18n="role">COMPUTER ENGINEER · IOT / EMBEDDED / SIGNAL + IMAGE</div>
+          <div class="kv-list">
+            <div class="kv-row"><span class="kv-k">OS:</span><span class="kv-v" data-i18n="osShort">Windows · Ubuntu GNOME</span></div>
+            <div class="kv-row"><span class="kv-k">TERM:</span><span class="kv-v" data-i18n="termShort">Ghostty</span></div>
+            <div class="kv-row"><span class="kv-k">MCU:</span><span class="kv-v">ESP32 (Main Board)</span></div>
+            <div class="kv-row"><span class="kv-k">SHELL:</span><span class="kv-v">ssh ebad84.ir</span></div>
+            <div class="kv-row"><span class="kv-k">MAKING:</span><span class="kv-v" data-i18n="makingShort">DataLoggers · Smart Sensors · 3D Printing</span></div>
+            <div class="kv-row"><span class="kv-k">DEVOPS:</span><span class="kv-v" data-i18n="devopsShort">CI/CD · Containers · Linux</span></div>
+          </div>
+          <div class="skill-bars" id="skillBars"></div>
+        </div>
+      </div>
+      <div class="waveform">
+        <strong>CLK</strong> ─┐ ┌─┐ ┌─┐ ┌───┐ ┌─┐ ┌─┐ ┌───┐ ┌─┐ ┌─┐ ┌─  <span data-i18n="sshLine">TERMINAL TWIN · ssh ebad84.ir · NO LOGIN NEEDED</span>
+      </div>
+    </section>
+
+    <!-- Vertical Signal Bus Timeline -->
+    <main class="bus">
+      <section class="node">
+        <div class="node-head">
+          <h2 data-i18n="secAbout">01 // ABOUT &amp; BIO</h2>
+          <span>SIGNAL ORIGIN</span>
+        </div>
+        <p class="bio" data-i18n="bio"></p>
+      </section>
+
+      <section class="node">
+        <div class="node-head">
+          <h2 data-i18n="secBoards">02 // BOARDS &amp; TOOLING</h2>
+          <span>HARDWARE + STACK</span>
+        </div>
+        <div class="hw-pills" id="boardsList"></div>
+        <div class="tools-line" data-i18n="tools"></div>
+      </section>
+
+      <section class="node">
+        <div class="node-head">
+          <h2 data-i18n="secProjects">03 // SELECTED BUILDS (01–07)</h2>
+          <span data-i18n="projHint">CLICK OR USE ↑ / ↓ + ENTER</span>
+        </div>
+        <div id="projAccordion"></div>
+      </section>
+
+      <section class="node">
+        <div class="node-head">
+          <h2 data-i18n="secExp">04 // EXPERIENCE &amp; UPLINK</h2>
+          <span data-i18n="linksNote">SAME USERNAME EVERYWHERE</span>
+        </div>
+        <div id="expList"></div>
+        <div class="contact-links">
+          <a class="clink" href="https://github.com/ebad84" target="_blank" rel="noopener"><img class="cicon" src="../static/icon-gh.svg" alt="" />GITHUB · ebad84</a>
+          <a class="clink" href="https://linkedin.com/in/ebad84" target="_blank" rel="noopener"><img class="cicon" src="../static/icon-in.svg" alt="" />LINKEDIN · ebad84</a>
+          <a class="clink" href="https://t.me/ebad84" target="_blank" rel="noopener"><img class="cicon" src="../static/icon-tg.svg" alt="" />TELEGRAM · ebad84</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span data-i18n="foot">© 2026 MOHAMMAD REZA EBADOLLAH — SYNAPSE</span>
+      <span>KEYS: [↑/↓] NAVIGATE · [ENTER] TOGGLE · [T] THEME · [L] LANG</span>
+    </footer>
+  </div>
+
+  <script>
+    const DATA = {
+      en: {
+        conceptTitle: "HYBRID 01: NEOFETCH + SIGNAL BUS",
+        name: "MOHAMMAD REZA EBADOLLAH",
+        role: "COMPUTER ENGINEER · IOT / EMBEDDED / SIGNAL + IMAGE",
+        osShort: "Windows · Ubuntu GNOME",
+        termShort: "Ghostty — Everywhere",
+        makingShort: "DataLoggers · Smart Sensors · Robotics · 3D Printing",
+        devopsShort: "CI/CD · Containers · Linux Boxes",
+        sshLine: "TERMINAL TWIN · ssh ebad84.ir · NO LOGIN NEEDED",
+        secAbout: "01 // ABOUT & BIO",
+        bio: "Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things.\n\nMy main board is currently the ESP32, but I've also worked with Arduino, Raspberry Pi Pico, the ESP8266 family, Pi Zero, and Pi 5.\n\nData, audio, signal, and image processing are some of the areas I've always found interesting and enjoy exploring.\n\nIf you have a project you think I could help with, I'd be happy to work together!",
+        secBoards: "02 // BOARDS & TOOLING",
+        boards: ["ESP32 — MAIN BOARD", "ARDUINO", "RASPBERRY PI PICO", "ESP8266 FAMILY", "RASPBERRY PI ZERO", "RASPBERRY PI 5"],
+        tools: "TOOLS: FLASK · FASTAPI · uv · SQL · GIT · DOCKER (A BIT) · POSTGRESQL (LEARNING)",
+        secProjects: "03 // SELECTED BUILDS (01–07)",
+        projHint: "CLICK OR USE ↑ / ↓ + ENTER",
+        secExp: "04 // EXPERIENCE & UPLINK",
+        linksNote: "SAME USERNAME EVERYWHERE",
+        openText: "OPEN ↑",
+        skills: [
+          { k: "PYTHON", pct: 80 },
+          { k: "C / C++ / EMBEDDED C", pct: 60 },
+          { k: "PHP", pct: 40 }
+        ],
+        exp: [
+          { role: "R&D · University of Qom", dur: "2026-present", note: "Making a DataLogger and other IoT Projects" },
+          { role: "FREELANCE DEVELOPER · PARSCODERS", dur: "2020-2024 · 4 years", note: "Python webscraping expert and bot automation (parscoders.com/resume/150715/mohammad_e)" }
+        ],
+        foot: "© 2026 MOHAMMAD REZA EBADOLLAH — SYNAPSE"
+      },
+      fa: {
+        conceptTitle: "ترکیبی ۰۱: نئوفتچ + باس سیگنال",
+        name: "محمدرضا عبادالله",
+        role: "مهندس کامپیوتر · اینترنت اشیا / سیستم‌های نهفته / سیگنال و تصویر",
+        osShort: "ویندوز · اوبونتو گنوم",
+        termShort: "Ghostty — همه‌جا",
+        makingShort: "دیتالاگر · سنسور هوشمند · رباتیک · پرینتر سه‌بعدی",
+        devopsShort: "CI/CD · کانتینرها · لینوکس",
+        sshLine: "نسخهٔ ترمینالی · ssh ebad84.ir · بدون لاگین",
+        secAbout: "۰۱ // دربارهٔ من",
+        bio: "در حال تحصیل در رشته مهندسی کامپیوتر هستم و به حوزه‌های سخت‌افزار و نرم‌افزار علاقه دارم؛ از وب‌اسکرپینگ، بات و اتومیشن گرفته تا الکترونیک، ساخت دستگاه‌ها و اینترنت اشیا (IoT).\n\nدر حال حاضر بیشتر با ESP32 کار می‌کنم، اما تجربه کار با آردوینو، Raspberry Pi Pico، خانواده ESP8266، Raspberry Pi Zero و Raspberry Pi 5 رو هم دارم.\n\nپردازش داده، صوت، سیگنال و تصویر از حوزه‌هایی هستن که همیشه برام جذاب بودن و دوست دارم بیشتر توی این زمینه‌ها تجربه کسب کنم.\n\nاگه پروژه‌ای دارید که فکر می‌کنید می‌تونم توش کمکی کنم، خوشحال می‌شم با هم همکاری کنیم!",
+        secBoards: "۰۲ // بردها و ابزارها",
+        boards: ["ESP32 — برد اصلی", "آردوینو", "رزبری‌پای پیکو", "خانوادهٔ ESP8266", "رزبری‌پای زیرو", "رزبری‌پای 5"],
+        tools: "ابزارها: فلسک · فست‌ای‌پی‌آی · uv · اسکیول · گیت · داکر (کمی) · در حال یادگیری پستگرس",
+        secProjects: "۰۳ // پروژه‌های منتخب (۰۱ تا ۰۷)",
+        projHint: "کلیک کنید یا از کلیدهای ↑ / ↓ و Enter استفاده کنید",
+        secExp: "۰۴ // تجربه و راه‌های ارتباطی",
+        linksNote: "در همه‌جا همین نام کاربری",
+        openText: "باز کردن ↑",
+        skills: [
+          { k: "پایتون", pct: 80 },
+          { k: "C / C++ / آردوینو / EMBEDDED C", pct: 60 },
+          { k: "PHP", pct: 40 }
+        ],
+        exp: [
+          { role: "دانشگاه قم R&D", dur: "2026-present", note: "پروژه IoT و دیتالاگر" },
+          { role: "توسعه‌دهندهٔ فریلنسر · پارس‌کدرز", dur: "2020-2024 · 4 years", note: "متخصص وب‌اسکرپینگ پایتون و اتوماسیون ربات" }
+        ],
+        foot: "© ۲۰۲۶ محمدرضا عبادالله — سینپس"
+      }
+    };
+
+    const PROJECTS = [
+      { idx: "01", titleEn: "SYNAPSE RESUME SITE", titleFa: "سایت رزومهٔ سینپس", descEn: "Personal resume site with two faces: a minimal Flask web page and an interactive SSH terminal version — login-free, terminal.shop style. Self-hosted on a home server behind nginx.", descFa: "سایت رزومهٔ شخصی با دو رویه: یک صفحه وب مینیمال با Flask و یک نسخه SSH تعاملی بدون نیاز به لاگین. هاست روی سرور خانگی پشت nginx.", tags: "PYTHON · FLASK · SSH · PARAMIKO · SELF-HOSTED · NGINX", link: "https://github.com/ebad84/synapse-resume" },
+      { idx: "02", titleEn: "UTEMP — IoT TEMPERATURE PLATFORM", titleFa: "یوتمپ — پلتفرم دمای IoT", descEn: "A web service and REST API for IoT devices to log and display temperature data. Devices authenticate with an API key; users register sensors via a web dashboard. Deployed with Docker + nginx.", descFa: "سرویس وب و REST API برای دستگاه‌های IoT جهت ثبت و نمایش دما. دستگاه‌ها با API key احراز هویت می‌شوند؛ کاربران سنسورها را از طریق داشبورد وب مدیریت می‌کنند. Deploy شده با Docker و nginx.", tags: "PYTHON · FLASK · REST API · DOCKER · NGINX · IOT · SQLITE", link: "https://github.com/ebad84/UTEMP" },
+      { idx: "03", titleEn: "QR CODE GENERATOR", titleFa: "مولد QR Code", descEn: "A fully client-side QR code generator — no backend, no API, no tracking. Runs entirely in the browser. Supports URL, text, email, phone and Wi-Fi. Outputs PNG and SVG. Self-hosted on home hardware.", descFa: "مولد QR Code کاملاً سمت کلاینت — بدون بک‌اند، بدون API، بدون ردیابی. کاملاً در مرورگر اجرا می‌شود. پشتیبانی از URL، متن، ایمیل، تلفن و Wi-Fi. خروجی PNG و SVG. هاست روی سخت‌افزار خانگی.", tags: "HTML · CSS · VANILLA JS · SELF-HOSTED · NGINX", link: "https://qr.ebad84.ir" },
+      { idx: "04", titleEn: "ELECTRONIC PARTS MANAGER", titleFa: "مدیریت قطعات الکترونیکی", descEn: "A full-stack Persian web app for managing an electronics inventory. Tracks parts, purchase history, projects, invoices and organizations. Features Jalali calendar, image extraction from product URLs, and ZIP backup/restore.", descFa: "اپلیکیشن وب فارسی full-stack برای مدیریت انبار قطعات الکترونیکی. ردیابی قطعات، تاریخچهٔ خرید، پروژه‌ها، فاکتورها و سازمان‌ها. دارای تقویم جلالی، استخراج تصویر از URL محصول و بکاپ/ریستور ZIP.", tags: "PYTHON · FLASK · SQLALCHEMY · SQLITE · PILLOW · JALALI CALENDAR", link: "https://github.com/ebad84/my-things-manager" },
+      { idx: "05", titleEn: "DIGIKALA DAILY POINT BOT", titleFa: "ربات امتیاز روزانهٔ دیجی‌کالا", descEn: "Automates the daily DigiClub point collection on Digikala — Iran's largest e-commerce platform. Logs in via OTP, persists the session, and can be deployed to run automatically every day via UptimeRobot.", descFa: "جمع‌آوری خودکار امتیاز روزانهٔ DigiClub دیجی‌کالا. لاگین با OTP، نگهداری session، و قابل deploy برای اجرای روزانهٔ خودکار از طریق UptimeRobot.", tags: "PYTHON · FLASK · WEB SCRAPING · BEAUTIFULSOUP4 · REQUESTS · POETRY", link: "https://github.com/ebad84/digikala_dailypoint" },
+      { idx: "06", titleEn: "ESP32 MUSIC PLAYER", titleFa: "موزیک پلیر ESP32", descEn: "An MP3 player built on an ESP32 with MicroPython. Audio is converted to WAV on a PC using pydub/ffmpeg, stored on an SD card, and streamed to an I2S DAC. Includes a Flask server for wireless file transfer over Wi-Fi.", descFa: "موزیک پلیر ساخته‌شده روی ESP32 با MicroPython. صدا با pydub/ffmpeg به WAV تبدیل و روی SD card ذخیره می‌شود و از طریق I2S DAC پخش می‌شود. شامل Flask server برای انتقال بی‌سیم فایل از طریق Wi-Fi.", tags: "MICROPYTHON · ESP32 · I2S · SPI · PYTHON · PYDUB · EMBEDDED", link: "https://github.com/ebad84/Music_Player" },
+      { idx: "07", titleEn: "UV CURING STATION PCB", titleFa: "PCB ایستگاه UV", descEn: "A compact PCB-based UV curing station for electronics work — cures UV solder mask, resin and PCB coatings. 20 UV LEDs, USB powered (5V / ~400mA). Designed in EasyEDA Pro.", descFa: "یک ایستگاه UV Curing مبتنی بر PCB برای کارهای الکترونیکی — پخت solder mask UV، رزین و پوشش PCB. ۲۰ عدد LED UV، تغذیه USB (5V / ~400mA). طراحی‌شده با EasyEDA Pro.", tags: "PCB DESIGN · EASYEDA PRO · ELECTRONICS · UV LED · HARDWARE", link: "https://github.com/ebad84/UV-Station" }
+    ];
+
+    let lang = "en";
+    let focusedIdx = 0;
+    let openSet = new Set([0]);
+
+    function renderAll() {
+      const d = DATA[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
+      document.getElementById("langBtn").textContent = lang === "fa" ? "EN" : "FA";
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const k = el.getAttribute("data-i18n");
+        if (d[k]) el.textContent = d[k];
+      });
+
+      document.getElementById("skillBars").innerHTML = d.skills.map(s => {
+        const fill = "█".repeat(s.pct / 10);
+        const track = "░".repeat(10 - s.pct / 10);
+        return `<div class="sk-item"><div class="sk-top"><span>${s.k}</span><span>${s.pct}%</span></div><div class="bar"><span class="fill">${fill}</span><span class="track">${track}</span></div></div>`;
+      }).join("");
+
+      document.getElementById("boardsList").innerHTML = d.boards.map((b, i) =>
+        `<span class="pill ${i === 0 ? "main" : ""}">${b}</span>`
+      ).join("");
+
+      document.getElementById("expList").innerHTML = d.exp.map(e => `
+        <div class="exp-item">
+          <div class="exp-top"><span>${e.role}</span><span class="exp-dur">${e.dur}</span></div>
+          <div class="exp-note">${e.note}</div>
+        </div>
+      `).join("");
+
+      renderProjects();
+    }
+
+    function renderProjects() {
+      const d = DATA[lang];
+      document.getElementById("projAccordion").innerHTML = PROJECTS.map((p, i) => `
+        <div class="proj-row ${openSet.has(i) ? "open" : ""} ${focusedIdx === i ? "focused" : ""}">
+          <button class="proj-trigger" onclick="toggleProj(${i})">
+            <span class="proj-name">${p.idx} · ${lang === "fa" ? p.titleFa : p.titleEn}</span>
+            <span class="proj-meta">${p.tags.split(" · ").slice(0, 3).join(" · ")}</span>
+          </button>
+          <div class="proj-body">
+            <div>${lang === "fa" ? p.descFa : p.descEn}</div>
+            <div style="margin-top:6px; font-size:10px;">${p.tags}</div>
+            <a class="proj-open-link" href="${p.link}" target="_blank" rel="noopener">${d.openText}</a>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function toggleProj(i) {
+      focusedIdx = i;
+      if (openSet.has(i)) openSet.delete(i);
+      else openSet.add(i);
+      renderProjects();
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      updateThemeBtn();
+    }
+
+    function updateThemeBtn() {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      document.getElementById("themeBtn").textContent = lang === "fa" ? (isDark ? "روشن" : "تیره") : (isDark ? "LIGHT" : "DARK");
+    }
+
+    function toggleLang() {
+      lang = lang === "en" ? "fa" : "en";
+      renderAll();
+      updateThemeBtn();
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowDown") { e.preventDefault(); focusedIdx = (focusedIdx + 1) % PROJECTS.length; renderProjects(); }
+      if (e.key === "ArrowUp") { e.preventDefault(); focusedIdx = (focusedIdx - 1 + PROJECTS.length) % PROJECTS.length; renderProjects(); }
+      if (e.key === "Enter" && document.activeElement.tagName !== "A" && document.activeElement.tagName !== "BUTTON") { toggleProj(focusedIdx); }
+      if (e.key.toLowerCase() === "t") toggleTheme();
+      if (e.key.toLowerCase() === "l") toggleLang();
+    });
+
+    renderAll();
+    updateThemeBtn();
+  </script>
+  <script src="../static/oneko.js" data-cat="../static/oneko.gif" async></script>
+</body>
+</html>

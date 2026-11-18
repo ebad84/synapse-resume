@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEOFETCH 03 — MULTI-FETCH SUITE | EBAD84 / SYNAPSE</title>
+  <link rel="icon" href="../static/synapse.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M14 30 H84 V104 H160'/%3E%3Cpath d='M226 20 V76 H140 V164'/%3E%3Cpath d='M34 218 V152 L78 108'/%3E%3Cpath d='M196 226 H130 V186'/%3E%3Cpath d='M66 12 V48'/%3E%3Cpath d='M104 226 V196 H150'/%3E%3C/g%3E%3Cg fill='%23e3e3e3'%3E%3Ccircle cx='14' cy='30' r='3'/%3E%3Ccircle cx='160' cy='104' r='3'/%3E%3Ccircle cx='226' cy='20' r='3'/%3E%3Ccircle cx='140' cy='164' r='3'/%3E%3Ccircle cx='34' cy='218' r='3'/%3E%3Ccircle cx='78' cy='108' r='3'/%3E%3Ccircle cx='196' cy='226' r='3'/%3E%3Ccircle cx='150' cy='196' r='3'/%3E%3Ccircle cx='66' cy='12' r='3'/%3E%3Crect x='100' y='128' width='16' height='10'/%3E%3Crect x='182' y='58' width='10' height='16'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M14 30 H84 V104 H160'/%3E%3Cpath d='M226 20 V76 H140 V164'/%3E%3Cpath d='M34 218 V152 L78 108'/%3E%3Cpath d='M196 226 H130 V186'/%3E%3Cpath d='M66 12 V48'/%3E%3Cpath d='M104 226 V196 H150'/%3E%3C/g%3E%3Cg fill='%232e2e2e'%3E%3Ccircle cx='14' cy='30' r='3'/%3E%3Ccircle cx='160' cy='104' r='3'/%3E%3Ccircle cx='226' cy='20' r='3'/%3E%3Ccircle cx='140' cy='164' r='3'/%3E%3Ccircle cx='34' cy='218' r='3'/%3E%3Ccircle cx='78' cy='108' r='3'/%3E%3Ccircle cx='196' cy='226' r='3'/%3E%3Ccircle cx='150' cy='196' r='3'/%3E%3Ccircle cx='66' cy='12' r='3'/%3E%3Crect x='100' y='128' width='16' height='10'/%3E%3Crect x='182' y='58' width='10' height='16'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background-color: var(--paper); background-image: var(--pcb); background-repeat: repeat;
+      color: var(--ink); font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Courier New", monospace;
+      font-size: 13px; line-height: 1.65;
+    }
+    html[dir="rtl"] body { font-family: Vazirmatn, Tahoma, "JetBrains Mono", monospace; }
+    html[dir="rtl"] * { letter-spacing: 0 !important; }
+    a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--line); }
+    a:hover { border-bottom-color: var(--ink); }
+
+    .wrap { max-width: 1020px; margin: 0 auto; padding: 22px 20px 64px; }
+    .topbar {
+      background: var(--paper); border: 1px solid var(--line); border-bottom: 2px solid var(--ink);
+      padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    .tab-bar {
+      background: var(--paper); border: 1px solid var(--line); border-top: none; padding: 10px 16px;
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px;
+    }
+    .btn {
+      background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 5px 11px;
+      font-family: inherit; font-size: 11px; font-weight: 700; text-transform: uppercase; cursor: pointer;
+    }
+    .btn.ghost { background: var(--paper); color: var(--ink); border-color: var(--line); }
+    .btn.ghost.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+    .fetch-block {
+      background: var(--paper); border: 1px solid var(--ink); margin-bottom: 18px;
+    }
+    .fetch-block.hidden { display: none; }
+    .fetch-cmd {
+      padding: 9px 16px; border-bottom: 1px solid var(--line); font-size: 12px; font-weight: 700;
+      display: flex; justify-content: space-between; color: var(--dim);
+    }
+    .fetch-cmd strong { color: var(--ink); }
+    .fetch-body {
+      padding: 22px; display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: start;
+    }
+    .photo { width: 100%; aspect-ratio: 1/1; object-fit: cover; filter: grayscale(1); border: 1px solid var(--ink); }
+    .chip-logo { width: 140px; height: 140px; image-rendering: pixelated; border: 1px solid var(--line); margin: 0 auto; display: block; }
+    .bio { margin: 10px 0 0; white-space: pre-line; font-size: 12.5px; color: var(--dim); }
+
+    .kv { display: flex; gap: 10px; padding: 3px 0; font-size: 12px; }
+    .kv-k { color: var(--dim); min-width: 110px; }
+    .kv-v { font-weight: 700; }
+
+    .proj-menu { display: flex; flex-direction: column; gap: 4px; }
+    .p-btn {
+      background: var(--paper); color: var(--ink); border: 1px solid var(--line); padding: 7px 10px;
+      font-family: inherit; font-size: 11.5px; text-align: start; cursor: pointer;
+    }
+    .p-btn.active, .p-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+    .cicon { width: 13px; height: 13px; image-rendering: pixelated; vertical-align: -1px; margin-inline-end: 7px; }
+    html[data-theme="dark"] .cicon { filter: invert(1); }
+
+    @media (max-width: 760px) {
+      .fetch-body { grid-template-columns: 1fr; }
+      .photo { max-width: 180px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div><strong>SYNAPSE</strong> // <span data-i18n="title">NEOFETCH 03: MULTI-FETCH SUITE</span></div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn ghost" id="langBtn" onclick="toggleLang()">FA</button>
+        <button class="btn" id="themeBtn" onclick="toggleTheme()">DARK</button>
+      </div>
+    </header>
+
+    <nav class="tab-bar">
+      <button class="btn ghost active" onclick="setTab('all', this)">ALL STACKED</button>
+      <button class="btn ghost" onclick="setTab('neo', this)">$ neofetch</button>
+      <button class="btn ghost" onclick="setTab('hw', this)">$ hwfetch</button>
+      <button class="btn ghost" onclick="setTab('proj', this)">$ projfetch</button>
+      <button class="btn ghost" onclick="setTab('exp', this)">$ expfetch</button>
+    </nav>
+
+    <!-- 1. $ neofetch -->
+    <section class="fetch-block" data-tab="neo">
+      <div class="fetch-cmd"><strong>$ neofetch --photo profile.jpg</strong><span>IDENTITY</span></div>
+      <div class="fetch-body">
+        <img class="photo" src="../static/profile.jpg" alt="Mohammad Reza Ebadollah" />
+        <div>
+          <h1 style="margin:0 0 4px; font-size:18px; letter-spacing:0.1em;" data-i18n="name">MOHAMMAD REZA EBADOLLAH</h1>
+          <div style="font-size:11px; color:var(--dim); margin-bottom:10px;" data-i18n="role">COMPUTER ENGINEER · IOT / EMBEDDED / SIGNAL + IMAGE</div>
+          <div class="kv"><span class="kv-k">OS:</span><span class="kv-v" data-i18n="osLine">Windows · Ubuntu GNOME</span></div>
+          <div class="kv"><span class="kv-k">TERMINAL:</span><span class="kv-v">Ghostty — Everywhere</span></div>
+          <div class="kv"><span class="kv-k">SSH TWIN:</span><span class="kv-v">ssh ebad84.ir (no login)</span></div>
+          <p class="bio" data-i18n="bio"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. $ hwfetch -->
+    <section class="fetch-block" data-tab="hw">
+      <div class="fetch-cmd"><strong>$ hwfetch --boards --skills</strong><span>HARDWARE &amp; STACK</span></div>
+      <div class="fetch-body">
+        <img class="chip-logo" src="../static/synapse.png" alt="SYNAPSE CHIP" />
+        <div>
+          <div class="kv"><span class="kv-k">MAIN MCU:</span><span class="kv-v">ESP32</span></div>
+          <div class="kv"><span class="kv-k">OTHER BOARDS:</span><span class="kv-v" data-i18n="boardsShort">Arduino · Pi Pico · ESP8266 · Pi Zero · Pi 5</span></div>
+          <div class="kv"><span class="kv-k">MAKING:</span><span class="kv-v" data-i18n="makingLine">DataLoggers · Smart Sensors · Home Automation · Robotics · 3D Printing</span></div>
+          <div class="kv"><span class="kv-k">TOOLS:</span><span class="kv-v" data-i18n="tools">Flask · FastAPI · uv · SQL · Git · Docker</span></div>
+          <div style="margin-top:14px; border-top:1px solid var(--line); padding-top:10px;" id="skillsBox"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. $ projfetch -->
+    <section class="fetch-block" data-tab="proj">
+      <div class="fetch-cmd"><strong>$ projfetch --select 01..07</strong><span>7 BUILDS</span></div>
+      <div class="fetch-body">
+        <div class="proj-menu" id="projMenu"></div>
+        <div id="projDetail" style="border:1px solid var(--line); padding:16px 18px; min-height:220px;"></div>
+      </div>
+    </section>
+
+    <!-- 4. $ expfetch -->
+    <section class="fetch-block" data-tab="exp">
+      <div class="fetch-cmd"><strong>$ expfetch --uplink</strong><span>EXPERIENCE &amp; CONTACT</span></div>
+      <div class="fetch-body">
+        <div style="font-size:11px; color:var(--dim); border:1px solid var(--line); padding:14px;">
+          <strong style="color:var(--ink)">DEVOPS &amp; SITE</strong><br/>
+          <span data-i18n="devopsLine">CI/CD, Containers, Linux Boxes</span><br/><br/>
+          <span data-i18n="siteLine">Flask + One CSS File</span>
+        </div>
+        <div>
+          <div id="expBox" style="margin-bottom:14px;"></div>
+          <div style="display:flex; flex-wrap:wrap; gap:14px; border-top:1px solid var(--line); padding-top:12px;">
+            <a href="https://github.com/ebad84" target="_blank" rel="noopener"><img class="cicon" src="../static/icon-gh.svg" alt="" />GITHUB — github.com/ebad84</a>
+            <a href="https://linkedin.com/in/ebad84" target="_blank" rel="noopener"><img class="cicon" src="../static/icon-in.svg" alt="" />LINKEDIN — linkedin.com/in/ebad84</a>
+            <a href="https://t.me/ebad84" target="_blank" rel="noopener"><img class="cicon" src="../static/icon-tg.svg" alt="" />TELEGRAM — t.me/ebad84</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const D = {
+      en: {
+        title: "NEOFETCH 03: MULTI-FETCH SUITE",
+        name: "MOHAMMAD REZA EBADOLLAH", role: "COMPUTER ENGINEER · IOT / EMBEDDED / SIGNAL + IMAGE",
+        osLine: "Windows — Daily Driver · Ubuntu GNOME — Second Home",
+        boardsShort: "Arduino · Raspberry Pi Pico · ESP8266 Family · Pi Zero · Pi 5",
+        makingLine: "DataLoggers · Smart Sensors · Home Automation · Robotics · 3D Printing",
+        tools: "Flask · FastAPI · uv · SQL · Git · Docker (a bit) · Learning PostgreSQL",
+        devopsLine: "Interested — CI/CD, Containers, Linux Boxes",
+        siteLine: "Flask + one CSS file — no JS libraries, no CDN",
+        openText: "OPEN ↑",
+        bio: "Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things.\nData, audio, signal, and image processing are areas I enjoy exploring. If you have a project you think I could help with, I'd be happy to work together!",
+        skills: [{ k: "PYTHON", pct: 80 }, { k: "C / C++ / ARDUINO / EMBEDDED C", pct: 60 }, { k: "PHP", pct: 40 }],
+        exp: [
+          { role: "R&D · University of Qom", dur: "2026-present", note: "Making a DataLogger and other IoT Projects" },
+          { role: "FREELANCE DEVELOPER · PARSCODERS", dur: "2020-2024 · 4 years", note: "Python webscraping expert and bot automation" }
+        ]
+      },
+      fa: {
+        title: "نئوفتچ ۰۳: مجموعه دستورهای Fetch",
+        name: "محمدرضا عبادالله", role: "مهندس کامپیوتر · اینترنت اشیا / سیستم‌های نهفته / سیگنال و تصویر",
+        osLine: "ویندوز — سیستم اصلی · اوبونتو گنوم — خانهٔ دوم",
+        boardsShort: "آردوینو · رزبری‌پای پیکو · خانوادهٔ ESP8266 · زیرو · رزبری‌پای 5",
+        makingLine: "دیتالاگر · سنسور هوشمند · هوشمندسازی خانه · رباتیک · پرینتر سه‌بعدی",
+        tools: "فلسک · فست‌ای‌پی‌آی · uv · اسکیول · گیت · داکر (کمی) · پستگرس",
+        devopsLine: "علاقه‌مند — CI/CD، کانتینرها، باکس‌های لینوکس",
+        siteLine: "فلسک + یک فایل CSS — بدون کتابخانه جاوااسکریپت و CDN",
+        openText: "باز کردن ↑",
+        bio: "در حال تحصیل در رشته مهندسی کامپیوتر هستم و به حوزه‌های سخت‌افزار و نرم‌افزار علاقه دارم؛ از وب‌اسکرپینگ، بات و اتومیشن گرفته تا الکترونیک و اینترنت اشیا (IoT).\nپردازش داده، صوت، سیگنال و تصویر از حوزه‌های مورد علاقهٔ من هستن و خوشحال می‌شم در پروژه‌ها همکاری کنیم!",
+        skills: [{ k: "پایتون", pct: 80 }, { k: "C / C++ / آردوینو", pct: 60 }, { k: "PHP", pct: 40 }],
+        exp: [
+          { role: "دانشگاه قم R&D", dur: "2026-present", note: "پروژه IoT و دیتالاگر" },
+          { role: "توسعه‌دهندهٔ فریلنسر · پارس‌کدرز", dur: "2020-2024 · 4 years", note: "متخصص وب‌اسکرپینگ پایتون و اتوماسیون ربات" }
+        ]
+      }
+    };
+
+    const PROJECTS = [
+      { idx: "01", titleEn: "SYNAPSE RESUME SITE", titleFa: "سایت رزومهٔ سینپس", descEn: "Personal resume site with two faces: minimal Flask web page and login-free interactive SSH terminal twin behind nginx.", descFa: "سایت رزومهٔ شخصی با دو رویه: صفحه وب مینیمال Flask و نسخه SSH تعاملی بدون لاگین پشت nginx.", tags: "PYTHON · FLASK · SSH · PARAMIKO · NGINX", link: "https://github.com/ebad84/synapse-resume" },
+      { idx: "02", titleEn: "UTEMP — IoT TEMPERATURE", titleFa: "یوتمپ — پلتفرم دمای IoT", descEn: "Web service and REST API for IoT devices to log and display temperature data. Deployed with Docker + nginx.", descFa: "سرویس وب و REST API برای دستگاه‌های IoT جهت ثبت و نمایش دما با داکر و nginx.", tags: "PYTHON · FLASK · DOCKER · IOT · SQLITE", link: "https://github.com/ebad84/UTEMP" },
+      { idx: "03", titleEn: "QR CODE GENERATOR", titleFa: "مولد QR Code", descEn: "100% client-side QR code generator — no backend, no API, no tracking. Outputs PNG and SVG.", descFa: "مولد QR Code کاملاً سمت کلاینت بدون ردیابی با خروجی PNG و SVG.", tags: "HTML · CSS · VANILLA JS · SELF-HOSTED", link: "https://qr.ebad84.ir" },
+      { idx: "04", titleEn: "ELECTRONIC PARTS MANAGER", titleFa: "مدیریت قطعات الکترونیکی", descEn: "Full-stack Persian web app for electronics inventory with Jalali calendar and ZIP backup/restore.", descFa: "اپلیکیشن وب فارسی مدیریت انبار قطعات الکترونیکی دارای تقویم جلالی و بکاپ ZIP.", tags: "PYTHON · FLASK · SQLALCHEMY · PILLOW", link: "https://github.com/ebad84/my-things-manager" },
+      { idx: "05", titleEn: "DIGIKALA DAILY POINT BOT", titleFa: "ربات امتیاز روزانه دیجی‌کالا", descEn: "Automates daily DigiClub point collection on Digikala via OTP login and session persistence.", descFa: "جمع‌آوری خودکار امتیاز روزانهٔ DigiClub دیجی‌کالا با لاگین OTP و نگهداری نشست.", tags: "PYTHON · FLASK · BEAUTIFULSOUP4 · REQUESTS", link: "https://github.com/ebad84/digikala_dailypoint" },
+      { idx: "06", titleEn: "ESP32 MUSIC PLAYER", titleFa: "موزیک پلیر ESP32", descEn: "MP3/WAV player built on ESP32 with MicroPython, I2S DAC, and wireless Flask file transfer.", descFa: "موزیک پلیر روی ESP32 با MicroPython، خروجی I2S DAC و انتقال بی‌سیم فایل.", tags: "MICROPYTHON · ESP32 · I2S · SPI · PYDUB", link: "https://github.com/ebad84/Music_Player" },
+      { idx: "07", titleEn: "UV CURING STATION PCB", titleFa: "PCB ایستگاه UV", descEn: "Compact USB-powered PCB-based UV curing station (20 UV LEDs). Designed in EasyEDA Pro.", descFa: "ایستگاه UV Curing مبتنی بر PCB با ۲۰ عدد LED UV طراحی‌شده در EasyEDA Pro.", tags: "PCB DESIGN · EASYEDA PRO · HARDWARE", link: "https://github.com/ebad84/UV-Station" }
+    ];
+
+    let lang = "en", selProj = 0;
+
+    function setTab(tab, btn) {
+      document.querySelectorAll(".tab-bar .btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".fetch-block").forEach(blk => {
+        blk.classList.toggle("hidden", tab !== "all" && blk.dataset.tab !== tab);
+      });
+    }
+
+    function render() {
+      const t = D[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
+      document.getElementById("langBtn").textContent = lang === "fa" ? "EN" : "FA";
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const k = el.getAttribute("data-i18n");
+        if (t[k]) el.textContent = t[k];
+      });
+
+      document.getElementById("skillsBox").innerHTML = t.skills.map(s => {
+        const bar = "█".repeat(s.pct / 10) + `<span style="color:var(--dim)">${"░".repeat(10 - s.pct / 10)}</span>`;
+        return `<div class="kv"><span class="kv-k" style="min-width:190px;">${s.k}</span><span>${bar} ${s.pct}%</span></div>`;
+      }).join("");
+
+      document.getElementById("expBox").innerHTML = t.exp.map(e =>
+        `<div style="margin-bottom:10px;"><strong>${e.role}</strong> <span style="font-size:11px;color:var(--dim)">(${e.dur})</span><div style="font-size:12px;color:var(--dim)">${e.note}</div></div>`
+      ).join("");
+
+      renderProj();
+    }
+
+    function renderProj() {
+      const t = D[lang];
+      document.getElementById("projMenu").innerHTML = PROJECTS.map((p, i) => `
+        <button class="p-btn ${i === selProj ? "active" : ""}" onclick="selProj=${i};renderProj();">
+          ${p.idx} · ${lang === "fa" ? p.titleFa : p.titleEn}
+        </button>
+      `).join("");
+      const cur = PROJECTS[selProj];
+      document.getElementById("projDetail").innerHTML = `
+        <div style="font-size:10.5px;color:var(--dim);margin-bottom:6px;">FETCHED // ${cur.idx}</div>
+        <h2 style="margin:0 0 8px;font-size:15px;text-transform:uppercase;">${lang === "fa" ? cur.titleFa : cur.titleEn}</h2>
+        <p style="margin:0 0 12px;font-size:12.5px;color:var(--dim);">${lang === "fa" ? cur.descFa : cur.descEn}</p>
+        <div style="font-size:10.5px;color:var(--dim);margin-bottom:14px;">${cur.tags}</div>
+        <a class="btn" href="${cur.link}" target="_blank" rel="noopener">${t.openText}</a>
+      `;
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      updateThemeBtn();
+    }
+    function updateThemeBtn() {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      document.getElementById("themeBtn").textContent = lang === "fa" ? (isDark ? "روشن" : "تیره") : (isDark ? "LIGHT" : "DARK");
+    }
+    function toggleLang() {
+      lang = lang === "en" ? "fa" : "en";
+      render();
+      updateThemeBtn();
+    }
+
+    render();
+    updateThemeBtn();
+  </script>
+  <script src="../static/oneko.js" data-cat="../static/oneko.gif" async></script>
+</body>
+</html>
