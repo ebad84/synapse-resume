@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 260" width="480" height="260" font-family="monospace">
+  <rect width="480" height="260" fill="#f6f5f1"/>
+  <rect x="8" y="8" width="464" height="244" rx="10" fill="#ffffff" stroke="#e5e2da" stroke-width="1.5"/>
+  <text x="24" y="34" font-weight="600" font-size="12" fill="#1c1b19">ARCHITECTURE // ONE SOURCE, TWO FACES</text>
+  <rect x="24" y="104" width="74" height="52" rx="7" fill="#f6f5f1" stroke="#cdc9bf"/>
+  <text x="61" y="127" text-anchor="middle" font-size="10" font-weight="600" fill="#1c1b19">VISITOR</text>
+  <text x="61" y="142" text-anchor="middle" font-size="8.5" fill="#67655f">browser/ssh</text>
+  <path d="M98 130 H128" stroke="#a8492a" stroke-width="2"/><polygon points="126,125 134,130 126,135" fill="#a8492a"/>
+  <rect x="134" y="98" width="86" height="64" rx="7" fill="#1c1b19"/>
+  <text x="177" y="125" text-anchor="middle" font-size="11" font-weight="600" fill="#ecebe6">NGINX</text>
+  <text x="177" y="142" text-anchor="middle" font-size="8.5" fill="#e48b60">home server</text>
+  <path d="M220 116 L258 74" stroke="#a8492a" stroke-width="2"/>
+  <path d="M220 144 L258 186" stroke="#a8492a" stroke-width="2"/>
+  <rect x="258" y="48" width="104" height="52" rx="7" fill="#f5e8e1" stroke="#a8492a"/>
+  <text x="310" y="70" text-anchor="middle" font-size="10.5" font-weight="600" fill="#a8492a">FLASK :5000</text>
+  <text x="310" y="86" text-anchor="middle" font-size="8.5" fill="#1c1b19">web · /api · /admin</text>
+  <rect x="258" y="160" width="104" height="52" rx="7" fill="#f5e8e1" stroke="#a8492a"/>
+  <text x="310" y="182" text-anchor="middle" font-size="10.5" font-weight="600" fill="#a8492a">PARAMIKO :22</text>
+  <text x="310" y="198" text-anchor="middle" font-size="8.5" fill="#1c1b19">ssh tui · no auth</text>
+  <path d="M362 74 L396 116" stroke="#1c1b19" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <path d="M362 186 L396 144" stroke="#1c1b19" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <rect x="380" y="108" width="80" height="44" rx="7" fill="#ffffff" stroke="#1c1b19"/>
+  <text x="420" y="127" text-anchor="middle" font-size="9.5" font-weight="600" fill="#1c1b19">projects</text>
+  <text x="420" y="141" text-anchor="middle" font-size="9.5" fill="#1c1b19">.json</text>
+  <text x="24" y="236" font-size="9.5" fill="#67655f">edit once → web, ssh and admin panel all update</text>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 260" width="480" height="260" font-family="monospace">
+  <rect width="480" height="260" fill="#f6f5f1"/>
+  <rect x="8" y="8" width="464" height="244" rx="10" fill="#ffffff" stroke="#e5e2da" stroke-width="1.5"/>
+  <text x="24" y="34" font-weight="600" font-size="12" fill="#1c1b19">WIRING // SPI + I2S</text>
+  <rect x="180" y="52" width="120" height="176" rx="8" fill="#1c1b19"/>
+  <text x="240" y="76" text-anchor="middle" font-size="12" font-weight="600" fill="#ecebe6">ESP32</text>
+  <g font-size="9" fill="#e48b60"><text x="190" y="104">SCK</text><text x="190" y="124">MOSI</text><text x="190" y="144">MISO</text><text x="190" y="164">CS</text></g>
+  <g font-size="9" fill="#e48b60" text-anchor="end"><text x="290" y="104">BCLK</text><text x="290" y="124">LRCK</text><text x="290" y="144">DIN</text><text x="290" y="164">3V3</text></g>
+  <g stroke="#a8492a" stroke-width="1.5"><path d="M180 100 H130"/><path d="M180 120 H130"/><path d="M180 140 H130"/><path d="M180 160 H130"/></g>
+  <g stroke="#1c1b19" stroke-width="1.5"><path d="M300 100 H350"/><path d="M300 120 H350"/><path d="M300 140 H350"/><path d="M300 160 H350"/></g>
+  <rect x="34" y="84" width="96" height="92" rx="7" fill="#f5e8e1" stroke="#a8492a"/>
+  <text x="82" y="124" text-anchor="middle" font-size="11" font-weight="600" fill="#a8492a">SD CARD</text>
+  <text x="82" y="142" text-anchor="middle" font-size="9" fill="#1c1b19">WAV files</text>
+  <rect x="350" y="84" width="96" height="92" rx="7" fill="#ffffff" stroke="#1c1b19"/>
+  <text x="398" y="124" text-anchor="middle" font-size="11" font-weight="600" fill="#1c1b19">I2S DAC</text>
+  <text x="398" y="142" text-anchor="middle" font-size="9" fill="#67655f">→ speaker</text>
+  <text x="82" y="200" text-anchor="middle" font-size="9" fill="#a8492a">SPI bus</text>
+  <text x="398" y="200" text-anchor="middle" font-size="9" fill="#1c1b19">I2S bus</text>
+  <text x="240" y="244" text-anchor="middle" font-size="9" fill="#67655f">read chunk → buffer → i2s.write() · loop</text>
+</svg>

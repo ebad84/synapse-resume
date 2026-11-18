@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 260" width="480" height="260" font-family="monospace">
+  <rect width="480" height="260" fill="#f6f5f1"/>
+  <rect x="8" y="8" width="464" height="244" rx="10" fill="#ffffff" stroke="#e5e2da" stroke-width="1.5"/>
+  <text x="24" y="34" font-weight="600" font-size="12" fill="#1c1b19">SCHEMATIC // ONE CHANNEL (×N)</text>
+  <rect x="24" y="96" width="62" height="64" rx="6" fill="#1c1b19"/>
+  <text x="55" y="124" text-anchor="middle" font-size="10" font-weight="600" fill="#ecebe6">USB</text>
+  <text x="55" y="140" text-anchor="middle" font-size="9" fill="#e48b60">5V</text>
+  <path d="M86 112 H130" stroke="#a8492a" stroke-width="2"/>
+  <path d="M86 146 H112 V214 H420 V160" stroke="#1c1b19" stroke-width="1.5"/>
+  <rect x="130" y="102" width="56" height="20" rx="3" fill="#ffffff" stroke="#1c1b19" stroke-width="1.5"/>
+  <text x="158" y="116" text-anchor="middle" font-size="9" fill="#1c1b19">R</text>
+  <text x="158" y="94" text-anchor="middle" font-size="9" fill="#67655f">I limit</text>
+  <path d="M186 112 H420 V132" stroke="#a8492a" stroke-width="2"/>
+  <g fill="#f5e8e1" stroke="#a8492a" stroke-width="1.5">
+    <polygon points="404,132 436,132 420,150"/>
+  </g>
+  <line x1="404" y1="152" x2="436" y2="152" stroke="#a8492a" stroke-width="2"/>
+  <path d="M442 128 l10 -8 M446 138 l10 -8" stroke="#a8492a" stroke-width="1.5"/>
+  <text x="372" y="146" text-anchor="end" font-size="9.5" fill="#a8492a">UV LED</text>
+  <rect x="200" y="150" width="170" height="50" rx="6" fill="#f6f5f1" stroke="#e5e2da"/>
+  <text x="212" y="170" font-size="9.5" fill="#1c1b19">R = (5V − Vf) / I</text>
+  <text x="212" y="188" font-size="9.5" fill="#67655f">Σ I ≤ ~400mA (USB)</text>
+  <text x="24" y="240" font-size="9.5" fill="#67655f">20 LEDs · even spacing for uniform curing</text>
+</svg>

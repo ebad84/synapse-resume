@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 260" width="480" height="260" font-family="monospace">
+  <rect width="480" height="260" fill="#f6f5f1"/>
+  <rect x="8" y="8" width="464" height="244" rx="10" fill="#ffffff" stroke="#e5e2da" stroke-width="1.5"/>
+  <text x="24" y="34" font-weight="600" font-size="12" fill="#1c1b19">RUN LOG // ONE WEEK</text>
+  <line x1="44" y1="120" x2="436" y2="120" stroke="#cdc9bf" stroke-width="2"/>
+  <g font-size="9" fill="#67655f" text-anchor="middle">
+    <text x="60" y="150">SAT</text><text x="122" y="150">SUN</text><text x="184" y="150">MON</text><text x="246" y="150">TUE</text><text x="308" y="150">WED</text><text x="370" y="150">THU</text><text x="420" y="150">FRI</text>
+  </g>
+  <g fill="#a8492a"><circle cx="60" cy="120" r="7"/><circle cx="122" cy="120" r="7"/><circle cx="184" cy="120" r="7"/><circle cx="308" cy="120" r="7"/><circle cx="370" cy="120" r="7"/><circle cx="420" cy="120" r="7"/></g>
+  <circle cx="246" cy="120" r="7" fill="#ffffff" stroke="#1c1b19" stroke-width="2"/>
+  <g font-size="9" text-anchor="middle" fill="#a8492a"><text x="60" y="100">+pts</text><text x="122" y="100">+pts</text><text x="184" y="100">+pts</text><text x="308" y="100">+pts</text><text x="370" y="100">+pts</text><text x="420" y="100">+pts</text></g>
+  <text x="246" y="100" text-anchor="middle" font-size="9" fill="#1c1b19">expired</text>
+  <rect x="24" y="170" width="432" height="62" rx="7" fill="#1c1b19"/>
+  <text x="38" y="190" font-size="9.5" fill="#a3a099">[tue 08:00] session expired → 401</text>
+  <text x="38" y="206" font-size="9.5" fill="#e48b60">[tue 08:00] waiting for new OTP…</text>
+  <text x="38" y="222" font-size="9.5" fill="#ecebe6">[wed 08:00] logged in · session saved · claimed ✓</text>
+</svg>
