@@ -3,100 +3,204 @@
     {
       "id": "synapse-resume",
       "title": {
-        "en": "SYNAPSE RESUME SITE",
-        "fa": "سایت رزومهٔ سینپس"
+        "fa": "سایت رزومهٔ سینپس",
+        "en": "SYNAPSE RESUME SITE"
       },
       "desc": {
-        "en": "Personal resume site with two faces: a minimal Flask web page and an interactive SSH terminal version — login-free, terminal.shop style. Self-hosted on a home server behind nginx.",
-        "fa": "سایت رزومهٔ شخصی با دو رویه: یک صفحه وب مینیمال با Flask و یک نسخه SSH تعاملی بدون نیاز به لاگین. هاست روی سرور خانگی پشت nginx."
+        "fa": "سایت رزومهٔ شخصی با دو رویه: یک صفحه وب مینیمال با Flask و یک نسخه SSH تعاملی بدون نیاز به لاگین. هاست روی سرور خانگی پشت nginx.",
+        "en": "Personal resume site with two faces: a minimal Flask web page and an interactive SSH terminal version — login-free, terminal.shop style. Self-hosted on a home server behind nginx."
       },
-      "tags": ["PYTHON", "FLASK", "SSH", "PARAMIKO", "SELF-HOSTED", "NGINX"],
+      "details": {
+        "fa": "این سایت با تمرکز بر سرعت بالا و سادگی ساخته شده است؛ بدون فریم‌ورک‌های سنگین جاوااسکریپت و همراه با دو نسخه وب و SSH (پیاده‌سازی‌شده با Paramiko) برای دسترسی مستقیم از ترمینال.",
+        "en": "Built for speed and zero bloat: a clean Flask web front-end paired with a custom Paramiko SSH server so anyone can browse the resume right from their terminal via ssh ebad84.ir."
+      },
+      "cats": [
+        "PYTHON",
+        "SELF-HOSTED"
+      ],
+      "tags": [
+        "PYTHON",
+        "FLASK",
+        "SSH",
+        "PARAMIKO",
+        "SELF-HOSTED",
+        "NGINX"
+      ],
       "link": "https://github.com/ebad84/synapse-resume",
-      "image": "synapse-resume.svg"
+      "image": "/static/projects/synapse-resume.svg"
     },
     {
       "id": "utemp",
       "title": {
-        "en": "UTEMP — IoT TEMPERATURE PLATFORM",
-        "fa": "یوتمپ — پلتفرم دمای IoT"
+        "fa": "یوتمپ — پلتفرم دمای IoT",
+        "en": "UTEMP — IoT TEMPERATURE PLATFORM"
       },
       "desc": {
-        "en": "A web service and REST API for IoT devices to log and display temperature data. Devices authenticate with an API key; users register sensors via a web dashboard. Deployed with Docker + nginx.",
-        "fa": "سرویس وب و REST API برای دستگاه‌های IoT جهت ثبت و نمایش دما. دستگاه‌ها با API key احراز هویت می‌شوند؛ کاربران سنسورها را از طریق داشبورد وب مدیریت می‌کنند. Deploy شده با Docker و nginx."
+        "fa": "سرویس وب و REST API برای دستگاه‌های IoT جهت ثبت و نمایش دما. دستگاه‌ها با API key احراز هویت می‌شوند و کاربران سنسورها را از طریق داشبورد مدیریت می‌کنند.",
+        "en": "A web service and REST API for IoT devices to log and display temperature data. Devices authenticate with an API key; users register sensors via a web dashboard. Deployed with Docker + nginx."
       },
-      "tags": ["PYTHON", "FLASK", "REST API", "DOCKER", "NGINX", "IOT", "SQLITE"],
+      "details": {
+        "fa": "گره‌های سنسور (مثل ESP32) داده‌ها را با کلید API اختصاصی ارسال می‌کنند. داده‌ها در SQLite ذخیره شده و نمودار دمای هر سنسور در داشبورد وب نمایش داده می‌شود. کل سرویس با Docker و nginx کانتینری شده است.",
+        "en": "Hardware sensor nodes authenticate with per-device API keys to stream temperature readings. Readings are stored in SQLite and visualized in a responsive dashboard, containerized with Docker behind nginx."
+      },
+      "cats": [
+        "PYTHON",
+        "IOT",
+        "SELF-HOSTED"
+      ],
+      "tags": [
+        "PYTHON",
+        "FLASK",
+        "REST API",
+        "DOCKER",
+        "NGINX",
+        "IOT",
+        "SQLITE"
+      ],
       "link": "https://github.com/ebad84/UTEMP",
-      "image": "utemp.svg"
+      "image": "/static/projects/utemp.svg"
     },
     {
       "id": "qr-generator",
       "title": {
-        "en": "QR CODE GENERATOR",
-        "fa": "مولد QR Code"
+        "fa": "مولد QR Code",
+        "en": "QR CODE GENERATOR"
       },
       "desc": {
-        "en": "A fully client-side QR code generator — no backend, no API, no tracking. Runs entirely in the browser. Supports URL, text, email, phone and Wi-Fi. Outputs PNG and SVG. Self-hosted on home hardware.",
-        "fa": "مولد QR Code کاملاً سمت کلاینت — بدون بک‌اند، بدون API، بدون ردیابی. کاملاً در مرورگر اجرا می‌شود. پشتیبانی از URL، متن، ایمیل، تلفن و Wi-Fi. خروجی PNG و SVG. هاست روی سخت‌افزار خانگی."
+        "fa": "مولد QR Code کاملاً سمت کلاینت — بدون بک‌اند، بدون API، بدون ردیابی. پشتیبانی از URL، متن، ایمیل، تلفن و Wi-Fi با خروجی PNG و SVG.",
+        "en": "A fully client-side QR code generator — no backend, no API, no tracking. Runs entirely in the browser. Supports URL, text, email, phone and Wi-Fi. Outputs PNG and SVG."
       },
-      "tags": ["HTML", "CSS", "VANILLA JS", "SELF-HOSTED", "NGINX"],
+      "details": {
+        "fa": "تمام پردازش تولید QR Code مستقیماً داخل مرورگر کاربر انجام می‌شود تا هیچ اطلاعاتی (مثل رمز Wi-Fi) به سرور ارسال نشود. امکان دانلود با فرمت برداری SVG و PNG روی سرور خانگی میزبانی شده است.",
+        "en": "Everything runs locally in the browser so sensitive payloads like Wi-Fi credentials never leave the device. Supports instant vector SVG and high-DPI PNG downloads at qr.ebad84.ir."
+      },
+      "cats": [
+        "SELF-HOSTED"
+      ],
+      "tags": [
+        "HTML",
+        "CSS",
+        "VANILLA JS",
+        "SELF-HOSTED",
+        "NGINX"
+      ],
       "link": "https://qr.ebad84.ir",
-      "image": "qr-generator.svg"
+      "image": "/static/projects/qr-generator.svg"
     },
     {
       "id": "my-things-manager",
       "title": {
-        "en": "ELECTRONIC PARTS MANAGER",
-        "fa": "مدیریت قطعات الکترونیکی"
+        "fa": "مدیریت قطعات الکترونیکی",
+        "en": "ELECTRONIC PARTS MANAGER"
       },
       "desc": {
-        "en": "A full-stack Persian web app for managing an electronics inventory. Tracks parts, purchase history, projects, invoices and organizations. Features Jalali calendar, image extraction from product URLs, and ZIP backup/restore.",
-        "fa": "اپلیکیشن وب فارسی full-stack برای مدیریت انبار قطعات الکترونیکی. ردیابی قطعات، تاریخچهٔ خرید، پروژه‌ها، فاکتورها و سازمان‌ها. دارای تقویم جلالی، استخراج تصویر از URL محصول و بکاپ/ریستور ZIP."
+        "fa": "اپلیکیشن وب فارسی full-stack برای مدیریت انبار قطعات الکترونیکی، تاریخچهٔ خرید، پروژه‌ها، فاکتورها و سازمان‌ها با تقویم جلالی و بکاپ ZIP.",
+        "en": "A full-stack Persian web app for managing an electronics inventory. Tracks parts, purchase history, projects, invoices and organizations with Jalali calendar and ZIP backup/restore."
       },
-      "tags": ["PYTHON", "FLASK", "SQLALCHEMY", "SQLITE", "PILLOW", "JALALI CALENDAR"],
+      "details": {
+        "fa": "طراحی‌شده برای مدیریت انبار قطعات الکترونیکی؛ شامل استخراج خودکار تصویر قطعه از لینک فروشگاه، لیست قطعات موردنیاز هر پروژه، تقویم جلالی و خروجی کامل ZIP برای بکاپ و بازیابی.",
+        "en": "Built to keep track of electronics lab inventory: supports automatic image fetching from vendor URLs, project BOMs, invoice tracking, native Jalali dates, and one-click ZIP backup & restore."
+      },
+      "cats": [
+        "PYTHON"
+      ],
+      "tags": [
+        "PYTHON",
+        "FLASK",
+        "SQLALCHEMY",
+        "SQLITE",
+        "PILLOW",
+        "JALALI CALENDAR"
+      ],
       "link": "https://github.com/ebad84/my-things-manager",
-      "image": "my-things-manager.svg"
+      "image": "/static/projects/my-things-manager.svg"
     },
     {
       "id": "digikala-dailypoint",
       "title": {
-        "en": "DIGIKALA DAILY POINT BOT",
-        "fa": "ربات امتیاز روزانهٔ دیجی‌کالا"
+        "fa": "ربات امتیاز روزانهٔ دیجی‌کالا",
+        "en": "DIGIKALA DAILY POINT BOT"
       },
       "desc": {
-        "en": "Automates the daily DigiClub point collection on Digikala — Iran's largest e-commerce platform. Logs in via OTP, persists the session, and can be deployed to run automatically every day via UptimeRobot.",
-        "fa": "جمع‌آوری خودکار امتیاز روزانهٔ DigiClub دیجی‌کالا. لاگین با OTP، نگهداری session، و قابل deploy برای اجرای روزانهٔ خودکار از طریق UptimeRobot."
+        "fa": "جمع‌آوری خودکار امتیاز روزانهٔ DigiClub دیجی‌کالا با لاگین OTP، نگهداری session و قابلیت اجرای روزانه از طریق UptimeRobot.",
+        "en": "Automates the daily DigiClub point collection on Digikala — Iran's largest e-commerce platform. Logs in via OTP, persists the session, and runs daily via UptimeRobot."
       },
-      "tags": ["PYTHON", "FLASK", "WEB SCRAPING", "BEAUTIFULSOUP4", "REQUESTS", "POETRY"],
+      "details": {
+        "fa": "پس از ورود یک‌بارمصرف با OTP، نشست کاربری ذخیره می‌شود و با یک درخواست ساده روزانه از طریق سرویس‌هایی مثل UptimeRobot یا cron امتیاز روزانه را بدون دخالت کاربر ثبت می‌کند.",
+        "en": "Handles OTP authentication once, persists session cookies securely, and exposes a minimal Flask webhook endpoint so scheduled pings collect daily DigiClub points automatically."
+      },
+      "cats": [
+        "PYTHON"
+      ],
+      "tags": [
+        "PYTHON",
+        "FLASK",
+        "WEB SCRAPING",
+        "BEAUTIFULSOUP4",
+        "REQUESTS",
+        "POETRY"
+      ],
       "link": "https://github.com/ebad84/digikala_dailypoint",
-      "image": "digikala-dailypoint.svg"
+      "image": "/static/projects/digikala-dailypoint.svg"
     },
     {
       "id": "esp32-music-player",
       "title": {
-        "en": "ESP32 MUSIC PLAYER",
-        "fa": "موزیک پلیر ESP32"
+        "fa": "موزیک پلیر ESP32",
+        "en": "ESP32 MUSIC PLAYER"
       },
       "desc": {
-        "en": "An MP3 player built on an ESP32 with MicroPython. Audio is converted to WAV on a PC using pydub/ffmpeg, stored on an SD card, and streamed to an I2S DAC. Includes a Flask server for wireless file transfer over Wi-Fi.",
-        "fa": "موزیک پلیر ساخته‌شده روی ESP32 با MicroPython. صدا با pydub/ffmpeg به WAV تبدیل و روی SD card ذخیره می‌شود و از طریق I2S DAC پخش می‌شود. شامل Flask server برای انتقال بی‌سیم فایل از طریق Wi-Fi."
+        "fa": "موزیک پلیر ساخته‌شده روی ESP32 با MicroPython، ذخیره WAV روی SD card، پخش از طریق I2S DAC و سرور Flask برای انتقال بی‌سیم فایل با Wi-Fi.",
+        "en": "An MP3 player built on an ESP32 with MicroPython. Audio is converted to WAV using pydub/ffmpeg, stored on an SD card, and streamed to an I2S DAC with wireless Wi-Fi upload."
       },
-      "tags": ["MICROPYTHON", "ESP32", "I2S", "SPI", "PYTHON", "PYDUB", "EMBEDDED"],
+      "details": {
+        "fa": "فایل‌های صوتی روی کامپیوتر با pydub و ffmpeg به WAV استاندارد تبدیل و روی کارت SD ذخیره می‌شوند. میکروکنترلر ESP32 صدا را با رابط I2S به DAC می‌فرستد و از طریق سرور محلی Flask روی Wi-Fi فایل جدید دریافت می‌کند.",
+        "en": "Desktop companion tools convert tracks to WAV via pydub/ffmpeg, while MicroPython on ESP32 streams audio from SPI SD storage to an I2S DAC and receives new tracks wirelessly over Wi-Fi."
+      },
+      "cats": [
+        "PYTHON",
+        "ESP32",
+        "HARDWARE",
+        "IOT"
+      ],
+      "tags": [
+        "MICROPYTHON",
+        "ESP32",
+        "I2S",
+        "SPI",
+        "PYTHON",
+        "PYDUB",
+        "EMBEDDED"
+      ],
       "link": "https://github.com/ebad84/Music_Player",
-      "image": "esp32-music-player.svg"
+      "image": "/static/projects/esp32-music-player.svg"
     },
     {
       "id": "uv-station",
       "title": {
-        "en": "UV CURING STATION PCB",
-        "fa": "PCB ایستگاه UV"
+        "fa": "PCB ایستگاه UV",
+        "en": "UV CURING STATION PCB"
       },
       "desc": {
-        "en": "A compact PCB-based UV curing station for electronics work — cures UV solder mask, resin and PCB coatings. 20 UV LEDs, USB powered (5V / ~400mA). Designed in EasyEDA Pro.",
-        "fa": "یک ایستگاه UV Curing مبتنی بر PCB برای کارهای الکترونیکی — پخت solder mask UV، رزین و پوشش PCB. ۲۰ عدد LED UV، تغذیه USB (5V / ~400mA). طراحی‌شده با EasyEDA Pro."
+        "fa": "یک ایستگاه UV Curing مبتنی بر PCB برای کارهای الکترونیکی — پخت solder mask UV، رزین و پوشش PCB با ۲۰ عدد LED فرابنفش و تغذیه USB.",
+        "en": "A compact PCB-based UV curing station for electronics work — cures UV solder mask, resin and PCB coatings. 20 UV LEDs, USB powered (5V / ~400mA). Designed in EasyEDA Pro."
       },
-      "tags": ["PCB DESIGN", "EASYEDA PRO", "ELECTRONICS", "UV LED", "HARDWARE"],
+      "details": {
+        "fa": "شماتیک و طراحی دو لایه PCB کامل در EasyEDA Pro انجام شده است. با ۲۰ عدد LED فرابنفش با چیدمان یکنواخت و تغذیه مستقیم ۵ ولت USB (حدود ۴۰۰ میلی‌آمپر) برای پخت سریع solder mask روی بردهای دست‌ساز.",
+        "en": "Designed end-to-end in EasyEDA Pro with 20 UV LEDs arranged for even exposure across small PCBs, powered cleanly from standard 5V USB (~400mA) for solder mask and UV resin curing."
+      },
+      "cats": [
+        "HARDWARE"
+      ],
+      "tags": [
+        "PCB DESIGN",
+        "EASYEDA PRO",
+        "ELECTRONICS",
+        "UV LED",
+        "HARDWARE"
+      ],
       "link": "https://github.com/ebad84/UV-Station",
-      "image": "uv-station.svg"
+      "image": "/static/projects/uv-station.svg"
     }
   ]
 }

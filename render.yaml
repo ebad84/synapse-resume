@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ebad84-personal-site
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: RENDER
+        value: "true"
+      - key: ENV
+        value: production

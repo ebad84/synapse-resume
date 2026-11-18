@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>پنل ویرایش محلی (/edit) — ebad84</title>
+  <link rel="icon" href="/static/synapse.svg" type="image/svg+xml" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="edit-bar">
+    <div class="edit-bar-inner">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <a href="/" class="ctl">← مشاهده سایت</a>
+        <strong style="font-size:15px;">پنل ویرایش محلی (/edit)</strong>
+        <span style="font-size:12px;color:var(--muted);">بدون رمز عبور · فقط لوکال · ذخیره در data/site_content.json</span>
+      </div>
+      <button type="button" class="btn-primary" onclick="saveAll()">ذخیره در فایل تنظیمات</button>
+    </div>
+  </header>
+
+  <main class="edit-wrap">
+    <div id="statusBox" class="edit-status" style="display:none;"></div>
+
+    <div class="edit-tabs" id="editTabs">
+      <button type="button" class="f-btn active" onclick="showTab('projects', this)">پروژه‌ها</button>
+      <button type="button" class="f-btn" onclick="showTab('experience', this)">سوابق کاری</button>
+      <button type="button" class="f-btn" onclick="showTab('profile', this)">پروفایل و مهارت‌ها</button>
+      <button type="button" class="f-btn" onclick="showTab('uploads', this)">مدیریت عکس‌ها</button>
+    </div>
+
+    <div id="tab-projects"></div>
+    <div id="tab-experience" style="display:none;"></div>
+    <div id="tab-profile" style="display:none;"></div>
+    <div id="tab-uploads" style="display:none;"></div>
+  </main>
+
+  <script>
+    let DATA = {{ content | tojson }};
+    let UPLOADS = {{ uploads | tojson }};
+
+    function showTab(id, btn) {
+      document.querySelectorAll('#editTabs .f-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      ['projects','experience','profile','uploads'].forEach(t => {
+        document.getElementById('tab-' + t).style.display = t === id ? 'block' : 'none';
+      });
+    }
+
+    async function uploadFile(file) {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const json = await res.json();
+      if (json.files) { UPLOADS = json.files; renderUploads(); }
+      return json.url;
+    }
+
+    async function deleteUpload(url) {
+      const name = url.split('/').pop();
+      const res = await fetch('/api/upload/' + encodeURIComponent(name), { method: 'DELETE' });
+      const json = await res.json();
+      if (json.files) { UPLOADS = json.files; renderUploads(); }
+    }
+
+    function renderProjects() {
+      const el = document.getElementById('tab-projects');
+      el.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-size:13px;color:var(--muted);">متن فارسی و انگلیسی هم‌زمان + یک عکس مشترک برای هر دو زبان</span>
+          <button type="button" class="btn-primary" onclick="DATA.projects.unshift({id:'proj-'+Date.now(),title:{fa:'پروژه جدید',en:'NEW PROJECT'},desc:{fa:'',en:''},details:{fa:'',en:''},cats:['PYTHON'],tags:['PYTHON'],link:'https://github.com/ebad84',image:''});renderProjects();">+ افزودن پروژه</button>
+        </div>
+      ` + DATA.projects.map((p, i) => `
+        <div class="card" style="padding:18px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <strong>#${i+1} · ${p.title.fa}</strong>
+            <button type="button" class="btn-danger" onclick="DATA.projects.splice(${i},1);renderProjects();">حذف پروژه</button>
+          </div>
+          <div class="edit-proj-grid">
+            <div style="display:grid;gap:8px;">
+              ${p.image ? `<img class="proj-thumb" src="${p.image}" alt="" />` : `<div class="proj-thumb" style="display:grid;place-items:center;font-size:12px;color:var(--faint);">بدون عکس</div>`}
+              <label class="ctl" style="width:100%;cursor:pointer;">آپلود عکس جدید<input type="file" accept="image/*" style="display:none;" onchange="if(this.files[0]) uploadFile(this.files[0]).then(u=>{DATA.projects[${i}].image=u;renderProjects();})" /></label>
+              ${p.image ? `<button type="button" class="btn-danger" onclick="DATA.projects[${i}].image='';renderProjects();">حذف عکس</button>` : ''}
+              <div class="edit-field"><label>مسیر عکس</label><input dir="ltr" value="${p.image||''}" oninput="DATA.projects[${i}].image=this.value" /></div>
+            </div>
+            <div style="display:grid;gap:10px;">
+              <div class="edit-grid-2">
+                <div class="edit-field"><label>عنوان فارسی</label><input dir="rtl" value="${p.title.fa}" oninput="DATA.projects[${i}].title.fa=this.value" /></div>
+                <div class="edit-field"><label>Title English</label><input dir="ltr" value="${p.title.en}" oninput="DATA.projects[${i}].title.en=this.value" /></div>
+                <div class="edit-field"><label>توضیح کوتاه فارسی</label><textarea rows="2" dir="rtl" oninput="DATA.projects[${i}].desc.fa=this.value">${p.desc.fa}</textarea></div>
+                <div class="edit-field"><label>Short Description English</label><textarea rows="2" dir="ltr" oninput="DATA.projects[${i}].desc.en=this.value">${p.desc.en}</textarea></div>
+                <div class="edit-field"><label>جزئیات کامل فارسی</label><textarea rows="2" dir="rtl" oninput="DATA.projects[${i}].details=DATA.projects[${i}].details||{};DATA.projects[${i}].details.fa=this.value">${(p.details&&p.details.fa)||''}</textarea></div>
+                <div class="edit-field"><label>Expanded Details English</label><textarea rows="2" dir="ltr" oninput="DATA.projects[${i}].details=DATA.projects[${i}].details||{};DATA.projects[${i}].details.en=this.value">${(p.details&&p.details.en)||''}</textarea></div>
+                <div class="edit-field"><label>لینک</label><input dir="ltr" value="${p.link}" oninput="DATA.projects[${i}].link=this.value" /></div>
+                <div class="edit-field"><label>تگ‌ها (با کاما)</label><input dir="ltr" value="${(p.tags||[]).join(', ')}" oninput="DATA.projects[${i}].tags=this.value.split(',').map(x=>x.trim()).filter(Boolean)" /></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderExp() {
+      document.getElementById('tab-experience').innerHTML = `
+        <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+          <button type="button" class="btn-primary" onclick="DATA.experience.unshift({id:'exp-'+Date.now(),dur:{fa:'۲۰۲۶',en:'2026'},role:{fa:'نقش جدید',en:'New role'},note:{fa:'',en:''},link:'',linkLabel:{fa:'',en:''}});renderExp();">+ افزودن سابقه</button>
+        </div>
+      ` + DATA.experience.map((e, i) => `
+        <div class="card" style="padding:18px;margin-bottom:12px;display:grid;gap:10px;">
+          <div style="display:flex;justify-content:space-between;"><strong>${e.role.fa}</strong><button type="button" class="btn-danger" onclick="DATA.experience.splice(${i},1);renderExp();">حذف</button></div>
+          <div class="edit-grid-2">
+            <div class="edit-field"><label>عنوان فارسی</label><input dir="rtl" value="${e.role.fa}" oninput="DATA.experience[${i}].role.fa=this.value" /></div>
+            <div class="edit-field"><label>Role English</label><input dir="ltr" value="${e.role.en}" oninput="DATA.experience[${i}].role.en=this.value" /></div>
+            <div class="edit-field"><label>تاریخ فارسی</label><input dir="rtl" value="${e.dur.fa}" oninput="DATA.experience[${i}].dur.fa=this.value" /></div>
+            <div class="edit-field"><label>Duration English</label><input dir="ltr" value="${e.dur.en}" oninput="DATA.experience[${i}].dur.en=this.value" /></div>
+            <div class="edit-field"><label>توضیح فارسی</label><textarea dir="rtl" rows="2" oninput="DATA.experience[${i}].note.fa=this.value">${e.note.fa}</textarea></div>
+            <div class="edit-field"><label>Note English</label><textarea dir="ltr" rows="2" oninput="DATA.experience[${i}].note.en=this.value">${e.note.en}</textarea></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderProfile() {
+      const p = DATA.profile;
+      const skillsHtml = (p.skills || []).map((sk, idx) => `
+        <div style="display:grid;grid-template-columns:1fr 1fr 90px auto;gap:8px;align-items:end;">
+          <div class="edit-field"><label>عنوان فارسی</label><input dir="rtl" value="${sk.k.fa}" oninput="DATA.profile.skills[${idx}].k.fa=this.value" /></div>
+          <div class="edit-field"><label>Title (EN)</label><input dir="ltr" value="${sk.k.en}" oninput="DATA.profile.skills[${idx}].k.en=this.value" /></div>
+          <div class="edit-field"><label>%</label><input dir="ltr" type="number" min="0" max="100" value="${sk.pct}" oninput="DATA.profile.skills[${idx}].pct=Math.min(100,Math.max(0,Number(this.value)||0))" /></div>
+          <button type="button" class="btn-danger" onclick="DATA.profile.skills.splice(${idx},1);renderProfile();">حذف</button>
+        </div>
+      `).join('');
+
+      document.getElementById('tab-profile').innerHTML = `
+        <div class="card" style="padding:20px;display:grid;gap:14px;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            ${p.avatar ? `<img src="${p.avatar}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:1px solid var(--line);" />` : ''}
+            <label class="ctl" style="cursor:pointer;">تغییر عکس پروفایل<input type="file" accept="image/*" style="display:none;" onchange="if(this.files[0]) uploadFile(this.files[0]).then(u=>{DATA.profile.avatar=u;renderProfile();})" /></label>
+            ${p.avatar ? `<button type="button" class="btn-danger" onclick="DATA.profile.avatar='';renderProfile();">حذف عکس پروفایل</button>` : ''}
+          </div>
+          <div class="edit-grid-2">
+            <div class="edit-field"><label>نام فارسی</label><input dir="rtl" value="${p.name.fa}" oninput="DATA.profile.name.fa=this.value" /></div>
+            <div class="edit-field"><label>Name English</label><input dir="ltr" value="${p.name.en}" oninput="DATA.profile.name.en=this.value" /></div>
+            <div class="edit-field"><label>توضیح نقش فارسی</label><input dir="rtl" value="${p.role.fa}" oninput="DATA.profile.role.fa=this.value" /></div>
+            <div class="edit-field"><label>Role English</label><input dir="ltr" value="${p.role.en}" oninput="DATA.profile.role.en=this.value" /></div>
+            <div class="edit-field"><label>درباره من فارسی (هر خط یک پاراگراف)</label><textarea rows="5" dir="rtl" oninput="DATA.profile.bio.fa=this.value.split('\n').filter(Boolean)">${p.bio.fa.join('\n')}</textarea></div>
+            <div class="edit-field"><label>About Bio English (one line per para)</label><textarea rows="5" dir="ltr" oninput="DATA.profile.bio.en=this.value.split('\n').filter(Boolean)">${p.bio.en.join('\n')}</textarea></div>
+          </div>
+          <div style="border-top:1px solid var(--line);padding-top:14px;display:grid;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong style="font-size:14px;">مهارت‌ها</strong>
+              <button type="button" class="ctl" onclick="DATA.profile.skills.push({k:{fa:'مهارت جدید',en:'New skill'},pct:50});renderProfile();">+ افزودن مهارت</button>
+            </div>
+            ${skillsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderUploads() {
+      document.getElementById('tab-uploads').innerHTML = `
+        <div class="card" style="padding:20px;display:grid;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:13px;color:var(--muted);">پوشه static/uploads/</span>
+            <label class="btn-primary" style="cursor:pointer;">+ آپلود عکس<input type="file" accept="image/*" style="display:none;" onchange="if(this.files[0]) uploadFile(this.files[0])" /></label>
+          </div>
+          <div class="uploads-strip">
+            ${UPLOADS.map(u => `
+              <div class="upload-tile">
+                <img src="${u}" alt="" />
+                <div class="mono" style="font-size:10px;overflow:hidden;text-overflow:ellipsis;">${u.split('/').pop()}</div>
+                <button type="button" class="btn-danger" onclick="deleteUpload('${u}')">حذف فایل</button>
+              </div>
+            `).join('') || '<div class="empty">عکسی آپلود نشده است.</div>'}
+          </div>
+        </div>
+      `;
+    }
+
+    async function saveAll() {
+      const res = await fetch('/api/save', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(DATA)
+      });
+      const box = document.getElementById('statusBox');
+      box.style.display = 'block';
+      box.textContent = res.ok
+        ? 'ذخیره شد! فایل data/site_content.json آپدیت شد؛ با git push روی Render منتشر می‌شود.'
+        : 'خطا در ذخیره‌سازی!';
+    }
+
+    renderProjects(); renderExp(); renderProfile(); renderUploads();
+  </script>
+</body>
+</html>
