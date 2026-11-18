@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TERMINAL 01 — TMUX MULTIPLEXER | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Ccircle cx='140' cy='60' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Ccircle cx='140' cy='60' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background: var(--paper); background-image: var(--pcb); color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 12.5px; line-height: 1.6;
+    }
+    .tmux-wrap { max-width: 1240px; margin: 0 auto; padding: 16px; min-height: 100vh; display: flex; flex-direction: column; }
+    .tmux-bar {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+      background: var(--ink); color: var(--paper); padding: 6px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    }
+    .tmux-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+    .tab-btn {
+      background: transparent; color: var(--paper); border: 1px solid transparent; padding: 2px 8px;
+      font-family: inherit; font-size: 11px; cursor: pointer; opacity: 0.7;
+    }
+    .tab-btn.active { border-color: var(--paper); opacity: 1; }
+    .tmux-grid {
+      flex: 1; display: grid; grid-template-columns: 260px 1fr 270px; gap: 1px;
+      background: var(--line); border: 1px solid var(--line); border-top: none;
+    }
+    .pane { background: var(--paper); display: flex; flex-direction: column; }
+    .pane-title {
+      padding: 6px 12px; border-bottom: 1px solid var(--line); font-size: 10.5px;
+      text-transform: uppercase; letter-spacing: 0.12em; color: var(--dim); display: flex; justify-content: space-between;
+    }
+    .pane-body { padding: 16px; flex: 1; overflow-y: auto; }
+    .kv { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed var(--line); font-size: 11.5px; }
+    .kv span:first-child { color: var(--dim); }
+    .proj-item { border: 1px solid var(--line); padding: 12px; margin-bottom: 10px; }
+    .proj-item:hover { border-color: var(--ink); }
+    .proj-item h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; display: flex; justify-content: space-between; }
+    .proj-item a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); font-size: 10.5px; }
+    .proj-item p { margin: 0 0 6px; color: var(--dim); font-size: 11.5px; }
+    .tags { font-size: 10px; color: var(--dim); }
+    .board-row { border: 1px solid var(--line); padding: 6px 10px; margin-bottom: 6px; display: flex; justify-content: space-between; font-size: 11px; }
+    .board-row.main { border-color: var(--ink); font-weight: 700; }
+    .tmux-foot {
+      border: 1px solid var(--line); border-top: none; background: var(--paper);
+      padding: 6px 12px; display: flex; justify-content: space-between; font-size: 10.5px; color: var(--dim);
+    }
+    @media (max-width: 960px) { .tmux-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="tmux-wrap">
+    <div class="tmux-bar">
+      <div class="tmux-tabs">
+        <span>[SYNAPSE:0]</span>
+        <button class="tab-btn active" onclick="setWin('overview', this)">0:overview*</button>
+        <button class="tab-btn" onclick="setWin('projects', this)">1:projects</button>
+        <button class="tab-btn" onclick="setWin('experience', this)">2:experience</button>
+        <button class="tab-btn" onclick="setWin('contact', this)">3:contact</button>
+      </div>
+      <div>
+        <button class="tab-btn" style="opacity:1;border-color:var(--paper)" id="themeBtn" onclick="toggleTheme()">LIGHT</button>
+      </div>
+    </div>
+
+    <div class="tmux-grid">
+      <!-- Left Pane: System Identity -->
+      <aside class="pane">
+        <div class="pane-title"><span>PANE 0: SYSINFO</span><span>TTY1</span></div>
+        <div class="pane-body">
+          <div style="font-weight:700; letter-spacing:0.1em; margin-bottom:10px;">MOHAMMAD REZA EBADOLLAH</div>
+          <div class="kv"><span>ROLE</span><span>COMP. ENG</span></div>
+          <div class="kv"><span>FOCUS</span><span>IOT / SIGNAL</span></div>
+          <div class="kv"><span>PRIMARY</span><span>ESP32</span></div>
+          <div class="kv"><span>BACKEND</span><span>FLASK / FASTAPI</span></div>
+          <div class="kv"><span>HOST</span><span>NGINX / DOCKER</span></div>
+          <div style="margin-top:16px; font-size:11px; color:var(--dim);">
+            SKILLS:<br/>
+            PYTHON &nbsp;████████░░ 80%<br/>
+            C / EMB ██████░░░░ 60%<br/>
+            LINUX &nbsp;&nbsp;██████░░░░ 60%<br/>
+            PHP/PCB ████░░░░░░ 40%
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center Pane: Active Window -->
+      <main class="pane">
+        <div class="pane-title"><span id="winTitle">PANE 1: OVERVIEW</span><span>ACTIVE</span></div>
+        <div class="pane-body" id="winBody"></div>
+      </main>
+
+      <!-- Right Pane: Live Hardware Monitor -->
+      <aside class="pane">
+        <div class="pane-title"><span>PANE 2: BOARDS</span><span>HW MON</span></div>
+        <div class="pane-body">
+          <div class="board-row main"><span>ESP32</span><span>[PRIMARY]</span></div>
+          <div class="board-row"><span>ARDUINO</span><span>[READY]</span></div>
+          <div class="board-row"><span>PI PICO</span><span>[RP2040]</span></div>
+          <div class="board-row"><span>ESP8266</span><span>[WIFI]</span></div>
+          <div class="board-row"><span>PI ZERO</span><span>[SBC]</span></div>
+          <div class="board-row"><span>PI 5</span><span>[SERVER]</span></div>
+          <div style="margin-top:16px; border-top:1px solid var(--line); padding-top:10px; font-size:11px; color:var(--dim);">
+            SSH TWIN:<br/>
+            <strong style="color:var(--ink)">ssh ebad84.ir</strong><br/>
+            NO LOGIN NEEDED
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="tmux-foot">
+      <span>[0-3] SWITCH WINDOW · [T] THEME</span>
+      <span>CONCEPT T1: TMUX MULTIPLEXER · EBAD84</span>
+    </div>
+  </div>
+
+  <script>
+    const windows = {
+      overview: {
+        title: "PANE 1: OVERVIEW",
+        html: `
+          <p style="margin-top:0">Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things.</p>
+          <p style="color:var(--dim)">Data, audio, signal, and image processing are some of the areas I've always found interesting and enjoy exploring. If you have a project you think I could help with, I'd be happy to work together!</p>
+          <div style="border-top:1px solid var(--line); margin-top:18px; padding-top:14px;">
+            <div style="font-size:11px; color:var(--dim); margin-bottom:10px;">FEATURED BUILDS (SELECT 1:PROJECTS FOR ALL 7):</div>
+            <div class="proj-item"><h3>01 · SYNAPSE RESUME SITE <a href="https://github.com/ebad84/synapse-resume" target="_blank">OPEN ↗</a></h3><p>Minimal Flask resume + login-free SSH terminal twin.</p></div>
+            <div class="proj-item"><h3>02 · UTEMP IOT PLATFORM <a href="https://github.com/ebad84/UTEMP" target="_blank">OPEN ↗</a></h3><p>REST API and dashboard for IoT temperature logging.</p></div>
+          </div>
+        `
+      },
+      projects: {
+        title: "PANE 1: PROJECTS (7)",
+        html: `
+          <div class="proj-item"><h3>01 · SYNAPSE RESUME SITE <a href="https://github.com/ebad84/synapse-resume" target="_blank">OPEN ↗</a></h3><p>Personal resume site with Flask web page and interactive SSH terminal version.</p><div class="tags">PYTHON · FLASK · SSH · PARAMIKO · NGINX</div></div>
+          <div class="proj-item"><h3>02 · UTEMP — IoT TEMPERATURE PLATFORM <a href="https://github.com/ebad84/UTEMP" target="_blank">OPEN ↗</a></h3><p>Web service and REST API for IoT devices to log and display temperature data.</p><div class="tags">PYTHON · FLASK · DOCKER · IOT · SQLITE</div></div>
+          <div class="proj-item"><h3>03 · QR CODE GENERATOR <a href="https://qr.ebad84.ir" target="_blank">OPEN ↗</a></h3><p>Fully client-side QR generator outputting PNG and SVG with zero tracking.</p><div class="tags">HTML · CSS · VANILLA JS · SELF-HOSTED</div></div>
+          <div class="proj-item"><h3>04 · ELECTRONIC PARTS MANAGER <a href="https://github.com/ebad84/my-things-manager" target="_blank">OPEN ↗</a></h3><p>Full-stack Persian inventory manager with Jalali calendar and ZIP backup.</p><div class="tags">PYTHON · FLASK · SQLALCHEMY · PILLOW</div></div>
+          <div class="proj-item"><h3>05 · DIGIKALA DAILY POINT BOT <a href="https://github.com/ebad84/digikala_dailypoint" target="_blank">OPEN ↗</a></h3><p>Automates daily DigiClub point collection with OTP login and session persistence.</p><div class="tags">PYTHON · FLASK · BEAUTIFULSOUP4</div></div>
+          <div class="proj-item"><h3>06 · ESP32 MUSIC PLAYER <a href="https://github.com/ebad84/Music_Player" target="_blank">OPEN ↗</a></h3><p>MicroPython audio player on ESP32 with I2S DAC and wireless Flask transfer.</p><div class="tags">MICROPYTHON · ESP32 · I2S · SPI</div></div>
+          <div class="proj-item"><h3>07 · UV CURING STATION PCB <a href="https://github.com/ebad84/UV-Station" target="_blank">OPEN ↗</a></h3><p>Compact USB-powered PCB with 20 UV LEDs designed in EasyEDA Pro.</p><div class="tags">PCB DESIGN · EASYEDA PRO · HARDWARE</div></div>
+        `
+      },
+      experience: {
+        title: "PANE 1: EXPERIENCE",
+        html: `
+          <div class="proj-item"><h3>R&amp;D — UNIVERSITY OF QOM</h3><p>Hardware and software research, prototyping embedded and signal-processing systems.</p></div>
+          <div class="proj-item"><h3>FREELANCE DEVELOPER — PARSCODERS</h3><p>Built web scraping pipelines, Telegram/automation bots, and Python backends.</p></div>
+        `
+      },
+      contact: {
+        title: "PANE 1: CONTACT",
+        html: `
+          <div class="proj-item"><h3>GITHUB <a href="https://github.com/ebad84" target="_blank">github.com/ebad84 ↗</a></h3><p>Open-source hardware &amp; Python repositories.</p></div>
+          <div class="proj-item"><h3>LINKEDIN <a href="https://linkedin.com/in/ebad84" target="_blank">linkedin.com/in/ebad84 ↗</a></h3><p>Professional profile and engineering background.</p></div>
+          <div class="proj-item"><h3>TELEGRAM <a href="https://t.me/ebad84" target="_blank">t.me/ebad84 ↗</a></h3><p>Direct message for projects and collaboration.</p></div>
+        `
+      }
+    };
+
+    function setWin(name, btn) {
+      document.getElementById("winTitle").textContent = windows[name].title;
+      document.getElementById("winBody").innerHTML = windows[name].html;
+      document.querySelectorAll(".tmux-tabs .tab-btn").forEach(b => b.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+
+    document.addEventListener("keydown", e => {
+      const btns = document.querySelectorAll(".tmux-tabs .tab-btn");
+      if (e.key === "0") setWin("overview", btns[0]);
+      if (e.key === "1") setWin("projects", btns[1]);
+      if (e.key === "2") setWin("experience", btns[2]);
+      if (e.key === "3") setWin("contact", btns[3]);
+      if (e.key.toLowerCase() === "t") toggleTheme();
+    });
+
+    setWin("overview", document.querySelector(".tmux-tabs .tab-btn"));
+  </script>
+</body>
+</html>

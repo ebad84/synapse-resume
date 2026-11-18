@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TIMELINE 02 — PCB TRACE MAP | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background: var(--paper); background-image: var(--pcb); color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 13px; line-height: 1.65;
+    }
+    html[dir="rtl"] body { font-family: Vazirmatn, Tahoma, monospace; letter-spacing: 0 !important; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 24px 20px; }
+    .bar {
+      background: var(--paper); border: 1px solid var(--line); border-bottom: 2px solid var(--ink);
+      padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .btn {
+      background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 6px 12px;
+      font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer;
+    }
+    .btn.ghost { background: var(--paper); color: var(--ink); }
+    .trace-map { position: relative; margin-top: 28px; padding-inline-start: 44px; }
+    .trace-map::before {
+      content: ""; position: absolute; inset-block: 16px; inset-inline-start: 16px; width: 2px; background: var(--ink);
+    }
+    .pad-card {
+      position: relative; background: var(--paper); border: 1px solid var(--line); padding: 20px 22px; margin-bottom: 24px;
+      transition: border-color 0.15s;
+    }
+    .pad-card:hover { border-color: var(--ink); }
+    .pad-card::before {
+      content: ""; position: absolute; top: 22px; inset-inline-start: -35px; width: 14px; height: 14px;
+      background: var(--paper); border: 3px solid var(--ink);
+    }
+    .pad-card::after {
+      content: ""; position: absolute; top: 28px; inset-inline-start: -21px; width: 21px; height: 2px; background: var(--ink);
+    }
+    .pad-tag { font-size: 10px; color: var(--dim); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+    .pad-card h2 { margin: 0 0 10px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.1em; }
+    .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .mini { border: 1px solid var(--line); padding: 10px 12px; font-size: 12px; }
+    a { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="bar">
+      <div><strong>SYNAPSE</strong> // CONCEPT S2: PCB TRACE &amp; SOLDER PAD MAP</div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn ghost" id="langBtn" onclick="toggleLang()">FA</button>
+        <button class="btn" id="themeBtn" onclick="toggleTheme()">DARK</button>
+      </div>
+    </div>
+
+    <div class="trace-map">
+      <section class="pad-card">
+        <div class="pad-tag">PAD_01 // VCC_IN</div>
+        <h2 data-en="MOHAMMAD REZA EBADOLLAH" data-fa="محمدرضا عبادالله">MOHAMMAD REZA EBADOLLAH</h2>
+        <p data-en="Computer Engineer · IoT / Embedded / Signal + Image Processing. Bridging hardware and software from ESP32 & custom PCBs to Flask APIs."
+           data-fa="مهندس کامپیوتر · اینترنت اشیا، سخت‌افزار و پردازش سیگنال و تصویر. اتصال سخت‌افزار و نرم‌افزار از ESP32 و PCB تا APIهای Flask."></p>
+      </section>
+
+      <section class="pad-card">
+        <div class="pad-tag">PAD_02 // MCU_ARRAY</div>
+        <h2 data-en="BOARDS &amp; CAPABILITIES" data-fa="بردها و مهارت‌ها">BOARDS &amp; CAPABILITIES</h2>
+        <div class="proj-grid">
+          <div class="mini"><strong>ESP32</strong> · Arduino · Pi Pico · ESP8266 · Pi Zero · Pi 5</div>
+          <div class="mini"><strong>Python 80%</strong> · C/C++ 60% · Docker/Nginx 60% · EasyEDA 40%</div>
+        </div>
+      </section>
+
+      <section class="pad-card">
+        <div class="pad-tag">PAD_03 // BUS_OUT (7 BUILDS)</div>
+        <h2 data-en="PROJECTS" data-fa="پروژه‌ها">PROJECTS</h2>
+        <div class="proj-grid">
+          <div class="mini"><strong>01. SYNAPSE</strong><br/>Flask + SSH twin (<a href="https://github.com/ebad84/synapse-resume" target="_blank">↗</a>)</div>
+          <div class="mini"><strong>02. UTEMP</strong><br/>IoT Temp API (<a href="https://github.com/ebad84/UTEMP" target="_blank">↗</a>)</div>
+          <div class="mini"><strong>03. QR GEN</strong><br/>Client-side QR (<a href="https://qr.ebad84.ir" target="_blank">↗</a>)</div>
+          <div class="mini"><strong>04. PARTS MGR</strong><br/>Jalali Inventory (<a href="https://github.com/ebad84/my-things-manager" target="_blank">↗</a>)</div>
+          <div class="mini"><strong>05. DIGIKALA BOT</strong><br/>Daily Points (<a href="https://github.com/ebad84/digikala_dailypoint" target="_blank">↗</a>)</div>
+          <div class="mini"><strong>06. ESP32 PLAYER</strong><br/>I2S Audio (<a href="https://github.com/ebad84/Music_Player" target="_blank">↗</a>)</div>
+          <div class="mini"><strong>07. UV PCB</strong><br/>EasyEDA Pro (<a href="https://github.com/ebad84/UV-Station" target="_blank">↗</a>)</div>
+        </div>
+      </section>
+
+      <section class="pad-card">
+        <div class="pad-tag">PAD_04 // GND_UPLINK</div>
+        <h2 data-en="EXPERIENCE &amp; CONTACT" data-fa="سوابق و ارتباط">EXPERIENCE &amp; CONTACT</h2>
+        <p>R&amp;D @ University of Qom · Freelance @ Parscoders</p>
+        <p><a href="https://github.com/ebad84" target="_blank">GitHub ↗</a> · <a href="https://linkedin.com/in/ebad84" target="_blank">LinkedIn ↗</a> · <a href="https://t.me/ebad84" target="_blank">Telegram ↗</a></p>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    let lang = "en";
+    function applyLang() {
+      document.documentElement.setAttribute("dir", lang === "fa" ? "rtl" : "ltr");
+      document.getElementById("langBtn").textContent = lang === "fa" ? "EN" : "FA";
+      document.querySelectorAll("[data-en]").forEach(el => el.textContent = el.getAttribute("data-" + lang));
+    }
+    function toggleLang() { lang = lang === "en" ? "fa" : "en"; applyLang(); }
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+    applyLang();
+  </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TIMELINE 04 — OSCILLOSCOPE SCROLL | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background: var(--paper); background-image: var(--pcb); color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 13.5px; line-height: 1.7;
+    }
+    .scope-bar {
+      position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 2px solid var(--ink);
+      padding: 10px 20px;
+    }
+    .scope-inner { max-width: 900px; margin: 0 auto; }
+    .scope-top { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+    .meter { height: 6px; border: 1px solid var(--ink); margin-top: 8px; background: var(--paper); }
+    .meter-fill { height: 100%; width: 0%; background: var(--ink); transition: width 0.08s linear; }
+    .btn {
+      background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 4px 10px;
+      font-family: inherit; font-size: 10.5px; font-weight: 700; cursor: pointer;
+    }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 28px 20px 60px; }
+    .block { background: var(--paper); border: 1px solid var(--line); padding: 28px; margin-bottom: 20px; }
+    .block h2 { margin: 0 0 14px; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+    .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+    .row:last-child { border-bottom: none; }
+    a { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <header class="scope-bar">
+    <div class="scope-inner">
+      <div class="scope-top">
+        <span><strong>SCOPE // EBAD84</strong> · CONCEPT S4 · <span id="pct">0%</span></span>
+        <button class="btn" id="themeBtn" onclick="toggleTheme()">DARK</button>
+      </div>
+      <div class="meter"><div class="meter-fill" id="fill"></div></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="block">
+      <div style="font-size:11px; color:var(--dim); letter-spacing:0.12em;">SIGNAL ORIGIN</div>
+      <h1 style="margin:6px 0 12px; font-size:26px; letter-spacing:0.08em;">MOHAMMAD REZA EBADOLLAH</h1>
+      <p style="margin:0; color:var(--dim);">Computer Engineer · IoT / Embedded / Signal + Image Processing. Building devices, web backends, automation bots, and self-hosted Linux systems.</p>
+    </section>
+
+    <section class="block">
+      <h2>01 // CAPABILITIES &amp; BOARDS</h2>
+      <div class="row"><span>PYTHON / FLASK / FASTAPI</span><strong>80%</strong></div>
+      <div class="row"><span>C / C++ / EMBEDDED C</span><strong>60%</strong></div>
+      <div class="row"><span>LINUX / NGINX / DOCKER / SQL</span><strong>60%</strong></div>
+      <div class="row"><span>PHP / PCB (EASYEDA PRO)</span><strong>40%</strong></div>
+      <div class="row"><span>BOARDS</span><strong>ESP32 · ARDUINO · PI PICO · ESP8266 · PI ZERO · PI 5</strong></div>
+    </section>
+
+    <section class="block">
+      <h2>02 // PROJECTS</h2>
+      <div class="row"><span>01 · SYNAPSE RESUME SITE (Flask + SSH)</span><a href="https://github.com/ebad84/synapse-resume" target="_blank">OPEN ↗</a></div>
+      <div class="row"><span>02 · UTEMP IOT TEMPERATURE PLATFORM</span><a href="https://github.com/ebad84/UTEMP" target="_blank">OPEN ↗</a></div>
+      <div class="row"><span>03 · QR CODE GENERATOR (Client-Side)</span><a href="https://qr.ebad84.ir" target="_blank">OPEN ↗</a></div>
+      <div class="row"><span>04 · ELECTRONIC PARTS MANAGER</span><a href="https://github.com/ebad84/my-things-manager" target="_blank">OPEN ↗</a></div>
+      <div class="row"><span>05 · DIGIKALA DAILY POINT BOT</span><a href="https://github.com/ebad84/digikala_dailypoint" target="_blank">OPEN ↗</a></div>
+      <div class="row"><span>06 · ESP32 MUSIC PLAYER (I2S DAC)</span><a href="https://github.com/ebad84/Music_Player" target="_blank">OPEN ↗</a></div>
+      <div class="row"><span>07 · UV CURING STATION PCB</span><a href="https://github.com/ebad84/UV-Station" target="_blank">OPEN ↗</a></div>
+    </section>
+
+    <section class="block">
+      <h2>03 // EXPERIENCE &amp; UPLINK</h2>
+      <div class="row"><span>R&amp;D — UNIVERSITY OF QOM</span><span>HARDWARE / SOFTWARE</span></div>
+      <div class="row"><span>FREELANCE — PARSCODERS</span><span>BOTS / SCRAPING / API</span></div>
+      <div class="row"><span>LINKS</span><span><a href="https://github.com/ebad84" target="_blank">GITHUB</a> · <a href="https://linkedin.com/in/ebad84" target="_blank">LINKEDIN</a> · <a href="https://t.me/ebad84" target="_blank">TELEGRAM</a></span></div>
+    </section>
+  </main>
+
+  <script>
+    window.addEventListener("scroll", () => {
+      const h = document.documentElement;
+      const pct = Math.min(100, Math.round((h.scrollTop / (h.scrollHeight - h.clientHeight || 1)) * 100));
+      document.getElementById("fill").style.width = pct + "%";
+      document.getElementById("pct").textContent = pct + "%";
+    });
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+  </script>
+</body>
+</html>

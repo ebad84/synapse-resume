@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TIMELINE 01 — LOGIC ANALYZER | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background: var(--paper); background-image: var(--pcb); color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 13px; line-height: 1.65;
+    }
+    html[dir="rtl"] body { font-family: Vazirmatn, Tahoma, monospace; letter-spacing: 0 !important; }
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 24px 20px; }
+    .top {
+      background: var(--paper); border: 1px solid var(--line); border-bottom: 2px solid var(--ink);
+      padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    .btn {
+      background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 6px 12px;
+      font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase;
+    }
+    .btn.ghost { background: var(--paper); color: var(--ink); }
+    .channels { margin-top: 20px; border: 1px solid var(--line); background: var(--paper); }
+    .ch-row { display: grid; grid-template-columns: 160px 1fr; border-bottom: 1px solid var(--line); cursor: pointer; }
+    .ch-row:last-child { border-bottom: none; }
+    .ch-label {
+      padding: 16px; border-inline-end: 1px solid var(--line); font-weight: 700; font-size: 11.5px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .ch-label span { font-size: 10px; color: var(--dim); font-weight: 400; }
+    .ch-wave { padding: 16px; display: flex; flex-direction: column; justify-content: center; }
+    .pulse { font-size: 11px; letter-spacing: 0.04em; color: var(--dim); overflow: hidden; white-space: nowrap; }
+    .ch-row.active .ch-label { background: var(--ink); color: var(--paper); }
+    .ch-row.active .ch-label span { color: var(--paper); opacity: 0.75; }
+    .ch-row.active .pulse { color: var(--ink); font-weight: 700; }
+    .detail-box {
+      margin-top: 16px; background: var(--paper); border: 1px solid var(--ink); padding: 24px;
+    }
+    .detail-box h2 { margin: 0 0 12px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.12em; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .card { border: 1px solid var(--line); padding: 12px; }
+    a { color: var(--ink); }
+    @media (max-width: 720px) { .ch-row, .grid-2 { grid-template-columns: 1fr; } .ch-label { border-inline-end: none; border-bottom: 1px solid var(--line); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div><strong>SYNAPSE</strong> // CONCEPT S1: LOGIC ANALYZER TIMELINE</div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn ghost" id="langBtn" onclick="toggleLang()">FA</button>
+        <button class="btn" id="themeBtn" onclick="toggleTheme()">DARK</button>
+      </div>
+    </div>
+
+    <div class="channels" id="channels">
+      <div class="ch-row active" onclick="pick(0, this)">
+        <div class="ch-label">CH0 // IDENTITY<span>TRIGGER: RISING</span></div>
+        <div class="ch-wave"><div class="pulse">───┐ ┌───┐ ┌───────┐ ┌───┐ ┌───</div><div style="font-size:12px;">MOHAMMAD REZA EBADOLLAH · IOT / EMBEDDED</div></div>
+      </div>
+      <div class="ch-row" onclick="pick(1, this)">
+        <div class="ch-label">CH1 // HARDWARE<span>6 BOARDS</span></div>
+        <div class="ch-wave"><div class="pulse">─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─</div><div style="font-size:12px;">ESP32 · ARDUINO · PI PICO · ESP8266 · PI ZERO · PI 5</div></div>
+      </div>
+      <div class="ch-row" onclick="pick(2, this)">
+        <div class="ch-label">CH2 // BUILDS<span>7 PROJECTS</span></div>
+        <div class="ch-wave"><div class="pulse">─────┐ ┌───┐ ┌───┐ ┌───────────</div><div style="font-size:12px;">SYNAPSE · UTEMP · QR · PARTS MGR · DIGIKALA · MUSIC · UV PCB</div></div>
+      </div>
+      <div class="ch-row" onclick="pick(3, this)">
+        <div class="ch-label">CH3 // UPLINK<span>CONTACT</span></div>
+        <div class="ch-wave"><div class="pulse">─┐ ┌───┐ ┌───┐ ┌───┐ ┌───┐ ┌───</div><div style="font-size:12px;">GITHUB · LINKEDIN · TELEGRAM · SSH EBAD84.IR</div></div>
+      </div>
+    </div>
+
+    <div class="detail-box" id="detailBox"></div>
+  </div>
+
+  <script>
+    let lang = "en", current = 0;
+    const panels = {
+      en: [
+        { title: "CH0 // IDENTITY & BIO", html: "<p>Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and IoT. Experience: R&D @ University of Qom &amp; Freelance @ Parscoders.</p>" },
+        { title: "CH1 // HARDWARE & SKILLS", html: "<div class='grid-2'><div class='card'><strong>BOARDS</strong><br/>ESP32 (Main), Arduino, Pi Pico, ESP8266, Pi Zero, Pi 5</div><div class='card'><strong>STACK</strong><br/>Python 80% · C/Embedded 60% · Linux/Docker 60% · EasyEDA/PHP 40%</div></div>" },
+        { title: "CH2 // 7 SELECTED PROJECTS", html: "<div class='grid-2'><div class='card'><strong>01. SYNAPSE RESUME</strong><br/>Flask + SSH twin (<a href='https://github.com/ebad84/synapse-resume' target='_blank'>repo ↗</a>)</div><div class='card'><strong>02. UTEMP IOT</strong><br/>IoT temp REST API (<a href='https://github.com/ebad84/UTEMP' target='_blank'>repo ↗</a>)</div><div class='card'><strong>03. QR GENERATOR</strong><br/>Client-side PNG/SVG (<a href='https://qr.ebad84.ir' target='_blank'>live ↗</a>)</div><div class='card'><strong>04. PARTS MANAGER</strong><br/>Persian inventory + Jalali (<a href='https://github.com/ebad84/my-things-manager' target='_blank'>repo ↗</a>)</div><div class='card'><strong>05. DIGIKALA BOT</strong><br/>Daily DigiClub automation (<a href='https://github.com/ebad84/digikala_dailypoint' target='_blank'>repo ↗</a>)</div><div class='card'><strong>06. ESP32 PLAYER</strong><br/>MicroPython + I2S DAC (<a href='https://github.com/ebad84/Music_Player' target='_blank'>repo ↗</a>)</div><div class='card'><strong>07. UV STATION PCB</strong><br/>20 UV LEDs in EasyEDA (<a href='https://github.com/ebad84/UV-Station' target='_blank'>repo ↗</a>)</div></div>" },
+        { title: "CH3 // UPLINK", html: "<p>GitHub: <a href='https://github.com/ebad84' target='_blank'>github.com/ebad84</a> · LinkedIn: <a href='https://linkedin.com/in/ebad84' target='_blank'>linkedin.com/in/ebad84</a> · Telegram: <a href='https://t.me/ebad84' target='_blank'>t.me/ebad84</a></p>" }
+      ],
+      fa: [
+        { title: "CH0 // معرفی و سوابق", html: "<p>دانشجوی مهندسی کامپیوتر علاقه‌مند به سخت‌افزار و نرم‌افزار — از وب‌اسکرپینگ و اتوماسیون تا الکترونیک و اینترنت اشیا. سابقه: تحقیق و توسعه دانشگاه قم و فریلنسر در پارسکدرز.</p>" },
+        { title: "CH1 // سخت‌افزار و مهارت‌ها", html: "<div class='grid-2'><div class='card'><strong>بردها</strong><br/>ESP32 (اصلی)، Arduino، Pi Pico، ESP8266، Pi Zero، Pi 5</div><div class='card'><strong>مهارت‌ها</strong><br/>Python 80% · C/Embedded 60% · Linux/Docker 60% · EasyEDA/PHP 40%</div></div>" },
+        { title: "CH2 // ۷ پروژه منتخب", html: "<div class='grid-2'><div class='card'><strong>۰۱. سایت رزومه سینپس</strong><br/>Flask + نسخه SSH (<a href='https://github.com/ebad84/synapse-resume' target='_blank'>لینک ↗</a>)</div><div class='card'><strong>۰۲. پلتفرم UTEMP</strong><br/>API دمای IoT (<a href='https://github.com/ebad84/UTEMP' target='_blank'>لینک ↗</a>)</div><div class='card'><strong>۰۳. مولد QR Code</strong><br/>کاملاً سمت کلاینت (<a href='https://qr.ebad84.ir' target='_blank'>لینک ↗</a>)</div><div class='card'><strong>۰۴. مدیریت قطعات</strong><br/>انبارداری فارسی + جلالی (<a href='https://github.com/ebad84/my-things-manager' target='_blank'>لینک ↗</a>)</div><div class='card'><strong>۰۵. ربات دیجی‌کالا</strong><br/>امتیاز روزانه دیجی‌کلاب (<a href='https://github.com/ebad84/digikala_dailypoint' target='_blank'>لینک ↗</a>)</div><div class='card'><strong>۰۶. موزیک پلیر ESP32</strong><br/>MicroPython + I2S (<a href='https://github.com/ebad84/Music_Player' target='_blank'>لینک ↗</a>)</div><div class='card'><strong>۰۷. PCB ایستگاه UV</strong><br/>۲۰ LED UV در EasyEDA (<a href='https://github.com/ebad84/UV-Station' target='_blank'>لینک ↗</a>)</div></div>" },
+        { title: "CH3 // راه‌های ارتباطی", html: "<p>گیت‌هاب: <a href='https://github.com/ebad84' target='_blank'>github.com/ebad84</a> · لینکدین: <a href='https://linkedin.com/in/ebad84' target='_blank'>linkedin.com/in/ebad84</a> · تلگرام: <a href='https://t.me/ebad84' target='_blank'>t.me/ebad84</a></p>" }
+      ]
+    };
+
+    function pick(idx, el) {
+      current = idx;
+      document.querySelectorAll(".ch-row").forEach(r => r.classList.remove("active"));
+      if (el) el.classList.add("active");
+      const p = panels[lang][idx];
+      document.getElementById("detailBox").innerHTML = `<h2>${p.title}</h2>${p.html}`;
+    }
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+    function toggleLang() {
+      lang = lang === "en" ? "fa" : "en";
+      document.documentElement.setAttribute("dir", lang === "fa" ? "rtl" : "ltr");
+      document.getElementById("langBtn").textContent = lang === "fa" ? "EN" : "FA";
+      pick(current);
+    }
+    pick(0);
+  </script>
+</body>
+</html>

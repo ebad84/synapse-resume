@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TIMELINE 03 — GIT LOG CHANGELOG | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background: var(--paper); background-image: var(--pcb); color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 13px; line-height: 1.65;
+    }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 24px 20px; }
+    .head {
+      background: var(--paper); border: 1px solid var(--line); border-bottom: 2px solid var(--ink);
+      padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    .filters { display: flex; gap: 6px; margin: 16px 0; flex-wrap: wrap; }
+    .btn {
+      background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 6px 12px;
+      font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase;
+    }
+    .btn.ghost { background: var(--paper); color: var(--ink); border-color: var(--line); }
+    .btn.ghost.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+    .log-list { background: var(--paper); border: 1px solid var(--line); padding: 18px 22px; }
+    .commit {
+      position: relative; padding-inline-start: 24px; padding-bottom: 20px; border-inline-start: 1px solid var(--line);
+    }
+    .commit:last-child { padding-bottom: 0; }
+    .commit::before {
+      content: "*"; position: absolute; inset-inline-start: -5px; top: 0; background: var(--paper);
+      font-weight: 700; color: var(--ink);
+    }
+    .hash { font-size: 11px; color: var(--dim); }
+    .msg { font-weight: 700; margin: 2px 0 4px; }
+    .desc { font-size: 12px; color: var(--dim); }
+    a { color: var(--ink); font-size: 11px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <div><strong>GIT LOG // EBAD84</strong> · CONCEPT S3: ENGINEERING CHANGELOG</div>
+      <button class="btn" id="themeBtn" onclick="toggleTheme()">DARK</button>
+    </div>
+
+    <div class="filters">
+      <button class="btn ghost active" onclick="setCat('ALL', this)">ALL</button>
+      <button class="btn ghost" onclick="setCat('WEB', this)">WEB / API</button>
+      <button class="btn ghost" onclick="setCat('HW', this)">HARDWARE / IOT</button>
+      <button class="btn ghost" onclick="setCat('EXP', this)">EXPERIENCE</button>
+    </div>
+
+    <div class="log-list" id="logList"></div>
+  </div>
+
+  <script>
+    const entries = [
+      { hash: "a84f01 · HEAD -> master", cat: "WEB", msg: "feat(synapse): Flask resume + login-free SSH twin", desc: "Minimal monochrome engineering site behind nginx.", link: "https://github.com/ebad84/synapse-resume" },
+      { hash: "b72e19 · tag: iot", cat: "HW", msg: "build(utemp): IoT temperature logging REST API", desc: "API-key sensor auth, Docker + nginx deployment.", link: "https://github.com/ebad84/UTEMP" },
+      { hash: "c41d08 · tag: web", cat: "WEB", msg: "release(qr): 100% client-side QR code generator", desc: "Zero tracking, outputs PNG & SVG.", link: "https://qr.ebad84.ir" },
+      { hash: "d19a44 · tag: fullstack", cat: "WEB", msg: "feat(parts-mgr): Persian electronics inventory app", desc: "Jalali calendar, invoices, ZIP backup/restore.", link: "https://github.com/ebad84/my-things-manager" },
+      { hash: "e05c31 · tag: bot", cat: "WEB", msg: "chore(digikala): automated daily DigiClub point bot", desc: "OTP login with persistent session.", link: "https://github.com/ebad84/digikala_dailypoint" },
+      { hash: "f88b12 · tag: esp32", cat: "HW", msg: "feat(esp32): MicroPython audio player + I2S DAC", desc: "Wireless WAV upload over Wi-Fi via Flask.", link: "https://github.com/ebad84/Music_Player" },
+      { hash: "012a90 · tag: pcb", cat: "HW", msg: "pcb(uv-station): 20-LED USB UV curing board", desc: "Designed in EasyEDA Pro for solder mask & resin.", link: "https://github.com/ebad84/UV-Station" },
+      { hash: "990e01 · exp", cat: "EXP", msg: "exp(qom-uni): R&D Researcher & Prototyper", desc: "Hardware/software R&D at University of Qom." },
+      { hash: "881d02 · exp", cat: "EXP", msg: "exp(parscoders): Freelance Python & Automation Dev", desc: "Bots, web scraping, and custom backends." }
+    ];
+
+    let cat = "ALL";
+    function render() {
+      const list = cat === "ALL" ? entries : entries.filter(e => e.cat === cat);
+      document.getElementById("logList").innerHTML = list.map(e => `
+        <div class="commit">
+          <div class="hash">${e.hash}</div>
+          <div class="msg">${e.msg}</div>
+          <div class="desc">${e.desc} ${e.link ? `<a href="${e.link}" target="_blank">[open ↗]</a>` : ""}</div>
+        </div>
+      `).join("");
+    }
+    function setCat(c, btn) {
+      cat = c;
+      document.querySelectorAll(".filters .btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      render();
+    }
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+    render();
+  </script>
+</body>
+</html>

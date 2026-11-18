@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TERMINAL 05 — UNIX MAN PAGE | EBAD84(1)</title>
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background: var(--paper); background-image: var(--pcb); color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 13px; line-height: 1.65;
+    }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 24px 20px; }
+    .man-sheet { background: var(--paper); border: 1px solid var(--line); padding: 28px 32px; }
+    .man-head, .man-foot {
+      display: flex; justify-content: space-between; font-weight: 700; font-size: 12px;
+      border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 22px;
+    }
+    .man-foot { border-bottom: none; border-top: 2px solid var(--ink); padding-top: 10px; margin-top: 28px; margin-bottom: 0; }
+    h2 { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; margin: 22px 0 8px; }
+    .indent { padding-inline-start: 28px; }
+    .flag { font-weight: 700; margin-top: 10px; }
+    .flag-desc { padding-inline-start: 24px; color: var(--dim); }
+    .btn {
+      background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 5px 10px;
+      font-family: inherit; font-size: 10.5px; font-weight: 700; cursor: pointer;
+    }
+    a { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <span style="font-size:11px; color:var(--dim);">CONCEPT T5 · UNIX MANUAL PAGE</span>
+      <button class="btn" id="themeBtn" onclick="toggleTheme()">DARK</button>
+    </div>
+
+    <article class="man-sheet">
+      <div class="man-head"><span>EBAD84(1)</span><span>SYNAPSE USER MANUAL</span><span>EBAD84(1)</span></div>
+
+      <h2>NAME</h2>
+      <div class="indent">ebad84 — Mohammad Reza Ebadollah, Computer Engineer (IoT / Embedded / Signal + Image)</div>
+
+      <h2>SYNOPSIS</h2>
+      <div class="indent"><strong>ssh ebad84.ir</strong> [--esp32] [--python] [--signal] [--pcb]</div>
+
+      <h2>DESCRIPTION</h2>
+      <div class="indent">
+        Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things. Data, audio, signal, and image processing are core areas of exploration.
+      </div>
+
+      <h2>OPTIONS (SKILLS &amp; BOARDS)</h2>
+      <div class="indent">
+        <div class="flag">--python, --flask, --fastapi</div>
+        <div class="flag-desc">Primary backend, API, scraping, and automation stack (80%).</div>
+        <div class="flag">--esp32, --arduino, --pico, --pi5</div>
+        <div class="flag-desc">Embedded microcontrollers and SBCs; ESP32 is the main board (60%).</div>
+        <div class="flag">--docker, --nginx, --sql</div>
+        <div class="flag-desc">Self-hosted Linux infrastructure and deployment tooling (60%).</div>
+        <div class="flag">--easyeda-pro, --php</div>
+        <div class="flag-desc">Custom PCB layout and legacy web maintenance (40%).</div>
+      </div>
+
+      <h2>EXAMPLES (PROJECTS)</h2>
+      <div class="indent">
+        <div class="flag">01. SYNAPSE RESUME SITE (<a href="https://github.com/ebad84/synapse-resume" target="_blank">repo</a>)</div>
+        <div class="flag-desc">Flask web resume paired with a login-free SSH terminal twin.</div>
+        <div class="flag">02. UTEMP IOT PLATFORM (<a href="https://github.com/ebad84/UTEMP" target="_blank">repo</a>)</div>
+        <div class="flag-desc">REST API and dashboard for IoT temperature sensors.</div>
+        <div class="flag">03. QR CODE GENERATOR (<a href="https://qr.ebad84.ir" target="_blank">live</a>)</div>
+        <div class="flag-desc">Client-side PNG/SVG QR generator with zero tracking.</div>
+        <div class="flag">04. ELECTRONIC PARTS MANAGER (<a href="https://github.com/ebad84/my-things-manager" target="_blank">repo</a>)</div>
+        <div class="flag-desc">Persian electronics inventory app with Jalali calendar.</div>
+        <div class="flag">05. DIGIKALA DAILY POINT BOT (<a href="https://github.com/ebad84/digikala_dailypoint" target="_blank">repo</a>)</div>
+        <div class="flag-desc">Automated DigiClub point collector with OTP session persistence.</div>
+        <div class="flag">06. ESP32 MUSIC PLAYER (<a href="https://github.com/ebad84/Music_Player" target="_blank">repo</a>)</div>
+        <div class="flag-desc">MicroPython audio player with I2S DAC and wireless Flask upload.</div>
+        <div class="flag">07. UV CURING STATION PCB (<a href="https://github.com/ebad84/UV-Station" target="_blank">repo</a>)</div>
+        <div class="flag-desc">USB-powered 20-LED UV curing PCB designed in EasyEDA Pro.</div>
+      </div>
+
+      <h2>SEE ALSO</h2>
+      <div class="indent">
+        <a href="https://github.com/ebad84" target="_blank">github.com/ebad84</a>,
+        <a href="https://linkedin.com/in/ebad84" target="_blank">linkedin.com/in/ebad84</a>,
+        <a href="https://t.me/ebad84" target="_blank">t.me/ebad84</a>
+      </div>
+
+      <div class="man-foot"><span>SYNAPSE 2026</span><span>QOM, IRAN</span><span>EBAD84(1)</span></div>
+    </article>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+  </script>
+</body>
+</html>

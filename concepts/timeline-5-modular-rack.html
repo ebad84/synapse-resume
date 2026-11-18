@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TIMELINE 05 — MODULAR RACK PATCHBAY | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background: var(--paper); background-image: var(--pcb); color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 13px; line-height: 1.65;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 20px; }
+    .rack-top {
+      background: var(--paper); border: 2px solid var(--ink); padding: 14px 18px;
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;
+    }
+    .btn {
+      background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 5px 12px;
+      font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer;
+    }
+    .module {
+      background: var(--paper); border: 1px solid var(--ink); margin-bottom: 0; position: relative;
+    }
+    .patch-cable {
+      height: 22px; display: flex; justify-content: center; align-items: center;
+    }
+    .patch-cable::before {
+      content: ""; width: 2px; height: 100%; background: var(--ink);
+    }
+    .mod-head {
+      display: flex; justify-content: space-between; align-items: center; padding: 10px 16px;
+      border-bottom: 1px solid var(--line); font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .jacks { display: flex; gap: 6px; }
+    .jack { width: 10px; height: 10px; border: 2px solid var(--ink); display: inline-block; }
+    .mod-body { padding: 18px 20px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+    .card { border: 1px solid var(--line); padding: 10px 12px; font-size: 12px; }
+    a { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="rack-top">
+      <div><strong>SYNAPSE RACK // EBAD84</strong> · CONCEPT S5: MODULAR PATCHBAY</div>
+      <button class="btn" id="themeBtn" onclick="toggleTheme()">DARK</button>
+    </div>
+
+    <section class="module">
+      <div class="mod-head"><span>MOD 01 // IDENTITY_CORE</span><span class="jacks"><i class="jack"></i><i class="jack"></i></span></div>
+      <div class="mod-body">
+        <h1 style="margin:0 0 8px; font-size:20px; letter-spacing:0.1em;">MOHAMMAD REZA EBADOLLAH</h1>
+        <div style="color:var(--dim)">Computer Engineer · IoT / Embedded / Signal + Image · R&amp;D @ Univ. of Qom · Freelance @ Parscoders</div>
+      </div>
+    </section>
+
+    <div class="patch-cable"></div>
+
+    <section class="module">
+      <div class="mod-head"><span>MOD 02 // IO_BOARDS &amp; STACK</span><span class="jacks"><i class="jack"></i><i class="jack"></i></span></div>
+      <div class="mod-body cards">
+        <div class="card"><strong>MCU / SBC</strong><br/>ESP32, Arduino, Pi Pico, ESP8266, Pi Zero, Pi 5</div>
+        <div class="card"><strong>SOFTWARE</strong><br/>Python 80%, C/C++ 60%, Linux/Docker 60%, PHP/PCB 40%</div>
+      </div>
+    </section>
+
+    <div class="patch-cable"></div>
+
+    <section class="module">
+      <div class="mod-head"><span>MOD 03 // SIGNAL_BUILDS (7)</span><span class="jacks"><i class="jack"></i><i class="jack"></i></span></div>
+      <div class="mod-body cards">
+        <div class="card"><strong>01. SYNAPSE</strong><br/>Flask + SSH twin <a href="https://github.com/ebad84/synapse-resume" target="_blank">↗</a></div>
+        <div class="card"><strong>02. UTEMP</strong><br/>IoT Temp API <a href="https://github.com/ebad84/UTEMP" target="_blank">↗</a></div>
+        <div class="card"><strong>03. QR GEN</strong><br/>Client-side QR <a href="https://qr.ebad84.ir" target="_blank">↗</a></div>
+        <div class="card"><strong>04. PARTS MGR</strong><br/>Jalali Inventory <a href="https://github.com/ebad84/my-things-manager" target="_blank">↗</a></div>
+        <div class="card"><strong>05. DIGIKALA BOT</strong><br/>Daily Points <a href="https://github.com/ebad84/digikala_dailypoint" target="_blank">↗</a></div>
+        <div class="card"><strong>06. ESP32 PLAYER</strong><br/>I2S Audio <a href="https://github.com/ebad84/Music_Player" target="_blank">↗</a></div>
+        <div class="card"><strong>07. UV PCB</strong><br/>EasyEDA Pro <a href="https://github.com/ebad84/UV-Station" target="_blank">↗</a></div>
+      </div>
+    </section>
+
+    <div class="patch-cable"></div>
+
+    <section class="module">
+      <div class="mod-head"><span>MOD 04 // OUTPUT_UPLINK</span><span class="jacks"><i class="jack"></i></span></div>
+      <div class="mod-body">
+        <a href="https://github.com/ebad84" target="_blank">GITHUB ↗</a> ·
+        <a href="https://linkedin.com/in/ebad84" target="_blank">LINKEDIN ↗</a> ·
+        <a href="https://t.me/ebad84" target="_blank">TELEGRAM ↗</a> ·
+        <span>ssh ebad84.ir</span>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONCEPT 01 — IC DATASHEET GRID | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111;
+      --paper: #ffffff;
+      --line: #dcdcdc;
+      --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Ccircle cx='140' cy='60' r='3' fill='%23e3e3e3'/%3E%3Ccircle cx='180' cy='60' r='3' fill='%23e3e3e3'/%3E%3Ccircle cx='100' cy='120' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    html[data-theme="dark"] {
+      --ink: #e8e8e8;
+      --paper: #111111;
+      --line: #333333;
+      --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Ccircle cx='140' cy='60' r='3' fill='%232e2e2e'/%3E%3Ccircle cx='180' cy='60' r='3' fill='%232e2e2e'/%3E%3Ccircle cx='100' cy='120' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0;
+      background-color: var(--paper);
+      background-image: var(--pcb);
+      color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Courier New", monospace;
+      font-size: 13.5px;
+      line-height: 1.65;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    html[dir="rtl"] body {
+      font-family: Vazirmatn, Tahoma, "JetBrains Mono", monospace;
+      letter-spacing: 0 !important;
+    }
+    html[dir="rtl"] * { letter-spacing: 0 !important; }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Top Telemetry Strip */
+    .telemetry {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-bottom: 2px solid var(--ink);
+      background: var(--paper);
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .telemetry strong { color: var(--ink); }
+    .dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: var(--ink);
+      margin-inline-end: 6px;
+      vertical-align: middle;
+    }
+
+    /* Shell Grid */
+    .sheet {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-top: none;
+    }
+
+    .rail, .main-col {
+      background: var(--paper);
+    }
+
+    .rail {
+      display: flex;
+      flex-direction: column;
+      border-inline-end: 1px solid var(--line);
+    }
+
+    .rail-sticky {
+      position: sticky;
+      top: 16px;
+    }
+
+    .block {
+      padding: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .block:last-child { border-bottom: none; }
+
+    /* Pixel Avatar / Chip Mark */
+    .chip-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .chip-svg {
+      width: 64px;
+      height: 64px;
+      border: 1px solid var(--ink);
+      padding: 6px;
+      flex-shrink: 0;
+      background: var(--paper);
+    }
+    .chip-header h1 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.3;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .role-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .btn {
+      flex: 1;
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid var(--ink);
+      padding: 7px 10px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn.ghost {
+      background: var(--paper);
+      color: var(--ink);
+    }
+    .btn:hover { opacity: 0.78; }
+
+    /* Section Headings */
+    .sec-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
+    .sec-head h2 {
+      margin: 0;
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .sec-head span {
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+    }
+
+    /* Spec Table */
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--line);
+      font-size: 11.5px;
+    }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-k { color: var(--dim); text-transform: uppercase; font-size: 10.5px; }
+    .spec-v { font-weight: 700; text-align: end; }
+
+    /* Main Content Bento */
+    .bento {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--line);
+    }
+    .cell {
+      background: var(--paper);
+      padding: 22px 24px;
+    }
+    .cell.wide {
+      grid-column: 1 / -1;
+    }
+
+    /* ASCII Skill Bars */
+    .skill-item {
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+    .skill-item:last-child { margin-bottom: 0; }
+    .skill-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 3px;
+    }
+    .bar {
+      letter-spacing: 0.08em;
+      font-size: 12px;
+      user-select: none;
+    }
+    .bar .empty { color: var(--dim); }
+
+    /* Boards Matrix */
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .board-chip {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      font-size: 11px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .board-chip.primary {
+      border-color: var(--ink);
+      font-weight: 700;
+    }
+
+    /* Filter Bar */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .f-btn {
+      background: var(--paper);
+      color: var(--dim);
+      border: 1px solid var(--line);
+      padding: 4px 10px;
+      font-family: inherit;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+    }
+    .f-btn.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    /* Project Cards */
+    .proj-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .proj {
+      border: 1px solid var(--line);
+      padding: 14px 16px;
+      transition: border-color 0.12s ease;
+    }
+    .proj:hover { border-color: var(--ink); }
+    .proj-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .proj-title {
+      margin: 0;
+      font-size: 12.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .proj-idx {
+      color: var(--dim);
+      margin-inline-end: 8px;
+      font-weight: 400;
+    }
+    .proj-link {
+      font-size: 10.5px;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+    .proj-link:hover { border-bottom-color: var(--ink); }
+    .proj-desc {
+      margin: 8px 0 10px;
+      font-size: 12px;
+      color: var(--dim);
+    }
+    .tags {
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    /* Nav Links in Rail */
+    .rail-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .rail-nav a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 11.5px;
+      padding: 5px 8px;
+      border: 1px solid transparent;
+      display: flex;
+      justify-content: space-between;
+    }
+    .rail-nav a:hover {
+      border-color: var(--line);
+    }
+
+    footer {
+      border: 1px solid var(--line);
+      border-top: 2px solid var(--ink);
+      background: var(--paper);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--dim);
+    }
+    footer a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+    }
+
+    @media (max-width: 860px) {
+      .sheet { grid-template-columns: 1fr; }
+      .rail { border-inline-end: none; border-bottom: 1px solid var(--line); }
+      .rail-sticky { position: static; }
+      .bento { grid-template-columns: 1fr; }
+      .board-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Top Telemetry -->
+    <div class="telemetry">
+      <div><span class="dot"></span><strong data-i18n="docCode">DOC // SYNAPSE-REV-2026</strong> · <span data-i18n="sshHint">SSH EBAD84.IR · NO LOGIN</span></div>
+      <div>CONCEPT 01: <strong>IC DATASHEET GRID</strong></div>
+    </div>
+
+    <div class="sheet">
+      <!-- Left Sticky Spec Rail -->
+      <aside class="rail">
+        <div class="rail-sticky">
+          <div class="block">
+            <div class="chip-header">
+              <svg class="chip-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="8" y="8" width="16" height="16" />
+                <rect x="12" y="12" width="8" height="8" fill="currentColor" />
+                <path d="M12 2v6M16 2v6M20 2v6M12 24v6M16 24v6M20 24v6M2 12h6M2 16h6M2 20h6M24 12h6M24 16h6M24 20h6" />
+              </svg>
+              <div>
+                <h1 data-i18n="name">MOHAMMAD REZA EBADOLLAH</h1>
+                <span class="role-tag" data-i18n="role">COMPUTER ENGINEER · IOT / EMBEDDED</span>
+              </div>
+            </div>
+            <div class="controls">
+              <button class="btn" id="themeBtn" onclick="toggleTheme()">DARK</button>
+              <button class="btn ghost" id="langBtn" onclick="toggleLang()">FA</button>
+            </div>
+          </div>
+
+          <div class="block">
+            <div class="sec-head">
+              <h2 data-i18n="specTitle">PINOUT / SPECS</h2>
+              <span>SYS</span>
+            </div>
+            <div class="spec-row"><span class="spec-k" data-i18n="kLoc">LOCATION</span><span class="spec-v" data-i18n="vLoc">QOM / IRAN</span></div>
+            <div class="spec-row"><span class="spec-k" data-i18n="kMain">MAIN MCU</span><span class="spec-v">ESP32</span></div>
+            <div class="spec-row"><span class="spec-k" data-i18n="kFocus">FOCUS</span><span class="spec-v" data-i18n="vFocus">IOT · SIGNAL</span></div>
+            <div class="spec-row"><span class="spec-k" data-i18n="kStatus">STATUS</span><span class="spec-v" data-i18n="vStatus">OPEN TO WORK</span></div>
+          </div>
+
+          <div class="block">
+            <div class="sec-head">
+              <h2 data-i18n="navTitle">SECTIONS</h2>
+              <span>01–05</span>
+            </div>
+            <nav class="rail-nav">
+              <a href="#about"><span data-i18n="navAbout">ABOUT</span><span>01</span></a>
+              <a href="#skills"><span data-i18n="navSkills">SKILLS</span><span>02</span></a>
+              <a href="#boards"><span data-i18n="navBoards">BOARDS & EXP</span><span>03</span></a>
+              <a href="#projects"><span data-i18n="navProjects">PROJECTS</span><span>04</span></a>
+              <a href="#contact"><span data-i18n="navContact">CONTACT</span><span>05</span></a>
+            </nav>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Datasheet Grid -->
+      <main class="main-col">
+        <div class="bento">
+          <!-- 01 ABOUT -->
+          <section class="cell" id="about">
+            <div class="sec-head">
+              <h2 data-i18n="aboutTitle">01 // ABOUT</h2>
+              <span>OVERVIEW</span>
+            </div>
+            <p data-i18n="bio1" style="margin-top:0">Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things.</p>
+            <p data-i18n="bio2" style="margin-bottom:0; color:var(--dim); font-size:12.5px">Data, audio, signal, and image processing are areas I enjoy exploring. If you have a project you think I could help with, let's work together.</p>
+          </section>
+
+          <!-- 02 SKILLS -->
+          <section class="cell" id="skills">
+            <div class="sec-head">
+              <h2 data-i18n="skillsTitle">02 // SKILLS</h2>
+              <span>SELF-ASSESSED</span>
+            </div>
+            <div class="skill-item">
+              <div class="skill-top"><span>PYTHON / FLASK / FASTAPI</span><span>80%</span></div>
+              <div class="bar">████████<span class="empty">░░</span></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-top"><span>C / C++ / EMBEDDED C</span><span>60%</span></div>
+              <div class="bar">██████<span class="empty">░░░░</span></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-top"><span>LINUX / NGINX / DOCKER / SQL</span><span>60%</span></div>
+              <div class="bar">██████<span class="empty">░░░░</span></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-top"><span>PHP / PCB (EASYEDA)</span><span>40%</span></div>
+              <div class="bar">████<span class="empty">░░░░░░</span></div>
+            </div>
+          </section>
+
+          <!-- 03 BOARDS -->
+          <section class="cell" id="boards">
+            <div class="sec-head">
+              <h2 data-i18n="boardsTitle">03 // BOARDS</h2>
+              <span>HARDWARE</span>
+            </div>
+            <div class="board-grid">
+              <div class="board-chip primary">ESP32 ★</div>
+              <div class="board-chip">ARDUINO</div>
+              <div class="board-chip">PI PICO</div>
+              <div class="board-chip">ESP8266</div>
+              <div class="board-chip">PI ZERO</div>
+              <div class="board-chip">PI 5</div>
+            </div>
+          </section>
+
+          <!-- EXPERIENCE -->
+          <section class="cell">
+            <div class="sec-head">
+              <h2 data-i18n="expTitle">04 // EXPERIENCE</h2>
+              <span>LOG</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-k">R&amp;D</span>
+              <span class="spec-v" data-i18n="exp1">UNIVERSITY OF QOM</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-k">FREELANCE</span>
+              <span class="spec-v" data-i18n="exp2">PARSCODERS DEVELOPER</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-k">SELF-HOSTING</span>
+              <span class="spec-v">HOME SERVER · NGINX</span>
+            </div>
+          </section>
+
+          <!-- 05 PROJECTS WITH FILTER -->
+          <section class="cell wide" id="projects">
+            <div class="sec-head">
+              <h2 data-i18n="projTitle">05 // PROJECTS</h2>
+              <span id="projCount">7 BUILDS</span>
+            </div>
+
+            <div class="filters">
+              <button class="f-btn active" onclick="filterProj('ALL', this)">ALL</button>
+              <button class="f-btn" onclick="filterProj('PYTHON', this)">PYTHON</button>
+              <button class="f-btn" onclick="filterProj('IOT', this)">IOT / EMBEDDED</button>
+              <button class="f-btn" onclick="filterProj('HARDWARE', this)">HARDWARE</button>
+              <button class="f-btn" onclick="filterProj('SELF-HOSTED', this)">SELF-HOSTED</button>
+            </div>
+
+            <div class="proj-list" id="projList"></div>
+          </section>
+
+          <!-- 06 CONTACT -->
+          <section class="cell wide" id="contact">
+            <div class="sec-head">
+              <h2 data-i18n="contactTitle">06 // UPLINK</h2>
+              <span>SAME USERNAME EVERYWHERE: EBAD84</span>
+            </div>
+            <div style="display:flex; gap:16px; flex-wrap:wrap;">
+              <a class="btn ghost" style="flex:0 1 auto" href="https://github.com/ebad84" target="_blank">GITHUB ↗</a>
+              <a class="btn ghost" style="flex:0 1 auto" href="https://linkedin.com/in/ebad84" target="_blank">LINKEDIN ↗</a>
+              <a class="btn ghost" style="flex:0 1 auto" href="https://t.me/ebad84" target="_blank">TELEGRAM ↗</a>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <footer>
+      <span>© 2026 MOHAMMAD REZA EBADOLLAH — SYNAPSE</span>
+      <span>CONCEPT 01 · <a href="#" onclick="window.print();return false;">PRINT DATASHEET</a></span>
+    </footer>
+  </div>
+
+  <script>
+    const projects = [
+      { idx: "01", titleEn: "SYNAPSE RESUME SITE", titleFa: "سایت رزومهٔ سینپس", descEn: "Personal resume site with two faces: minimal Flask web page + login-free SSH terminal twin.", descFa: "سایت رزومهٔ شخصی با دو رویه: صفحه وب مینیمال Flask و نسخه SSH تعاملی بدون لاگین.", tags: ["PYTHON", "FLASK", "SSH", "SELF-HOSTED", "NGINX"], link: "https://github.com/ebad84/synapse-resume" },
+      { idx: "02", titleEn: "UTEMP — IoT TEMPERATURE PLATFORM", titleFa: "یوتمپ — پلتفرم دمای IoT", descEn: "REST API and dashboard for IoT devices to log and visualize temperature data.", descFa: "سرویس وب و REST API برای دستگاه‌های IoT جهت ثبت و نمایش داده‌های دما.", tags: ["PYTHON", "FLASK", "IOT", "DOCKER", "NGINX"], link: "https://github.com/ebad84/UTEMP" },
+      { idx: "03", titleEn: "QR CODE GENERATOR", titleFa: "مولد QR Code", descEn: "Client-side QR generator with zero tracking. Outputs PNG and SVG.", descFa: "مولد QR Code کاملاً سمت کلاینت بدون ردیابی با خروجی PNG و SVG.", tags: ["HTML", "CSS", "VANILLA JS", "SELF-HOSTED"], link: "https://qr.ebad84.ir" },
+      { idx: "04", titleEn: "ELECTRONIC PARTS MANAGER", titleFa: "مدیریت قطعات الکترونیکی", descEn: "Full-stack Persian inventory manager with Jalali calendar and ZIP backup.", descFa: "اپلیکیشن وب فارسی برای مدیریت انبار قطعات الکترونیکی با تقویم جلالی.", tags: ["PYTHON", "FLASK", "SQLITE", "PILLOW"], link: "https://github.com/ebad84/my-things-manager" },
+      { idx: "05", titleEn: "DIGIKALA DAILY POINT BOT", titleFa: "ربات امتیاز روزانهٔ دیجی‌کالا", descEn: "Automates daily DigiClub point collection with OTP login and session persistence.", descFa: "جمع‌آوری خودکار امتیاز روزانهٔ دیجی‌کلاب با لاگین OTP.", tags: ["PYTHON", "FLASK", "WEB SCRAPING"], link: "https://github.com/ebad84/digikala_dailypoint" },
+      { idx: "06", titleEn: "ESP32 MUSIC PLAYER", titleFa: "موزیک پلیر ESP32", descEn: "MicroPython MP3/WAV player with I2S DAC and wireless Flask file transfer.", descFa: "موزیک پلیر روی ESP32 با MicroPython، خروجی I2S DAC و انتقال بی‌سیم فایل.", tags: ["IOT", "EMBEDDED", "ESP32", "MICROPYTHON", "PYTHON"], link: "https://github.com/ebad84/Music_Player" },
+      { idx: "07", titleEn: "UV CURING STATION PCB", titleFa: "PCB ایستگاه UV", descEn: "Compact USB-powered PCB with 20 UV LEDs designed in EasyEDA Pro.", descFa: "ایستگاه UV Curing مبتنی بر PCB با ۲۰ LED UV طراحی‌شده در EasyEDA Pro.", tags: ["HARDWARE", "PCB DESIGN", "EASYEDA PRO"], link: "https://github.com/ebad84/UV-Station" }
+    ];
+
+    const i18n = {
+      en: {
+        name: "MOHAMMAD REZA EBADOLLAH",
+        role: "COMPUTER ENGINEER · IOT / EMBEDDED",
+        docCode: "DOC // SYNAPSE-REV-2026",
+        sshHint: "SSH EBAD84.IR · NO LOGIN",
+        specTitle: "PINOUT / SPECS",
+        kLoc: "LOCATION", vLoc: "QOM / IRAN",
+        kMain: "MAIN MCU", kFocus: "FOCUS", vFocus: "IOT · SIGNAL",
+        kStatus: "STATUS", vStatus: "OPEN TO WORK",
+        navTitle: "SECTIONS",
+        navAbout: "ABOUT", navSkills: "SKILLS", navBoards: "BOARDS & EXP", navProjects: "PROJECTS", navContact: "CONTACT",
+        aboutTitle: "01 // ABOUT",
+        bio1: "Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things.",
+        bio2: "Data, audio, signal, and image processing are areas I enjoy exploring. If you have a project you think I could help with, let's work together.",
+        skillsTitle: "02 // SKILLS",
+        boardsTitle: "03 // BOARDS",
+        expTitle: "04 // EXPERIENCE",
+        exp1: "UNIVERSITY OF QOM", exp2: "PARSCODERS DEVELOPER",
+        projTitle: "05 // PROJECTS",
+        contactTitle: "06 // UPLINK"
+      },
+      fa: {
+        name: "محمدرضا عبادالله",
+        role: "مهندس کامپیوتر · اینترنت اشیا و سخت‌افزار",
+        docCode: "سند // SYNAPSE-REV-2026",
+        sshHint: "SSH EBAD84.IR · بدون نیاز به لاگین",
+        specTitle: "مشخصات فنی",
+        kLoc: "موقعیت", vLoc: "قم / ایران",
+        kMain: "برد اصلی", kFocus: "تمرکز", vFocus: "اینترنت اشیا · سیگنال",
+        kStatus: "وضعیت", vStatus: "آماده همکاری",
+        navTitle: "بخش‌ها",
+        navAbout: "درباره من", navSkills: "مهارت‌ها", navBoards: "بردها و تجربه", navProjects: "پروژه‌ها", navContact: "ارتباط",
+        aboutTitle: "۰۱ // درباره من",
+        bio1: "دانشجوی مهندسی کامپیوتر علاقه‌مند به سخت‌افزار و نرم‌افزار — از وب‌اسکرپینگ، ربات و اتوماسیون تا الکترونیک، ساخت دستگاه‌ها و اینترنت اشیا.",
+        bio2: "پردازش داده، صدا، سیگنال و تصویر از حوزه‌های مورد علاقهٔ من است. اگر پروژه‌ای دارید که بتوانم کمک کنم، خوشحال می‌شوم همکاری کنیم.",
+        skillsTitle: "۰۲ // مهارت‌ها",
+        boardsTitle: "۰۳ // بردها",
+        expTitle: "۰۴ // سوابق",
+        exp1: "تحقیق و توسعه دانشگاه قم", exp2: "توسعه‌دهنده پارسکدرز",
+        projTitle: "۰۵ // پروژه‌ها",
+        contactTitle: "۰۶ // راه‌های ارتباطی"
+      }
+    };
+
+    let currentLang = "en";
+    let currentFilter = "ALL";
+
+    function renderProjects() {
+      const list = document.getElementById("projList");
+      const filtered = currentFilter === "ALL"
+        ? projects
+        : projects.filter(p => p.tags.includes(currentFilter));
+
+      document.getElementById("projCount").textContent = `${filtered.length} ${currentLang === "fa" ? "پروژه" : "BUILDS"}`;
+      list.innerHTML = filtered.map(p => `
+        <article class="proj">
+          <div class="proj-top">
+            <h3 class="proj-title"><span class="proj-idx">${p.idx}</span>${currentLang === "fa" ? p.titleFa : p.titleEn}</h3>
+            <a class="proj-link" href="${p.link}" target="_blank">${currentLang === "fa" ? "مشاهده ↗" : "OPEN ↗"}</a>
+          </div>
+          <p class="proj-desc">${currentLang === "fa" ? p.descFa : p.descEn}</p>
+          <div class="tags">${p.tags.join(" · ")}</div>
+        </article>
+      `).join("");
+    }
+
+    function filterProj(tag, btn) {
+      currentFilter = tag;
+      document.querySelectorAll(".f-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderProjects();
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+
+    function toggleLang() {
+      currentLang = currentLang === "en" ? "fa" : "en";
+      const html = document.documentElement;
+      html.setAttribute("lang", currentLang);
+      html.setAttribute("dir", currentLang === "fa" ? "rtl" : "ltr");
+      document.getElementById("langBtn").textContent = currentLang === "fa" ? "EN" : "FA";
+
+      const dict = i18n[currentLang];
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+      renderProjects();
+    }
+
+    renderProjects();
+  </script>
+</body>
+</html>

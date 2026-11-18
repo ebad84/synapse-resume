@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONCEPT 02 — TERMINAL WORKBENCH | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111;
+      --paper: #ffffff;
+      --line: #dcdcdc;
+      --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Ccircle cx='140' cy='60' r='3' fill='%23e3e3e3'/%3E%3Ccircle cx='180' cy='60' r='3' fill='%23e3e3e3'/%3E%3Ccircle cx='100' cy='120' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    html[data-theme="dark"] {
+      --ink: #e8e8e8;
+      --paper: #111111;
+      --line: #333333;
+      --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Ccircle cx='140' cy='60' r='3' fill='%232e2e2e'/%3E%3Ccircle cx='180' cy='60' r='3' fill='%232e2e2e'/%3E%3Ccircle cx='100' cy='120' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0;
+      background-color: var(--paper);
+      background-image: var(--pcb);
+      color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-bottom: 2px solid var(--ink);
+      background: var(--paper);
+      padding: 10px 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn {
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid var(--ink);
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .btn.ghost {
+      background: var(--paper);
+      color: var(--ink);
+    }
+    .btn:hover { opacity: 0.78; }
+
+    /* Split Workbench */
+    .workbench {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-top: none;
+    }
+
+    .pane {
+      background: var(--paper);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pane-head {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--dim);
+    }
+
+    /* Left Terminal Pane */
+    .term-body {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      max-height: 620px;
+    }
+
+    .ascii {
+      font-size: 9.5px;
+      line-height: 1.15;
+      color: var(--ink);
+      margin: 0;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .cmd-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+    }
+    .cmd-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .cmd-item:hover, .cmd-item.active {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .cmd-item span.hint {
+      font-size: 10px;
+      opacity: 0.7;
+    }
+
+    .log {
+      font-size: 11.5px;
+      color: var(--dim);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .log-line strong { color: var(--ink); }
+
+    .prompt-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-top: 1px solid var(--line);
+      background: var(--paper);
+    }
+    .prompt-row span {
+      color: var(--dim);
+      font-weight: 700;
+    }
+    .prompt-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 12.5px;
+    }
+
+    /* Right Inspector Pane */
+    .inspector {
+      padding: 26px 28px;
+      overflow-y: auto;
+      max-height: 680px;
+    }
+
+    .section-title {
+      margin: 0 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--ink);
+      font-size: 16px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .section-title small {
+      font-size: 10.5px;
+      color: var(--dim);
+      font-weight: 400;
+    }
+
+    .kv-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .kv-box {
+      border: 1px solid var(--line);
+      padding: 12px 14px;
+    }
+    .kv-box .k {
+      font-size: 10px;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .kv-box .v {
+      margin-top: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .proj-card {
+      border: 1px solid var(--line);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .proj-card:hover { border-color: var(--ink); }
+    .proj-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .proj-card-head h3 {
+      margin: 0;
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .proj-card p {
+      margin: 6px 0 8px;
+      font-size: 12px;
+      color: var(--dim);
+    }
+    .proj-card a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      font-size: 11px;
+    }
+    .proj-card a:hover { border-bottom-color: var(--ink); }
+
+    .skill-row {
+      margin-bottom: 14px;
+    }
+    .skill-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+    .skill-bar {
+      font-size: 13px;
+      letter-spacing: 0.1em;
+    }
+    .skill-bar span { color: var(--dim); }
+
+    footer {
+      border: 1px solid var(--line);
+      border-top: none;
+      background: var(--paper);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10.5px;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 900px) {
+      .workbench { grid-template-columns: 1fr; }
+      .term-body, .inspector { max-height: none; }
+      .kv-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span>[SYNAPSE://EBAD84.IR]</span>
+        <span style="color:var(--dim); font-weight:400;">CONCEPT 02 · TERMINAL WORKBENCH</span>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" onclick="runCmd('teapot')">418</button>
+        <button class="btn" id="themeBtn" onclick="toggleTheme()">LIGHT</button>
+      </div>
+    </header>
+
+    <div class="workbench">
+      <!-- Left Interactive Terminal -->
+      <section class="pane">
+        <div class="pane-head">
+          <span>TTY0 // SSH TWIN</span>
+          <span>NO LOGIN</span>
+        </div>
+        <div class="term-body" id="termBody">
+<pre class="ascii"> ____  _   _ _   _    _    ____  ____  _____ 
+/ ___|| \ | | \ | |  / \  |  _ \/ ___|| ____|
+\___ \|  \| |  \| | / _ \ | |_) \___ \|  _|  
+ ___) | |\  | |\  |/ ___ \|  __/ ___) | |___ 
+|____/|_| \_|_| \_/_/   \_\_|   |____/|_____|</pre>
+          <div style="font-size:11.5px; color:var(--dim);">
+            Click a command below or type in the prompt (e.g. <strong style="color:var(--ink)">projects</strong>, <strong style="color:var(--ink)">theme</strong>, <strong style="color:var(--ink)">teapot</strong>).
+          </div>
+
+          <div class="cmd-list" id="cmdList">
+            <button class="cmd-item active" data-cmd="whoami" onclick="runCmd('whoami')"><span>$ whoami</span><span class="hint">[1] PROFILE</span></button>
+            <button class="cmd-item" data-cmd="skills" onclick="runCmd('skills')"><span>$ cat skills.txt</span><span class="hint">[2] STACK</span></button>
+            <button class="cmd-item" data-cmd="boards" onclick="runCmd('boards')"><span>$ boards --list</span><span class="hint">[3] HARDWARE</span></button>
+            <button class="cmd-item" data-cmd="projects" onclick="runCmd('projects')"><span>$ ls -la projects/</span><span class="hint">[4] 7 BUILDS</span></button>
+            <button class="cmd-item" data-cmd="contact" onclick="runCmd('contact')"><span>$ ping ebad84</span><span class="hint">[5] UPLINK</span></button>
+          </div>
+
+          <div class="log" id="termLog">
+            <div class="log-line"><strong>guest@ebad84:~$</strong> whoami</div>
+            <div class="log-line">→ Loaded profile: MOHAMMAD REZA EBADOLLAH</div>
+          </div>
+        </div>
+
+        <form class="prompt-row" onsubmit="handleInput(event)">
+          <span>&gt;</span>
+          <input class="prompt-input" id="cmdInput" type="text" placeholder="type command & press enter..." autocomplete="off" />
+        </form>
+      </section>
+
+      <!-- Right Structured Inspector -->
+      <main class="pane">
+        <div class="pane-head">
+          <span>INSPECTOR // STDOUT</span>
+          <span id="paneBadge">VIEW: WHOAMI</span>
+        </div>
+        <div class="inspector" id="inspector"></div>
+      </main>
+    </div>
+
+    <footer>
+      <span>SSH EBAD84.IR · TERMINAL.SHOP INSPIRED</span>
+      <span>KEYS: [1-5] SWITCH VIEW · [T] THEME</span>
+    </footer>
+  </div>
+
+  <script>
+    const views = {
+      whoami: {
+        badge: "VIEW: WHOAMI",
+        html: `
+          <h1 class="section-title">MOHAMMAD REZA EBADOLLAH <small>EBAD84</small></h1>
+          <div class="kv-grid">
+            <div class="kv-box"><div class="k">ROLE</div><div class="v">COMPUTER ENGINEER · IOT / EMBEDDED</div></div>
+            <div class="kv-box"><div class="k">SPECIALTY</div><div class="v">SIGNAL + IMAGE PROCESSING</div></div>
+            <div class="kv-box"><div class="k">EXPERIENCE</div><div class="v">R&D @ UNIV. OF QOM · PARSCODERS</div></div>
+            <div class="kv-box"><div class="k">PRIMARY BOARD</div><div class="v">ESP32 / MICROPYTHON</div></div>
+          </div>
+          <p>Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and the Internet of Things.</p>
+          <p style="color:var(--dim)">Data, audio, signal, and image processing are some of the areas I've always found interesting and enjoy exploring. If you have a project you think I could help with, I'd be happy to work together!</p>
+        `
+      },
+      skills: {
+        badge: "VIEW: SKILLS.TXT",
+        html: `
+          <h2 class="section-title">SKILLS — SELF-ASSESSED <small>4 GROUPS</small></h2>
+          <div class="skill-row"><div class="skill-meta"><span>PYTHON (FLASK / FASTAPI / SCRAPING)</span><span>80%</span></div><div class="skill-bar">████████<span>░░</span></div></div>
+          <div class="skill-row"><div class="skill-meta"><span>C / C++ / ARDUINO / EMBEDDED C</span><span>60%</span></div><div class="skill-bar">██████<span>░░░░</span></div></div>
+          <div class="skill-row"><div class="skill-meta"><span>LINUX / NGINX / DOCKER / SQL / GIT</span><span>60%</span></div><div class="skill-bar">██████<span>░░░░</span></div></div>
+          <div class="skill-row"><div class="skill-meta"><span>PHP / PCB DESIGN (EASYEDA PRO)</span><span>40%</span></div><div class="skill-bar">████<span>░░░░░░</span></div></div>
+          <div class="kv-box" style="margin-top:20px">
+            <div class="k">DAILY TOOLING</div>
+            <div class="v" style="font-size:12px; font-weight:400;">FLASK · FASTAPI · uv · SQL · GIT · DOCKER · NGINX · PARAMIKO</div>
+          </div>
+        `
+      },
+      boards: {
+        badge: "VIEW: BOARDS --LIST",
+        html: `
+          <h2 class="section-title">HARDWARE &amp; BOARDS <small>6 DEVICES</small></h2>
+          <div class="kv-grid">
+            <div class="kv-box"><div class="k">PRIMARY MCU</div><div class="v">ESP32 (Wi-Fi / BLE / I2S)</div></div>
+            <div class="kv-box"><div class="k">MICROCONTROLLER</div><div class="v">ARDUINO FAMILY</div></div>
+            <div class="kv-box"><div class="k">RP2040</div><div class="v">RASPBERRY PI PICO</div></div>
+            <div class="kv-box"><div class="k">WI-FI MODULE</div><div class="v">ESP8266 FAMILY</div></div>
+            <div class="kv-box"><div class="k">SBC COMPACT</div><div class="v">RASPBERRY PI ZERO</div></div>
+            <div class="kv-box"><div class="k">SBC DESKTOP/SERVER</div><div class="v">RASPBERRY PI 5</div></div>
+          </div>
+        `
+      },
+      projects: {
+        badge: "VIEW: LS PROJECTS/",
+        html: `
+          <h2 class="section-title">PROJECTS <small>7 REPOSITORIES</small></h2>
+          <div class="proj-card"><div class="proj-card-head"><h3>01 · SYNAPSE RESUME SITE</h3><a href="https://github.com/ebad84/synapse-resume" target="_blank">OPEN ↗</a></div><p>Minimal Flask resume + login-free interactive SSH terminal twin behind nginx.</p><div style="font-size:10px;color:var(--dim)">PYTHON · FLASK · SSH · PARAMIKO · NGINX</div></div>
+          <div class="proj-card"><div class="proj-card-head"><h3>02 · UTEMP — IoT TEMPERATURE PLATFORM</h3><a href="https://github.com/ebad84/UTEMP" target="_blank">OPEN ↗</a></div><p>REST API and dashboard for IoT devices to log and display temperature data.</p><div style="font-size:10px;color:var(--dim)">PYTHON · FLASK · DOCKER · IOT · SQLITE</div></div>
+          <div class="proj-card"><div class="proj-card-head"><h3>03 · QR CODE GENERATOR</h3><a href="https://qr.ebad84.ir" target="_blank">OPEN ↗</a></div><p>100% client-side QR generator with PNG &amp; SVG export. Zero tracking.</p><div style="font-size:10px;color:var(--dim)">HTML · CSS · VANILLA JS · SELF-HOSTED</div></div>
+          <div class="proj-card"><div class="proj-card-head"><h3>04 · ELECTRONIC PARTS MANAGER</h3><a href="https://github.com/ebad84/my-things-manager" target="_blank">OPEN ↗</a></div><p>Persian full-stack electronics inventory with Jalali calendar and ZIP backup.</p><div style="font-size:10px;color:var(--dim)">PYTHON · FLASK · SQLALCHEMY · PILLOW</div></div>
+          <div class="proj-card"><div class="proj-card-head"><h3>05 · DIGIKALA DAILY POINT BOT</h3><a href="https://github.com/ebad84/digikala_dailypoint" target="_blank">OPEN ↗</a></div><p>Automated daily DigiClub point collector with OTP login &amp; session persistence.</p><div style="font-size:10px;color:var(--dim)">PYTHON · FLASK · BEAUTIFULSOUP4 · SCRAPING</div></div>
+          <div class="proj-card"><div class="proj-card-head"><h3>06 · ESP32 MUSIC PLAYER</h3><a href="https://github.com/ebad84/Music_Player" target="_blank">OPEN ↗</a></div><p>MicroPython audio player on ESP32 with I2S DAC &amp; wireless Flask upload.</p><div style="font-size:10px;color:var(--dim)">MICROPYTHON · ESP32 · I2S · SPI · PYDUB</div></div>
+          <div class="proj-card"><div class="proj-card-head"><h3>07 · UV CURING STATION PCB</h3><a href="https://github.com/ebad84/UV-Station" target="_blank">OPEN ↗</a></div><p>20-LED USB-powered UV curing PCB for solder mask and resin. EasyEDA Pro.</p><div style="font-size:10px;color:var(--dim)">PCB DESIGN · EASYEDA PRO · HARDWARE</div></div>
+        `
+      },
+      contact: {
+        badge: "VIEW: PING EBAD84",
+        html: `
+          <h2 class="section-title">CONTACT / UPLINK <small>EBAD84</small></h2>
+          <div class="kv-grid">
+            <div class="kv-box"><div class="k">GITHUB</div><div class="v"><a style="color:inherit" href="https://github.com/ebad84" target="_blank">github.com/ebad84 ↗</a></div></div>
+            <div class="kv-box"><div class="k">LINKEDIN</div><div class="v"><a style="color:inherit" href="https://linkedin.com/in/ebad84" target="_blank">linkedin.com/in/ebad84 ↗</a></div></div>
+            <div class="kv-box"><div class="k">TELEGRAM</div><div class="v"><a style="color:inherit" href="https://t.me/ebad84" target="_blank">t.me/ebad84 ↗</a></div></div>
+            <div class="kv-box"><div class="k">SSH TERMINAL</div><div class="v">ssh ebad84.ir</div></div>
+          </div>
+        `
+      },
+      teapot: {
+        badge: "HTTP 418",
+        html: `
+          <h2 class="section-title">418 I'M A TEAPOT <small>EASTER EGG</small></h2>
+          <pre style="font-size:12px; line-height:1.3;">
+             ;,'
+     _o_    ;:;'
+ ,-.'---\`.\__;
+((j\`=====',-'
+ \`-\\     /
+    \`-=-'   SYNAPSE REFUSES TO BREW COFFEE.
+          </pre>
+          <p style="color:var(--dim)">Classic RFC 2324 tribute — just like the SSH twin on ebad84.ir.</p>
+        `
+      }
+    };
+
+    function runCmd(cmd) {
+      const clean = cmd.trim().toLowerCase();
+      if (clean === "theme") { toggleTheme(); return; }
+      if (!views[clean]) {
+        appendLog(`guest@ebad84:~$ ${clean}`, `ERR: command not found. Try: whoami, skills, boards, projects, contact, teapot`);
+        return;
+      }
+      document.getElementById("inspector").innerHTML = views[clean].html;
+      document.getElementById("paneBadge").textContent = views[clean].badge;
+      document.querySelectorAll(".cmd-item").forEach(b => {
+        b.classList.toggle("active", b.dataset.cmd === clean);
+      });
+      appendLog(`guest@ebad84:~$ ${clean}`, `→ Rendered ${clean}`);
+    }
+
+    function appendLog(line1, line2) {
+      const log = document.getElementById("termLog");
+      log.innerHTML = `<div class="log-line"><strong>${line1}</strong></div><div class="log-line">${line2}</div>`;
+    }
+
+    function handleInput(e) {
+      e.preventDefault();
+      const input = document.getElementById("cmdInput");
+      if (input.value.trim()) runCmd(input.value);
+      input.value = "";
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (document.activeElement === document.getElementById("cmdInput")) return;
+      const map = { "1": "whoami", "2": "skills", "3": "boards", "4": "projects", "5": "contact" };
+      if (map[e.key]) runCmd(map[e.key]);
+      if (e.key.toLowerCase() === "t") toggleTheme();
+    });
+
+    runCmd("whoami");
+  </script>
+</body>
+</html>

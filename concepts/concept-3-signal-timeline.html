@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONCEPT 03 — SIGNAL BUS TIMELINE | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111;
+      --paper: #ffffff;
+      --line: #dcdcdc;
+      --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Ccircle cx='140' cy='60' r='3' fill='%23e3e3e3'/%3E%3Ccircle cx='180' cy='60' r='3' fill='%23e3e3e3'/%3E%3Ccircle cx='100' cy='120' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    html[data-theme="dark"] {
+      --ink: #e8e8e8;
+      --paper: #111111;
+      --line: #333333;
+      --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Ccircle cx='140' cy='60' r='3' fill='%232e2e2e'/%3E%3Ccircle cx='180' cy='60' r='3' fill='%232e2e2e'/%3E%3Ccircle cx='100' cy='120' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0;
+      background-color: var(--paper);
+      background-image: var(--pcb);
+      color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    html[dir="rtl"] body {
+      font-family: Vazirmatn, Tahoma, "JetBrains Mono", monospace;
+      letter-spacing: 0 !important;
+    }
+    html[dir="rtl"] * { letter-spacing: 0 !important; }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+    }
+
+    /* Minimal Top Nav */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink);
+      background: var(--paper);
+      padding: 14px 18px;
+      border: 1px solid var(--line);
+      border-bottom: 2px solid var(--ink);
+    }
+    .nav-left {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .nav-left strong { color: var(--ink); }
+    .nav-btns { display: flex; gap: 8px; }
+    .btn {
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid var(--ink);
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn.ghost { background: var(--paper); color: var(--ink); }
+    .btn:hover { opacity: 0.78; }
+
+    /* Hero */
+    .hero {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-top: none;
+      padding: 44px 32px;
+    }
+    .hero-kicker {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 12px;
+    }
+    .hero h1 {
+      margin: 0 0 16px;
+      font-size: clamp(24px, 4vw, 38px);
+      line-height: 1.18;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .hero-sub {
+      max-width: 68ch;
+      font-size: 13.5px;
+      color: var(--dim);
+      margin: 0 0 24px;
+    }
+    .waveform {
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      overflow-x: auto;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    /* Signal Bus Timeline */
+    .bus {
+      position: relative;
+      margin-top: 28px;
+      padding-inline-start: 34px;
+    }
+    .bus::before {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 11px;
+      width: 2px;
+      background: var(--line);
+    }
+
+    .node {
+      position: relative;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 24px 26px;
+      margin-bottom: 22px;
+    }
+    .node::before {
+      content: "";
+      position: absolute;
+      top: 26px;
+      inset-inline-start: -30px;
+      width: 12px;
+      height: 12px;
+      background: var(--paper);
+      border: 2px solid var(--ink);
+    }
+    .node:hover::before {
+      background: var(--ink);
+    }
+
+    .node-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+    }
+    .node-head h2 {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .node-head span {
+      font-size: 10.5px;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+
+    /* Hardware Strip */
+    .hw-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .hw-pill {
+      border: 1px solid var(--line);
+      padding: 6px 12px;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .hw-pill.main {
+      border-color: var(--ink);
+      font-weight: 700;
+    }
+
+    /* Accordion Project Rows */
+    .proj-row {
+      border-bottom: 1px solid var(--line);
+    }
+    .proj-row:last-child { border-bottom: none; }
+    .proj-trigger {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--ink);
+      font-family: inherit;
+      padding: 14px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      text-align: start;
+    }
+    .proj-trigger:hover { opacity: 0.75; }
+    .proj-name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .proj-meta {
+      font-size: 10.5px;
+      color: var(--dim);
+      white-space: nowrap;
+    }
+    .proj-body {
+      display: none;
+      padding: 0 0 16px;
+      font-size: 12.5px;
+      color: var(--dim);
+    }
+    .proj-row.open .proj-body { display: block; }
+    .proj-body a {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--ink);
+      font-size: 11px;
+    }
+
+    /* Experience Timeline */
+    .exp-item {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--line);
+      font-size: 12.5px;
+    }
+    .exp-item:last-child { border-bottom: none; }
+
+    footer {
+      margin-top: 28px;
+      border: 1px solid var(--line);
+      border-top: 2px solid var(--ink);
+      background: var(--paper);
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--dim);
+    }
+    footer a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left"><strong>SYNAPSE</strong> // CONCEPT 03: SIGNAL BUS</div>
+      <div class="nav-btns">
+        <button class="btn ghost" id="langBtn" onclick="toggleLang()">FA</button>
+        <button class="btn" id="themeBtn" onclick="toggleTheme()">DARK</button>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-kicker" data-i18n="kicker">COMPUTER ENGINEER · IOT / EMBEDDED / SIGNAL + IMAGE</div>
+      <h1 data-i18n="name">MOHAMMAD REZA EBADOLLAH</h1>
+      <p class="hero-sub" data-i18n="bio">
+        Building at the intersection of hardware and software — from ESP32 devices and custom PCBs to Flask APIs, automation bots, and self-hosted Linux infrastructure.
+      </p>
+      <div class="waveform">
+        CLK ─┐ ┌─┐ ┌─┐ ┌─┐ ┌───┐ ┌─┐ ┌─┐ ┌───┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─  SYNC: EBAD84.IR · SSH READY
+      </div>
+    </header>
+
+    <main class="bus">
+      <!-- Node 1: Hardware & Stack -->
+      <section class="node">
+        <div class="node-head">
+          <h2 data-i18n="hwTitle">01 // HARDWARE &amp; STACK</h2>
+          <span>SIGNAL INPUT</span>
+        </div>
+        <div class="hw-strip">
+          <span class="hw-pill main">ESP32</span>
+          <span class="hw-pill">ARDUINO</span>
+          <span class="hw-pill">PI PICO</span>
+          <span class="hw-pill">ESP8266</span>
+          <span class="hw-pill">PI ZERO / PI 5</span>
+          <span class="hw-pill main">PYTHON / FLASK / FASTAPI</span>
+          <span class="hw-pill">C / EMBEDDED C</span>
+          <span class="hw-pill">DOCKER / NGINX</span>
+          <span class="hw-pill">EASYEDA PRO</span>
+        </div>
+      </section>
+
+      <!-- Node 2: Selected Builds (Expandable) -->
+      <section class="node">
+        <div class="node-head">
+          <h2 data-i18n="projTitle">02 // SELECTED BUILDS</h2>
+          <span data-i18n="clickHint">CLICK ROW TO INSPECT</span>
+        </div>
+        <div id="projAccordion"></div>
+      </section>
+
+      <!-- Node 3: Experience -->
+      <section class="node">
+        <div class="node-head">
+          <h2 data-i18n="expTitle">03 // EXPERIENCE</h2>
+          <span>TIMELINE</span>
+        </div>
+        <div class="exp-item">
+          <strong data-i18n="exp1Title">R&amp;D — University of Qom</strong>
+          <span style="color:var(--dim)" data-i18n="exp1Sub">Research &amp; Hardware/Software Prototyping</span>
+        </div>
+        <div class="exp-item">
+          <strong data-i18n="exp2Title">Freelance Developer — Parscoders</strong>
+          <span style="color:var(--dim)" data-i18n="exp2Sub">Bots, Scraping, Web Backends &amp; Automation</span>
+        </div>
+      </section>
+
+      <!-- Node 4: Contact -->
+      <section class="node">
+        <div class="node-head">
+          <h2 data-i18n="contactTitle">04 // CONNECT</h2>
+          <span>EBAD84</span>
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a class="btn ghost" href="https://github.com/ebad84" target="_blank">GITHUB ↗</a>
+          <a class="btn ghost" href="https://linkedin.com/in/ebad84" target="_blank">LINKEDIN ↗</a>
+          <a class="btn ghost" href="https://t.me/ebad84" target="_blank">TELEGRAM ↗</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>© 2026 MOHAMMAD REZA EBADOLLAH — SYNAPSE</span>
+      <span>SSH EBAD84.IR · NO LOGIN NEEDED</span>
+    </footer>
+  </div>
+
+  <script>
+    const projects = [
+      { idx: "01", titleEn: "SYNAPSE RESUME SITE", titleFa: "سایت رزومهٔ سینپس", descEn: "Personal resume site with two faces: minimal Flask web page + login-free SSH terminal twin.", descFa: "سایت رزومهٔ شخصی با دو رویه: صفحه وب مینیمال Flask و نسخه SSH تعاملی بدون لاگین.", tags: "PYTHON · FLASK · SSH · NGINX", link: "https://github.com/ebad84/synapse-resume" },
+      { idx: "02", titleEn: "UTEMP — IoT TEMPERATURE PLATFORM", titleFa: "یوتمپ — پلتفرم دمای IoT", descEn: "REST API and dashboard for IoT devices to log and display temperature data.", descFa: "سرویس وب و REST API برای دستگاه‌های IoT جهت ثبت و نمایش دما.", tags: "FLASK · DOCKER · IOT · SQLITE", link: "https://github.com/ebad84/UTEMP" },
+      { idx: "03", titleEn: "QR CODE GENERATOR", titleFa: "مولد QR Code", descEn: "100% client-side QR code generator outputting PNG and SVG with zero tracking.", descFa: "مولد QR Code کاملاً سمت کلاینت با خروجی PNG و SVG بدون ردیابی.", tags: "HTML · CSS · VANILLA JS", link: "https://qr.ebad84.ir" },
+      { idx: "04", titleEn: "ELECTRONIC PARTS MANAGER", titleFa: "مدیریت قطعات الکترونیکی", descEn: "Full-stack Persian inventory app with Jalali calendar and ZIP backup/restore.", descFa: "اپلیکیشن وب فارسی برای مدیریت انبار قطعات الکترونیکی با تقویم جلالی.", tags: "PYTHON · FLASK · SQLALCHEMY", link: "https://github.com/ebad84/my-things-manager" },
+      { idx: "05", titleEn: "DIGIKALA DAILY POINT BOT", titleFa: "ربات امتیاز روزانهٔ دیجی‌کالا", descEn: "Automated daily DigiClub point collection with OTP login and session persistence.", descFa: "جمع‌آوری خودکار امتیاز روزانهٔ دیجی‌کلاب با لاگین OTP.", tags: "PYTHON · SCRAPING · FLASK", link: "https://github.com/ebad84/digikala_dailypoint" },
+      { idx: "06", titleEn: "ESP32 MUSIC PLAYER", titleFa: "موزیک پلیر ESP32", descEn: "MicroPython audio player on ESP32 with I2S DAC and wireless Flask file transfer.", descFa: "موزیک پلیر روی ESP32 با MicroPython، خروجی I2S DAC و انتقال بی‌سیم فایل.", tags: "MICROPYTHON · ESP32 · I2S", link: "https://github.com/ebad84/Music_Player" },
+      { idx: "07", titleEn: "UV CURING STATION PCB", titleFa: "PCB ایستگاه UV", descEn: "20-LED USB-powered UV curing PCB for solder mask and resin. EasyEDA Pro.", descFa: "ایستگاه UV Curing مبتنی بر PCB با ۲۰ LED UV طراحی‌شده در EasyEDA Pro.", tags: "PCB DESIGN · EASYEDA PRO", link: "https://github.com/ebad84/UV-Station" }
+    ];
+
+    const i18n = {
+      en: {
+        kicker: "COMPUTER ENGINEER · IOT / EMBEDDED / SIGNAL + IMAGE",
+        name: "MOHAMMAD REZA EBADOLLAH",
+        bio: "Building at the intersection of hardware and software — from ESP32 devices and custom PCBs to Flask APIs, automation bots, and self-hosted Linux infrastructure.",
+        hwTitle: "01 // HARDWARE & STACK",
+        projTitle: "02 // SELECTED BUILDS",
+        clickHint: "CLICK ROW TO INSPECT",
+        expTitle: "03 // EXPERIENCE",
+        exp1Title: "R&D — University of Qom",
+        exp1Sub: "Research & Hardware/Software Prototyping",
+        exp2Title: "Freelance Developer — Parscoders",
+        exp2Sub: "Bots, Scraping, Web Backends & Automation",
+        contactTitle: "04 // CONNECT"
+      },
+      fa: {
+        kicker: "مهندس کامپیوتر · اینترنت اشیا / سخت‌افزار / پردازش سیگنال",
+        name: "محمدرضا عبادالله",
+        bio: "ساختن در مرز بین سخت‌افزار و نرم‌افزار — از دستگاه‌های ESP32 و طراحی PCB تا APIهای Flask، ربات‌های اتوماسیون و سرورهای لینوکسی self-hosted.",
+        hwTitle: "۰۱ // سخت‌افزار و ابزارها",
+        projTitle: "۰۲ // پروژه‌های منتخب",
+        clickHint: "برای جزئیات کلیک کنید",
+        expTitle: "۰۳ // سوابق کاری",
+        exp1Title: "تحقیق و توسعه — دانشگاه قم",
+        exp1Sub: "پژوهش و نمونه‌سازی سخت‌افزار و نرم‌افزار",
+        exp2Title: "توسعه‌دهنده فریلنس — پارسکدرز",
+        exp2Sub: "ربات‌ها، وب‌اسکرپینگ، بک‌اند و اتوماسیون",
+        contactTitle: "۰۴ // ارتباط"
+      }
+    };
+
+    let lang = "en";
+
+    function renderAccordion() {
+      const el = document.getElementById("projAccordion");
+      el.innerHTML = projects.map((p, i) => `
+        <div class="proj-row ${i === 0 ? "open" : ""}">
+          <button class="proj-trigger" onclick="this.parentElement.classList.toggle('open')">
+            <span class="proj-name">${p.idx} · ${lang === "fa" ? p.titleFa : p.titleEn}</span>
+            <span class="proj-meta">${p.tags}</span>
+          </button>
+          <div class="proj-body">
+            <div>${lang === "fa" ? p.descFa : p.descEn}</div>
+            <a href="${p.link}" target="_blank">${lang === "fa" ? "باز کردن لینک ↗" : "OPEN REPOSITORY / DEMO ↗"}</a>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+
+    function toggleLang() {
+      lang = lang === "en" ? "fa" : "en";
+      const html = document.documentElement;
+      html.setAttribute("lang", lang);
+      html.setAttribute("dir", lang === "fa" ? "rtl" : "ltr");
+      document.getElementById("langBtn").textContent = lang === "fa" ? "EN" : "FA";
+      const dict = i18n[lang];
+      document.querySelectorAll("[data-i18n]").forEach(node => {
+        const k = node.getAttribute("data-i18n");
+        if (dict[k]) node.textContent = dict[k];
+      });
+      renderAccordion();
+    }
+
+    renderAccordion();
+  </script>
+</body>
+</html>

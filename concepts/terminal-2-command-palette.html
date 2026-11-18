@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TERMINAL 02 — COMMAND PALETTE | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Ccircle cx='140' cy='60' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Ccircle cx='140' cy='60' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background: var(--paper); background-image: var(--pcb); color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 13px; line-height: 1.65;
+    }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 32px 20px; }
+    .header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+      border-bottom: 2px solid var(--ink); padding-bottom: 14px; background: var(--paper); padding: 14px 18px; border: 1px solid var(--line); border-bottom: 2px solid var(--ink);
+    }
+    .header h1 { margin: 0; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; }
+    .btn {
+      background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 6px 12px;
+      font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase;
+    }
+    .palette {
+      background: var(--paper); border: 2px solid var(--ink); margin-bottom: 22px;
+    }
+    .palette-input-row {
+      display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); gap: 10px;
+    }
+    .palette-input-row span { font-weight: 700; color: var(--dim); }
+    .palette-input {
+      flex: 1; background: transparent; border: none; outline: none; color: var(--ink);
+      font-family: inherit; font-size: 14px;
+    }
+    .palette-results { max-height: 260px; overflow-y: auto; }
+    .pal-item {
+      display: flex; justify-content: space-between; align-items: center; width: 100%;
+      background: transparent; border: none; border-bottom: 1px solid var(--line);
+      color: var(--ink); font-family: inherit; font-size: 12px; padding: 10px 16px; cursor: pointer; text-align: left;
+    }
+    .pal-item:last-child { border-bottom: none; }
+    .pal-item:hover, .pal-item.active { background: var(--ink); color: var(--paper); }
+    .pal-cat { font-size: 10px; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.1em; }
+    .stage {
+      background: var(--paper); border: 1px solid var(--line); padding: 24px;
+    }
+    .stage h2 { margin: 0 0 12px; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+    .tag { display: inline-block; border: 1px solid var(--line); padding: 3px 8px; font-size: 10.5px; margin: 4px 4px 0 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <div>
+        <h1>MOHAMMAD REZA EBADOLLAH</h1>
+        <div style="font-size:10.5px; color:var(--dim);">CONCEPT T2 · COMMAND PALETTE (CTRL+K / TYPE TO SEARCH)</div>
+      </div>
+      <button class="btn" id="themeBtn" onclick="toggleTheme()">DARK</button>
+    </header>
+
+    <div class="palette">
+      <div class="palette-input-row">
+        <span>&gt;</span>
+        <input class="palette-input" id="searchInput" type="text" placeholder="Search projects, skills, boards, or type 'theme'..." oninput="renderList()" />
+      </div>
+      <div class="palette-results" id="results"></div>
+    </div>
+
+    <main class="stage" id="stage"></main>
+  </div>
+
+  <script>
+    const items = [
+      { id: "about", cat: "PROFILE", title: "About Mohammad Reza Ebadollah", body: "Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and IoT. Focus: ESP32, Signal & Image Processing.", tags: ["ESP32", "IOT", "SIGNAL", "PYTHON"] },
+      { id: "skills", cat: "STACK", title: "Skills & Daily Tooling", body: "Python (80%) · C / C++ / Embedded C (60%) · Linux / Nginx / Docker / SQL (60%) · PHP / EasyEDA Pro PCB (40%).", tags: ["FLASK", "FASTAPI", "UV", "DOCKER", "NGINX"] },
+      { id: "boards", cat: "HARDWARE", title: "Boards & Microcontrollers", body: "Primary board: ESP32. Also experienced with Arduino, Raspberry Pi Pico, ESP8266 family, Pi Zero, and Raspberry Pi 5.", tags: ["ESP32", "ARDUINO", "PI PICO", "PI 5"] },
+      { id: "p1", cat: "PROJECT 01", title: "SYNAPSE RESUME SITE", body: "Personal resume site with two faces: minimal Flask web page and login-free interactive SSH terminal twin.", tags: ["PYTHON", "FLASK", "SSH", "PARAMIKO"], link: "https://github.com/ebad84/synapse-resume" },
+      { id: "p2", cat: "PROJECT 02", title: "UTEMP — IoT Temperature Platform", body: "REST API and dashboard for IoT devices to log and visualize temperature data.", tags: ["FLASK", "DOCKER", "IOT", "SQLITE"], link: "https://github.com/ebad84/UTEMP" },
+      { id: "p3", cat: "PROJECT 03", title: "QR Code Generator", body: "100% client-side QR generator with PNG & SVG output and zero tracking.", tags: ["HTML", "CSS", "VANILLA JS"], link: "https://qr.ebad84.ir" },
+      { id: "p4", cat: "PROJECT 04", title: "Electronic Parts Manager", body: "Full-stack Persian electronics inventory manager with Jalali calendar and ZIP backup.", tags: ["PYTHON", "FLASK", "SQLALCHEMY"], link: "https://github.com/ebad84/my-things-manager" },
+      { id: "p5", cat: "PROJECT 05", title: "Digikala Daily Point Bot", body: "Automates daily DigiClub point collection with OTP login and session persistence.", tags: ["PYTHON", "SCRAPING", "FLASK"], link: "https://github.com/ebad84/digikala_dailypoint" },
+      { id: "p6", cat: "PROJECT 06", title: "ESP32 Music Player", body: "MicroPython MP3/WAV player on ESP32 with I2S DAC and wireless Flask file transfer.", tags: ["MICROPYTHON", "ESP32", "I2S"], link: "https://github.com/ebad84/Music_Player" },
+      { id: "p7", cat: "PROJECT 07", title: "UV Curing Station PCB", body: "Compact USB-powered PCB with 20 UV LEDs designed in EasyEDA Pro.", tags: ["PCB DESIGN", "EASYEDA PRO", "HARDWARE"], link: "https://github.com/ebad84/UV-Station" },
+      { id: "contact", cat: "UPLINK", title: "Contact (GitHub / LinkedIn / Telegram)", body: "Same username everywhere: ebad84. SSH twin: ssh ebad84.ir.", tags: ["GITHUB", "LINKEDIN", "TELEGRAM"], link: "https://github.com/ebad84" }
+    ];
+
+    let activeId = "about";
+
+    function renderList() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      if (q === "theme") { toggleTheme(); document.getElementById("searchInput").value = ""; return; }
+      const filtered = items.filter(x => (x.title + " " + x.cat + " " + x.tags.join(" ")).toLowerCase().includes(q));
+      const res = document.getElementById("results");
+      res.innerHTML = filtered.map(x => `
+        <button class="pal-item ${x.id === activeId ? "active" : ""}" onclick="selectItem('${x.id}')">
+          <span>${x.title}</span>
+          <span class="pal-cat">${x.cat}</span>
+        </button>
+      `).join("") || `<div style="padding:12px 16px; color:var(--dim);">No matching command or project.</div>`;
+    }
+
+    function selectItem(id) {
+      activeId = id;
+      const item = items.find(x => x.id === id);
+      document.getElementById("stage").innerHTML = `
+        <h2>${item.cat} // ${item.title}</h2>
+        <p style="margin-top:0">${item.body}</p>
+        <div>${item.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+        ${item.link ? `<div style="margin-top:16px;"><a class="btn" style="text-decoration:none;display:inline-block;" href="${item.link}" target="_blank">OPEN LINK ↗</a></div>` : ""}
+      `;
+      renderList();
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+
+    document.addEventListener("keydown", e => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        document.getElementById("searchInput").focus();
+      }
+    });
+
+    selectItem("about");
+  </script>
+</body>
+</html>

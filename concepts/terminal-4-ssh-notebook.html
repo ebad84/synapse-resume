@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TERMINAL 04 — SHELL NOTEBOOK | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background: var(--paper); background-image: var(--pcb); color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 13px; line-height: 1.65;
+    }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 24px 20px; }
+    .top {
+      background: var(--paper); border: 1px solid var(--line); border-bottom: 2px solid var(--ink);
+      padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;
+    }
+    .btn {
+      background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 6px 12px;
+      font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase;
+    }
+    .btn.ghost { background: var(--paper); color: var(--ink); }
+    .cell { background: var(--paper); border: 1px solid var(--line); margin-bottom: 14px; }
+    .cell-cmd {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 16px; border-bottom: 1px solid var(--line); font-weight: 700;
+    }
+    .cell-out { padding: 14px 16px; color: var(--dim); }
+    .cell.collapsed .cell-out { display: none; }
+    a { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div><strong>SYNAPSE.SH</strong> · CONCEPT T4: INTERACTIVE SHELL NOTEBOOK</div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn ghost" onclick="toggleAll()">EXPAND / COLLAPSE ALL</button>
+        <button class="btn" id="themeBtn" onclick="toggleTheme()">DARK</button>
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-cmd"><span>$ cat about.md</span><button class="btn ghost" onclick="this.closest('.cell').classList.toggle('collapsed')">RUN / HIDE</button></div>
+      <div class="cell-out">
+        <strong style="color:var(--ink)">MOHAMMAD REZA EBADOLLAH</strong> — Computer Engineer · IoT / Embedded / Signal + Image.<br/>
+        Computer Engineering student interested in both hardware and software — from web scraping, bots, and automation to electronics, building devices, and IoT.
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-cmd"><span>$ ./skills.sh --bars</span><button class="btn ghost" onclick="this.closest('.cell').classList.toggle('collapsed')">RUN / HIDE</button></div>
+      <div class="cell-out">
+        PYTHON / FLASK / FASTAPI &nbsp;████████░░ 80%<br/>
+        C / C++ / EMBEDDED C &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██████░░░░ 60%<br/>
+        LINUX / DOCKER / NGINX &nbsp;&nbsp;&nbsp;██████░░░░ 60%<br/>
+        PHP / PCB (EASYEDA PRO) &nbsp;&nbsp;████░░░░░░ 40%
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-cmd"><span>$ ls -1 projects/</span><button class="btn ghost" onclick="this.closest('.cell').classList.toggle('collapsed')">RUN / HIDE</button></div>
+      <div class="cell-out">
+        01. <a href="https://github.com/ebad84/synapse-resume" target="_blank">SYNAPSE RESUME SITE</a> — Flask + SSH terminal twin<br/>
+        02. <a href="https://github.com/ebad84/UTEMP" target="_blank">UTEMP</a> — IoT temperature REST API &amp; dashboard<br/>
+        03. <a href="https://qr.ebad84.ir" target="_blank">QR CODE GENERATOR</a> — Client-side PNG/SVG QR tool<br/>
+        04. <a href="https://github.com/ebad84/my-things-manager" target="_blank">ELECTRONIC PARTS MANAGER</a> — Persian inventory + Jalali calendar<br/>
+        05. <a href="https://github.com/ebad84/digikala_dailypoint" target="_blank">DIGIKALA DAILY POINT BOT</a> — Automated DigiClub bot<br/>
+        06. <a href="https://github.com/ebad84/Music_Player" target="_blank">ESP32 MUSIC PLAYER</a> — MicroPython + I2S DAC + Flask<br/>
+        07. <a href="https://github.com/ebad84/UV-Station" target="_blank">UV CURING STATION PCB</a> — 20 UV LEDs in EasyEDA Pro
+      </div>
+    </div>
+
+    <div class="cell">
+      <div class="cell-cmd"><span>$ ping ebad84</span><button class="btn ghost" onclick="this.closest('.cell').classList.toggle('collapsed')">RUN / HIDE</button></div>
+      <div class="cell-out">
+        GITHUB: <a href="https://github.com/ebad84" target="_blank">github.com/ebad84</a> ·
+        LINKEDIN: <a href="https://linkedin.com/in/ebad84" target="_blank">linkedin.com/in/ebad84</a> ·
+        TELEGRAM: <a href="https://t.me/ebad84" target="_blank">t.me/ebad84</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allOpen = true;
+    function toggleAll() {
+      allOpen = !allOpen;
+      document.querySelectorAll(".cell").forEach(c => c.classList.toggle("collapsed", !allOpen));
+    }
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+  </script>
+</body>
+</html>

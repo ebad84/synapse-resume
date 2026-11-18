@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TERMINAL 03 — NEOFETCH & BTOP TUI | EBAD84 / SYNAPSE</title>
+  <style>
+    :root {
+      --ink: #111111; --paper: #ffffff; --line: #dcdcdc; --dim: #555555;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23e3e3e3' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%23e3e3e3'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%23e3e3e3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    html[data-theme="dark"] {
+      --ink: #e8e8e8; --paper: #111111; --line: #333333; --dim: #999999;
+      --pcb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232e2e2e' stroke-width='1'%3E%3Cpath d='M0 40h60l20 20h60M180 0v60l-20 20v80l20 20v60M0 140h40l20-20h40v40l-20 20H0M120 240v-40l20-20h100'/%3E%3Ccircle cx='60' cy='40' r='3' fill='%232e2e2e'/%3E%3Crect x='156' y='156' width='8' height='8' fill='%232e2e2e'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    * { box-sizing: border-box; border-radius: 0 !important; }
+    body {
+      margin: 0; background: var(--paper); background-image: var(--pcb); color: var(--ink);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 12.5px; line-height: 1.55;
+    }
+    .wrap { max-width: 1060px; margin: 0 auto; padding: 20px; }
+    .box { background: var(--paper); border: 1px solid var(--ink); padding: 18px; margin-bottom: 14px; position: relative; }
+    .box-label {
+      position: absolute; top: -9px; left: 12px; background: var(--paper); padding: 0 6px;
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .neo { display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: center; }
+    .ascii-chip { margin: 0; font-size: 11px; line-height: 1.2; white-space: pre; }
+    .btn {
+      background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 5px 10px;
+      font-family: inherit; font-size: 10.5px; font-weight: 700; cursor: pointer; text-transform: uppercase;
+    }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+    th { font-size: 10.5px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; }
+    tr.proj-tr { cursor: pointer; }
+    tr.proj-tr:hover, tr.proj-tr.sel { background: var(--ink); color: var(--paper); }
+    @media (max-width: 760px) { .neo, .two-col { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="box">
+      <span class="box-label">NEOFETCH // EBAD84@SYNAPSE</span>
+      <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+        <button class="btn" id="themeBtn" onclick="toggleTheme()">LIGHT</button>
+      </div>
+      <div class="neo">
+<pre class="ascii-chip">   ┌─┬─┬─┬─┐
+  ─┤       ├─
+  ─┤  MCU  ├─
+  ─┤ ESP32 ├─
+  ─┤       ├─
+   └─┴─┴─┴─┘</pre>
+        <div>
+          <div><strong>USER:</strong> Mohammad Reza Ebadollah (ebad84)</div>
+          <div><strong>ROLE:</strong> Computer Engineer · IoT / Embedded / Signal + Image</div>
+          <div><strong>SHELL:</strong> ssh ebad84.ir (no login)</div>
+          <div><strong>EXP:</strong> R&amp;D @ University of Qom · Freelance @ Parscoders</div>
+          <div><strong>UPTIME:</strong> 2026 · Self-hosted behind nginx</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="box">
+        <span class="box-label">CPU / SKILLS</span>
+        <div>PYTHON / FLASK / FASTAPI &nbsp;[████████░░] 80%</div>
+        <div>C / C++ / EMBEDDED C &nbsp;&nbsp;&nbsp;&nbsp;[██████░░░░] 60%</div>
+        <div>LINUX / DOCKER / NGINX &nbsp;&nbsp;[██████░░░░] 60%</div>
+        <div>PHP / PCB (EASYEDA PRO) &nbsp;[████░░░░░░] 40%</div>
+      </div>
+      <div class="box">
+        <span class="box-label">DEVICES / BOARDS</span>
+        <div>● ESP32 (Primary) &nbsp;&nbsp; ○ Arduino &nbsp;&nbsp; ○ Pi Pico</div>
+        <div>○ ESP8266 Family &nbsp;&nbsp;&nbsp; ○ Pi Zero &nbsp;&nbsp; ○ Pi 5</div>
+        <div style="margin-top:8px; color:var(--dim); font-size:11px;">UPLINK: github.com/ebad84 · t.me/ebad84 · linkedin.com/in/ebad84</div>
+      </div>
+    </div>
+
+    <div class="box">
+      <span class="box-label">PROCESSES / PROJECTS (↑↓ OR CLICK)</span>
+      <table>
+        <thead><tr><th>PID</th><th>NAME</th><th>STACK</th><th>STATUS</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="detail" style="margin-top:14px; padding-top:12px; border-top:1px solid var(--line);"></div>
+    </div>
+  </div>
+
+  <script>
+    const rows = [
+      { pid: "01", name: "SYNAPSE RESUME SITE", stack: "FLASK · SSH · NGINX", desc: "Personal resume site with Flask web page and login-free SSH terminal twin.", link: "https://github.com/ebad84/synapse-resume" },
+      { pid: "02", name: "UTEMP IOT PLATFORM", stack: "FLASK · DOCKER · SQLITE", desc: "REST API and dashboard for IoT devices to log and visualize temperature data.", link: "https://github.com/ebad84/UTEMP" },
+      { pid: "03", name: "QR CODE GENERATOR", stack: "HTML · CSS · JS", desc: "100% client-side QR code generator outputting PNG and SVG.", link: "https://qr.ebad84.ir" },
+      { pid: "04", name: "ELECTRONIC PARTS MANAGER", stack: "FLASK · SQLALCHEMY", desc: "Full-stack Persian electronics inventory with Jalali calendar and ZIP backup.", link: "https://github.com/ebad84/my-things-manager" },
+      { pid: "05", name: "DIGIKALA DAILY POINT BOT", stack: "PYTHON · SCRAPING", desc: "Automates daily DigiClub point collection with OTP login.", link: "https://github.com/ebad84/digikala_dailypoint" },
+      { pid: "06", name: "ESP32 MUSIC PLAYER", stack: "MICROPYTHON · I2S", desc: "ESP32 audio player with I2S DAC and wireless Flask file transfer.", link: "https://github.com/ebad84/Music_Player" },
+      { pid: "07", name: "UV CURING STATION PCB", stack: "EASYEDA PRO · PCB", desc: "20-LED USB-powered UV curing PCB for solder mask and resin.", link: "https://github.com/ebad84/UV-Station" }
+    ];
+    let sel = 0;
+
+    function render() {
+      document.getElementById("tbody").innerHTML = rows.map((r, i) => `
+        <tr class="proj-tr ${i === sel ? "sel" : ""}" onclick="sel=${i};render();">
+          <td>${r.pid}</td><td>${r.name}</td><td>${r.stack}</td><td>RUNNING</td>
+        </tr>
+      `).join("");
+      const cur = rows[sel];
+      document.getElementById("detail").innerHTML = `
+        <strong>[${cur.pid}] ${cur.name}</strong> — <span style="color:var(--dim)">${cur.desc}</span>
+        <div style="margin-top:8px;"><a class="btn" style="text-decoration:none;display:inline-block;" href="${cur.link}" target="_blank">OPEN ↗</a></div>
+      `;
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").textContent = next === "dark" ? "LIGHT" : "DARK";
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowDown") { sel = (sel + 1) % rows.length; render(); }
+      if (e.key === "ArrowUp") { sel = (sel - 1 + rows.length) % rows.length; render(); }
+      if (e.key.toLowerCase() === "t") toggleTheme();
+    });
+
+    render();
+  </script>
+</body>
+</html>
