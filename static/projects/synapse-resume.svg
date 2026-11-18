@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 260" width="480" height="260">
+  <rect width="480" height="260" fill="#f6f5f1"/>
+  <rect x="8" y="8" width="464" height="244" rx="10" fill="#ffffff" stroke="#e5e2da" stroke-width="1.5"/>
+  <!-- Left Window: Minimal Web UI -->
+  <rect x="24" y="26" width="204" height="208" rx="8" fill="#f6f5f1" stroke="#cdc9bf" stroke-width="1.5"/>
+  <rect x="24" y="26" width="204" height="24" rx="8" fill="#e5e2da"/>
+  <rect x="24" y="42" width="204" height="8" fill="#e5e2da"/>
+  <circle cx="38" cy="38" r="3.5" fill="#a8492a"/>
+  <circle cx="49" cy="38" r="3.5" fill="#9a978f"/>
+  <circle cx="60" cy="38" r="3.5" fill="#cdc9bf"/>
+  <text x="126" y="42" text-anchor="middle" font-family="monospace" font-size="10" fill="#67655f">FLASK WEB · :5000</text>
+  <!-- Profile Card Preview inside Left Window -->
+  <circle cx="52" cy="76" r="14" fill="#f5e8e1" stroke="#a8492a" stroke-width="1.5"/>
+  <text x="52" y="80" text-anchor="middle" font-family="sans-serif" font-weight="600" font-size="10" fill="#a8492a">MR</text>
+  <rect x="74" y="66" width="94" height="7" rx="3" fill="#1c1b19"/>
+  <rect x="74" y="79" width="66" height="5" rx="2" fill="#9a978f"/>
+  <rect x="38" y="106" width="176" height="30" rx="5" fill="#ffffff" stroke="#e5e2da"/>
+  <rect x="46" y="114" width="70" height="5" rx="2" fill="#a8492a"/>
+  <rect x="46" y="124" width="140" height="4" rx="2" fill="#cdc9bf"/>
+  <rect x="38" y="144" width="176" height="30" rx="5" fill="#ffffff" stroke="#e5e2da"/>
+  <rect x="46" y="152" width="85" height="5" rx="2" fill="#1c1b19"/>
+  <rect x="46" y="162" width="120" height="4" rx="2" fill="#cdc9bf"/>
+  <rect x="38" y="182" width="176" height="38" rx="5" fill="#f5e8e1" stroke="#a8492a" stroke-dasharray="3 2"/>
+  <text x="126" y="205" text-anchor="middle" font-family="monospace" font-size="10" fill="#a8492a">GET /api/projects · 200 OK</text>
+
+  <!-- Sync Arrow -->
+  <path d="M232 130 H248" stroke="#a8492a" stroke-width="2"/>
+  <polygon points="246,125 254,130 246,135" fill="#a8492a"/>
+  <polygon points="234,125 226,130 234,135" fill="#a8492a"/>
+
+  <!-- Right Window: SSH Terminal TUI -->
+  <rect x="252" y="26" width="204" height="208" rx="8" fill="#1c1b19" stroke="#1c1b19" stroke-width="1.5"/>
+  <rect x="252" y="26" width="204" height="24" rx="8" fill="#2b2a27"/>
+  <rect x="252" y="42" width="204" height="8" fill="#2b2a27"/>
+  <text x="354" y="42" text-anchor="middle" font-family="monospace" font-size="10" fill="#a3a099">SSH TWIN · :22 (NO LOGIN)</text>
+  <text x="266" y="70" font-family="monospace" font-size="10.5" fill="#e48b60">$ ssh ebad84.ir</text>
+  <rect x="266" y="80" width="176" height="1" fill="#3d3b37"/>
+  <text x="266" y="96" font-family="monospace" font-size="10" fill="#ecebe6">SYNAPSE // EBAD84</text>
+  <text x="266" y="112" font-family="monospace" font-size="9.5" fill="#a3a099">[1] ABOUT   [2] SKILLS</text>
+  <text x="266" y="126" font-family="monospace" font-size="9.5" fill="#a3a099">[3] BOARDS  [4] PROJECTS</text>
+  <text x="266" y="140" font-family="monospace" font-size="9.5" fill="#a3a099">[5] LINKS   [418] TEAPOT</text>
+  <rect x="266" y="154" width="176" height="44" rx="4" fill="#131312" stroke="#3d3b37"/>
+  <text x="276" y="171" font-family="monospace" font-size="9.5" fill="#ecebe6">PARAMIKO TUI ACTIVE</text>
+  <text x="276" y="186" font-family="monospace" font-size="9" fill="#e48b60">SELF-HOSTED · NGINX</text>
+  <rect x="266" y="208" width="8" height="12" fill="#e48b60"/>
+</svg>

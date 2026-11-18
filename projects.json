@@ -12,7 +12,7 @@
       },
       "tags": ["PYTHON", "FLASK", "SSH", "PARAMIKO", "SELF-HOSTED", "NGINX"],
       "link": "https://github.com/ebad84/synapse-resume",
-      "image": null
+      "image": "synapse-resume.svg"
     },
     {
       "id": "utemp",
@@ -26,7 +26,7 @@
       },
       "tags": ["PYTHON", "FLASK", "REST API", "DOCKER", "NGINX", "IOT", "SQLITE"],
       "link": "https://github.com/ebad84/UTEMP",
-      "image": null
+      "image": "utemp.svg"
     },
     {
       "id": "qr-generator",
@@ -40,7 +40,7 @@
       },
       "tags": ["HTML", "CSS", "VANILLA JS", "SELF-HOSTED", "NGINX"],
       "link": "https://qr.ebad84.ir",
-      "image": null
+      "image": "qr-generator.svg"
     },
     {
       "id": "my-things-manager",
@@ -54,7 +54,7 @@
       },
       "tags": ["PYTHON", "FLASK", "SQLALCHEMY", "SQLITE", "PILLOW", "JALALI CALENDAR"],
       "link": "https://github.com/ebad84/my-things-manager",
-      "image": null
+      "image": "my-things-manager.svg"
     },
     {
       "id": "digikala-dailypoint",
@@ -68,7 +68,7 @@
       },
       "tags": ["PYTHON", "FLASK", "WEB SCRAPING", "BEAUTIFULSOUP4", "REQUESTS", "POETRY"],
       "link": "https://github.com/ebad84/digikala_dailypoint",
-      "image": null
+      "image": "digikala-dailypoint.svg"
     },
     {
       "id": "esp32-music-player",
@@ -82,7 +82,7 @@
       },
       "tags": ["MICROPYTHON", "ESP32", "I2S", "SPI", "PYTHON", "PYDUB", "EMBEDDED"],
       "link": "https://github.com/ebad84/Music_Player",
-      "image": null
+      "image": "esp32-music-player.svg"
     },
     {
       "id": "uv-station",
@@ -96,7 +96,7 @@
       },
       "tags": ["PCB DESIGN", "EASYEDA PRO", "ELECTRONICS", "UV LED", "HARDWARE"],
       "link": "https://github.com/ebad84/UV-Station",
-      "image": null
+      "image": "uv-station.svg"
     }
   ]
 }

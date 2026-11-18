@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 260" width="480" height="260">
+  <rect width="480" height="260" fill="#f6f5f1"/>
+  <rect x="8" y="8" width="464" height="244" rx="10" fill="#ffffff" stroke="#e5e2da" stroke-width="1.5"/>
+  <text x="24" y="34" font-family="monospace" font-weight="600" font-size="12" fill="#1c1b19">ESP32 MUSIC PLAYER // MICROPYTHON</text>
+  <!-- PC / Flask Upload -->
+  <rect x="26" y="56" width="112" height="82" rx="7" fill="#f6f5f1" stroke="#cdc9bf"/>
+  <text x="82" y="80" text-anchor="middle" font-family="monospace" font-weight="600" font-size="10.5" fill="#1c1b19">PC + FLASK</text>
+  <text x="82" y="98" text-anchor="middle" font-family="monospace" font-size="9" fill="#67655f">MP3 ──▶ WAV</text>
+  <text x="82" y="114" text-anchor="middle" font-family="monospace" font-size="9" fill="#a8492a">pydub / ffmpeg</text>
+  <!-- Wi-Fi Link -->
+  <line x1="138" y1="97" x2="178" y2="97" stroke="#a8492a" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="158" y="88" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#a8492a">WI-FI</text>
+  <!-- ESP32 + SD -->
+  <rect x="180" y="56" width="124" height="82" rx="7" fill="#1c1b19"/>
+  <text x="242" y="82" text-anchor="middle" font-family="monospace" font-weight="600" font-size="11.5" fill="#ecebe6">ESP32 MCU</text>
+  <text x="242" y="102" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#e48b60">SPI: SD CARD</text>
+  <text x="242" y="120" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#a3a099">MICROPYTHON</text>
+  <!-- I2S Bus -->
+  <line x1="304" y1="97" x2="342" y2="97" stroke="#1c1b19" stroke-width="2"/>
+  <text x="323" y="88" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#1c1b19">I2S</text>
+  <!-- DAC -->
+  <rect x="344" y="56" width="110" height="82" rx="7" fill="#f5e8e1" stroke="#a8492a" stroke-width="1.5"/>
+  <text x="399" y="84" text-anchor="middle" font-family="monospace" font-weight="600" font-size="11" fill="#a8492a">I2S DAC</text>
+  <text x="399" y="104" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#1c1b19">AUDIO OUT</text>
+  <!-- Audio Waveform -->
+  <rect x="26" y="156" width="428" height="72" rx="8" fill="#f6f5f1" stroke="#e5e2da"/>
+  <g fill="#a8492a">
+    <rect x="46" y="186" width="6" height="16"/><rect x="58" y="176" width="6" height="36"/>
+    <rect x="70" y="168" width="6" height="52"/><rect x="82" y="180" width="6" height="28"/>
+    <rect x="94" y="172" width="6" height="44"/><rect x="106" y="184" width="6" height="20"/>
+    <rect x="118" y="174" width="6" height="40"/><rect x="130" y="166" width="6" height="56"/>
+    <rect x="142" y="178" width="6" height="32"/><rect x="154" y="186" width="6" height="16"/>
+  </g>
+  <text x="180" y="188" font-family="monospace" font-size="10.5" fill="#1c1b19">NOW STREAMING: WAV PCM 16-BIT</text>
+  <text x="180" y="206" font-family="monospace" font-size="9.5" fill="#67655f">WIRELESS FILE UPLOAD OVER LOCAL WI-FI</text>
+</svg>

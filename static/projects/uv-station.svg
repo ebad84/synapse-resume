@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 260" width="480" height="260">
+  <rect width="480" height="260" fill="#f6f5f1"/>
+  <rect x="8" y="8" width="464" height="244" rx="10" fill="#ffffff" stroke="#e5e2da" stroke-width="1.5"/>
+  <!-- PCB Board -->
+  <rect x="28" y="30" width="268" height="200" rx="8" fill="#1c1b19" stroke="#a8492a" stroke-width="2"/>
+  <text x="44" y="52" font-family="monospace" font-size="10" fill="#ecebe6">UV-STATION REV1.0 · EASYEDA PRO</text>
+  <!-- 20 UV LEDs (5x4 grid) -->
+  <g stroke="#e48b60" stroke-width="1.5">
+    <circle cx="62" cy="84" r="9" fill="#2d211b"/><circle cx="112" cy="84" r="9" fill="#2d211b"/><circle cx="162" cy="84" r="9" fill="#2d211b"/><circle cx="212" cy="84" r="9" fill="#2d211b"/><circle cx="262" cy="84" r="9" fill="#2d211b"/>
+    <circle cx="62" cy="120" r="9" fill="#2d211b"/><circle cx="112" cy="120" r="9" fill="#2d211b"/><circle cx="162" cy="120" r="9" fill="#2d211b"/><circle cx="212" cy="120" r="9" fill="#2d211b"/><circle cx="262" cy="120" r="9" fill="#2d211b"/>
+    <circle cx="62" cy="156" r="9" fill="#2d211b"/><circle cx="112" cy="156" r="9" fill="#2d211b"/><circle cx="162" cy="156" r="9" fill="#2d211b"/><circle cx="212" cy="156" r="9" fill="#2d211b"/><circle cx="262" cy="156" r="9" fill="#2d211b"/>
+    <circle cx="62" cy="192" r="9" fill="#2d211b"/><circle cx="112" cy="192" r="9" fill="#2d211b"/><circle cx="162" cy="192" r="9" fill="#2d211b"/><circle cx="212" cy="192" r="9" fill="#2d211b"/><circle cx="262" cy="192" r="9" fill="#2d211b"/>
+  </g>
+  <!-- USB Power Trace -->
+  <rect x="18" y="122" width="16" height="30" rx="2" fill="#a8492a"/>
+  <text x="142" y="219" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#e48b60">20× UV LEDs · USB 5V / ~400mA</text>
+
+  <!-- Right Spec Sheet -->
+  <text x="314" y="54" font-family="monospace" font-weight="600" font-size="12" fill="#1c1b19">PCB SPECS</text>
+  <rect x="314" y="68" width="140" height="162" rx="7" fill="#f6f5f1" stroke="#e5e2da"/>
+  <text x="326" y="92" font-family="monospace" font-size="10" fill="#1c1b19">ARRAY: 5×4 (20 LED)</text>
+  <text x="326" y="114" font-family="monospace" font-size="10" fill="#1c1b19">INPUT: USB 5V</text>
+  <text x="326" y="136" font-family="monospace" font-size="10" fill="#1c1b19">DRAW:  ~400mA</text>
+  <text x="326" y="158" font-family="monospace" font-size="10" fill="#a8492a">USE: SOLDER MASK</text>
+  <text x="326" y="176" font-family="monospace" font-size="10" fill="#a8492a">     RESIN + COAT</text>
+  <text x="326" y="210" font-family="monospace" font-size="9.5" fill="#67655f">TOOL: EASYEDA PRO</text>
+</svg>
